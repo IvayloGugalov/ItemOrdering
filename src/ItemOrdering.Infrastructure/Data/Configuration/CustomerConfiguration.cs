@@ -11,15 +11,19 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedNever()
+                .IsRequired();
 
-            builder.Property(x => x.FirstName);
-            builder.Property(x => x.LastName);
+            builder.Property(x => x.FirstName)
+                .IsRequired();
+            builder.Property(x => x.LastName)
+                .IsRequired();
 
             builder.Property(x => x.Email)
                 .HasColumnName("Email")
                 .HasConversion(email => email.Value, value => new Email(value))
-                .HasMaxLength(220);
+                .HasMaxLength(220)
+                .IsRequired();
 
             builder.OwnsOne(
                 x => x.Address,

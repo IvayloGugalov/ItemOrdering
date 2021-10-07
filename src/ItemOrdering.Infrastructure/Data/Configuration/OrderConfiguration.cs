@@ -13,11 +13,13 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
         {
             builder.HasKey(x => x.Id);
             builder.Property(item => item.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedNever()
+                .IsRequired();
 
             builder.Property(x => x.Created)
                 .HasColumnType("date")
-                .ValueGeneratedNever();
+                .ValueGeneratedNever()
+                .IsRequired();
 
             builder.OwnsOne(
                     x => x.ShippingAddress,
@@ -36,7 +38,8 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
 
             builder.HasOne<Customer>()
                 .WithMany(x => x.Orders)
-                .HasForeignKey(x => x.CustomerId);
+                .HasForeignKey(x => x.CustomerId)
+                .IsRequired();
         }
     }
 }

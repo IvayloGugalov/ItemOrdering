@@ -13,8 +13,10 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
             builder.Property(x => x.Id)
                 .ValueGeneratedNever();
 
-            builder.Property(x => x.Url);
-            builder.Property(x => x.Title);
+            builder.Property(x => x.Url)
+                .IsRequired();
+            builder.Property(x => x.Title)
+                .IsRequired();
 
             builder.HasMany(x => x.Products);
             builder.Metadata.FindNavigation(nameof(Shop.Products))

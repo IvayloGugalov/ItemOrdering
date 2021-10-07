@@ -11,18 +11,24 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedNever()
+                .IsRequired();
 
-            builder.Property(x => x.Title);
-            builder.Property(x => x.Description);
-            builder.Property(x => x.Url);
+            builder.Property(x => x.Title)
+                .IsRequired();
+            builder.Property(x => x.Description)
+                .IsRequired();
+            builder.Property(x => x.Url)
+                .IsRequired();
 
             builder.HasOne(x => x.Shop)
-                .WithMany(x => x.Products);
+                .WithMany(x => x.Products)
+                .IsRequired();
 
             builder.OwnsOne(x => x.OriginalPrice)
                 .Property(x => x.Value)
-                .HasColumnType("float");
+                .HasColumnType("float")
+                .IsRequired();
         }
     }
 }

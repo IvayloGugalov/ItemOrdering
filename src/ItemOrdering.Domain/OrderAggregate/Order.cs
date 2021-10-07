@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 using ItemOrdering.Domain.CustomerAggregate;
@@ -10,11 +9,8 @@ namespace ItemOrdering.Domain.OrderAggregate
 {
     public class Order : Entity
     {
-        [Required]
         public Guid CustomerId { get; }
-        [Required]
         public Address ShippingAddress { get; private set; }
-        [Required]
         public DateTime Created { get; }
 
         public IReadOnlyList<Product> Products => this.products.AsReadOnly();
