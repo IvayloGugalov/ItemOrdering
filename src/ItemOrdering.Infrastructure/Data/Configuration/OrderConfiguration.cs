@@ -31,6 +31,8 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
                         sa.Property(p => p.Street).HasColumnName("ShippingStreet");
                         sa.Property(p => p.StreetNumber).HasColumnName("ShippingStreetNumber");
                     });
+            builder.Navigation(x => x.ShippingAddress)
+                .IsRequired();
 
             builder.HasMany(x => x.Products);
             builder.Metadata.FindNavigation(nameof(Order.Products))

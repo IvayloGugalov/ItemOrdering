@@ -35,6 +35,8 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
                     sa.Property(p => p.Street).HasColumnName("CustomerStreet");
                     sa.Property(p => p.StreetNumber).HasColumnName("CustomerStreetNumber");
                 });
+            builder.Navigation(x => x.Address)
+                .IsRequired();
 
         }
     }

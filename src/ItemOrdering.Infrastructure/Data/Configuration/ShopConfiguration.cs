@@ -11,7 +11,8 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
-                .ValueGeneratedNever();
+                .ValueGeneratedNever()
+                .IsRequired();
 
             builder.Property(x => x.Url)
                 .IsRequired();
