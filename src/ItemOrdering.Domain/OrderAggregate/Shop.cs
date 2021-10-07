@@ -10,7 +10,7 @@ namespace ItemOrdering.Domain.OrderAggregate
         public string Url { get; }
         public string Title { get; }
 
-        public IReadOnlyCollection<Product> Products => this.products?.AsReadOnly();
+        public IReadOnlyList<Product> Products => this.products?.AsReadOnly();
         private readonly List<Product> products = new();
 
         private Shop() { }

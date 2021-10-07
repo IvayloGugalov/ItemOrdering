@@ -34,7 +34,7 @@ namespace ItemOrdering.Domain.CustomerAggregate
             this.Email = !string.IsNullOrWhiteSpace(email.Value) ? email : throw new ArgumentNullException(nameof(email));
         }
 
-        public Customer Create(string firstName, string lastName, Address address, Email email)
+        public static Customer Create(string firstName, string lastName, Address address, Email email)
         {
             return new Customer(firstName: firstName, lastName: lastName, address: address, email: email);
         }

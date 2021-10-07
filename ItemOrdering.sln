@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemOrdering.Api", "src\ItemOrdering.Api\ItemOrdering.Api.csproj", "{948AC87B-D04A-4AE8-8420-787F56035D8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Api", "src\ItemOrdering.Api\ItemOrdering.Api.csproj", "{948AC87B-D04A-4AE8-8420-787F56035D8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemOrdering.Domain", "src\ItemOrdering.Domain\ItemOrdering.Domain.csproj", "{05177909-E3AF-409A-9C8A-770AF015DA6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Domain", "src\ItemOrdering.Domain\ItemOrdering.Domain.csproj", "{05177909-E3AF-409A-9C8A-770AF015DA6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemOrdering.Infrastructure", "src\ItemOrdering.Infrastructure\ItemOrdering.Infrastructure.csproj", "{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{05177909-E3AF-409A-9C8A-770AF015DA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05177909-E3AF-409A-9C8A-770AF015DA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05177909-E3AF-409A-9C8A-770AF015DA6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{948AC87B-D04A-4AE8-8420-787F56035D8A} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
 		{05177909-E3AF-409A-9C8A-770AF015DA6F} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8016928-19C4-463D-AB4C-1A92860FA316}

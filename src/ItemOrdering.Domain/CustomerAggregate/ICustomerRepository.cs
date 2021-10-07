@@ -4,7 +4,7 @@ using ItemOrdering.Domain.OrderAggregate;
 
 namespace ItemOrdering.Domain.CustomerAggregate
 {
-    public interface IBuyerRepository
+    public interface ICustomerRepository
     {
         Task BuyOrder(Order order);
     }

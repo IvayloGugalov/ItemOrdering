@@ -8,6 +8,8 @@ namespace ItemOrdering.Domain.OrderAggregate
         public Guid ItemId { get; }
         public DateTime DateCreated { get; }
 
+        private Price() { }
+
         public Price(double value, Guid itemId)
         {
             this.Value = value > 0 ? value : throw new NullReferenceException("Price value");

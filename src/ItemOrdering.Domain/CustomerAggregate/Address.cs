@@ -6,11 +6,11 @@ namespace ItemOrdering.Domain.CustomerAggregate
     {
         public string Country { get; }
         public string City { get; }
-        public byte ZipCode { get; }
+        public int ZipCode { get; }
         public string Street { get; }
         public int StreetNumber { get; }
 
-        public Address(string country, string city, byte zipCode, string street, int streetNumber)
+        public Address(string country, string city, int zipCode, string street, int streetNumber)
         {
             this.Country = !string.IsNullOrEmpty(country) ? country : throw new ArgumentNullException(nameof(country));
             this.City = !string.IsNullOrWhiteSpace(city) ? city : throw new ArgumentNullException(nameof(city));
