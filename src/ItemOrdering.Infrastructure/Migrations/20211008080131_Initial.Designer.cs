@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItemOrdering.Infrastructure.Migrations
 {
     [DbContext(typeof(ItemOrderingDbContext))]
-    [Migration("20211007183245_Initial")]
+    [Migration("20211008080131_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,9 +101,11 @@ namespace ItemOrdering.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -134,8 +136,8 @@ namespace ItemOrdering.Infrastructure.Migrations
                                 .HasColumnType("int")
                                 .HasColumnName("CustomerStreetNumber");
 
-                            b1.Property<byte>("ZipCode")
-                                .HasColumnType("tinyint")
+                            b1.Property<int>("ZipCode")
+                                .HasColumnType("int")
                                 .HasColumnName("CustomerZipCode");
 
                             b1.HasKey("CustomerId");
@@ -179,8 +181,8 @@ namespace ItemOrdering.Infrastructure.Migrations
                                 .HasColumnType("int")
                                 .HasColumnName("ShippingStreetNumber");
 
-                            b1.Property<byte>("ZipCode")
-                                .HasColumnType("tinyint")
+                            b1.Property<int>("ZipCode")
+                                .HasColumnType("int")
                                 .HasColumnName("ShippingZipCode");
 
                             b1.HasKey("OrderId");
@@ -213,7 +215,7 @@ namespace ItemOrdering.Infrastructure.Migrations
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<double>("Value")
-                                .HasColumnType("double");
+                                .HasColumnType("float");
 
                             b1.HasKey("ProductId");
 
@@ -223,8 +225,7 @@ namespace ItemOrdering.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.Navigation("OriginalPrice")
-                        .IsRequired();
+                    b.Navigation("OriginalPrice");
 
                     b.Navigation("Shop");
                 });

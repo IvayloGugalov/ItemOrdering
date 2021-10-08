@@ -15,11 +15,16 @@ namespace ItemOrdering.Domain.OrderAggregate
 
         private Shop() { }
 
-        public Shop(string url, string title)
+        private Shop(string url, string title)
         {
             this.Id = Guid.NewGuid();
             this.Url = !string.IsNullOrWhiteSpace(url) ? url : throw new ArgumentNullException(nameof(url));
             this.Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
+        }
+
+        public static Shop Create(string url, string title)
+        {
+            return new Shop(url, title);
         }
 
         public void AddProduct(Product product)
