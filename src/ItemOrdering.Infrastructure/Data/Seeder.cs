@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 
 using ItemOrdering.Domain.CustomerAggregate;
-using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.Shared;
+using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Infrastructure.Data
 {

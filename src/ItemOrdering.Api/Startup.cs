@@ -1,3 +1,4 @@
+using ItemOrdering.Domain.OrderAggregate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,8 @@ namespace ItemOrdering.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddTransient<IOrderRepository, OrderRepository>();
+
             services.AddRazorPages();
         }
 
@@ -54,7 +57,7 @@ namespace ItemOrdering.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

@@ -38,6 +38,9 @@ namespace ItemOrdering.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ShoppingCartId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
@@ -61,7 +64,29 @@ namespace ItemOrdering.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.Product", b =>
+            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.OrderedProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderedProduct");
+                });
+
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -69,9 +94,6 @@ namespace ItemOrdering.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("OrderId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ShopId")
                         .HasColumnType("uniqueidentifier");
@@ -86,14 +108,12 @@ namespace ItemOrdering.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.HasIndex("ShopId");
 
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.Shop", b =>
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.Shop", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
@@ -111,9 +131,28 @@ namespace ItemOrdering.Infrastructure.Migrations
                     b.ToTable("Shop");
                 });
 
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.ShoppingCart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductsAndAmount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.ToTable("ShoppingCarts");
+                });
+
             modelBuilder.Entity("ItemOrdering.Domain.CustomerAggregate.Customer", b =>
                 {
-                    b.OwnsOne("ItemOrdering.Domain.CustomerAggregate.Address", "Address", b1 =>
+                    b.OwnsOne("ItemOrdering.Domain.Shared.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("CustomerId")
                                 .HasColumnType("uniqueidentifier");
@@ -158,7 +197,7 @@ namespace ItemOrdering.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ItemOrdering.Domain.CustomerAggregate.Address", "ShippingAddress", b1 =>
+                    b.OwnsOne("ItemOrdering.Domain.Shared.Address", "ShippingAddress", b1 =>
                         {
                             b1.Property<Guid>("OrderId")
                                 .HasColumnType("uniqueidentifier");
@@ -195,19 +234,22 @@ namespace ItemOrdering.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.Product", b =>
+            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.OrderedProduct", b =>
                 {
                     b.HasOne("ItemOrdering.Domain.OrderAggregate.Order", null)
-                        .WithMany("Products")
+                        .WithMany("OrderedProducts")
                         .HasForeignKey("OrderId");
+                });
 
-                    b.HasOne("ItemOrdering.Domain.OrderAggregate.Shop", "Shop")
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.Product", b =>
+                {
+                    b.HasOne("ItemOrdering.Domain.ShoppingCartAggregate.Shop", "Shop")
                         .WithMany("Products")
                         .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ItemOrdering.Domain.OrderAggregate.Price", "OriginalPrice", b1 =>
+                    b.OwnsOne("ItemOrdering.Domain.ShoppingCartAggregate.Price", "OriginalPrice", b1 =>
                         {
                             b1.Property<Guid>("ProductId")
                                 .HasColumnType("uniqueidentifier");
@@ -223,10 +265,18 @@ namespace ItemOrdering.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.Navigation("OriginalPrice")
-                        .IsRequired();
+                    b.Navigation("OriginalPrice");
 
                     b.Navigation("Shop");
+                });
+
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.ShoppingCart", b =>
+                {
+                    b.HasOne("ItemOrdering.Domain.CustomerAggregate.Customer", null)
+                        .WithOne()
+                        .HasForeignKey("ItemOrdering.Domain.ShoppingCartAggregate.ShoppingCart", "CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ItemOrdering.Domain.CustomerAggregate.Customer", b =>
@@ -236,10 +286,10 @@ namespace ItemOrdering.Infrastructure.Migrations
 
             modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.Order", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("OrderedProducts");
                 });
 
-            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.Shop", b =>
+            modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.Shop", b =>
                 {
                     b.Navigation("Products");
                 });

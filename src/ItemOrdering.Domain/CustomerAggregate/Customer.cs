@@ -13,7 +13,9 @@ namespace ItemOrdering.Domain.CustomerAggregate
         public Address Address { get; private set; }
         public Email Email { get; private set; }
 
-        public IReadOnlyList<Order> Orders => this.orders;
+        public Guid ShoppingCartId { get; private set; }
+
+        public IReadOnlyCollection<Order> Orders => this.orders;
         private readonly List<Order> orders = new();
 
         private Customer() { }
@@ -34,6 +36,13 @@ namespace ItemOrdering.Domain.CustomerAggregate
             return new Customer(firstName: firstName, lastName: lastName, address: address, email: email);
         }
 
+        public void CreateShoppingCart(Guid shoppingCartId)
+        {
+            this.ShoppingCartId = this.ShoppingCartId == Guid.Empty
+                ? shoppingCartId
+                : throw new ShoppingCartMappedException();
+        }
+
         public void AddOrder(Order order)
         {
             if (this.orders.Contains(order)) return;
@@ -41,19 +50,22 @@ namespace ItemOrdering.Domain.CustomerAggregate
             this.orders.Add(order);
         }
 
-        public void RemoveOrder(Order order)
+        public bool RemoveOrder(Order order)
         {
-            if (!this.orders.Contains(order)) return;
-
-            this.orders.Remove(order);
+            return this.orders.Remove(order);
         }
 
         public Customer UpdateCustomer()
         {
-
-
-
             return this;
+        }
+    }
+
+    public class ShoppingCartMappedException : Exception
+    {
+        public ShoppingCartMappedException()
+            : base(message: "Customer already has a shopping cart instance.")
+        {
         }
     }
 }

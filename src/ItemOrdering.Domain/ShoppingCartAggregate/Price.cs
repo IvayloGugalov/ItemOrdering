@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public record Price
     {

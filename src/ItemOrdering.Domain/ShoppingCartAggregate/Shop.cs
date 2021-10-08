@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using ItemOrdering.Domain.Shared;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public class Shop : Entity
     {

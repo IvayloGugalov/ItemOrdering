@@ -2,14 +2,14 @@
 
 using ItemOrdering.Domain.Shared;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public class Product : Entity
     {
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public Price OriginalPrice { get; private set; }
         public string Url { get; }
+        public Price OriginalPrice { get; private set; }
         public Shop Shop { get; }
 
         private Product() { }

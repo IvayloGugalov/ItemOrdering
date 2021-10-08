@@ -34,8 +34,8 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
             builder.Navigation(x => x.ShippingAddress)
                 .IsRequired();
 
-            builder.HasMany(x => x.Products);
-            builder.Metadata.FindNavigation(nameof(Order.Products))
+            builder.HasMany(x => x.OrderedProducts);
+            builder.Metadata.FindNavigation(nameof(Order.OrderedProducts))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasOne<Customer>()

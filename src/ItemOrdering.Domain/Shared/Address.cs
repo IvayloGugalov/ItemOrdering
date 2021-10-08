@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ItemOrdering.Domain.CustomerAggregate
+namespace ItemOrdering.Domain.Shared
 {
     public record Address
     {

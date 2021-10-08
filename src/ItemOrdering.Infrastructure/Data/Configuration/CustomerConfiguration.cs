@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using ItemOrdering.Domain.CustomerAggregate;
+using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Infrastructure.Data.Configuration
 {
@@ -38,6 +39,13 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
             builder.Navigation(x => x.Address)
                 .IsRequired();
 
+            builder.HasMany(x => x.Orders);
+            builder.Metadata.FindNavigation(nameof(Customer.Orders))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.HasOne<ShoppingCart>()
+                .WithOne()
+                .HasForeignKey<ShoppingCart>(x => x.CustomerId);
         }
     }
 }
