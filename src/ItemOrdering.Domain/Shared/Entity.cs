@@ -5,6 +5,7 @@ namespace ItemOrdering.Domain.Shared
 {
     public abstract class Entity
     {
+        // TODO: JsonIgnore not working here?
         public IReadOnlyList<IDomainEvent> DomainEvents => this.domainEvents;
         private readonly List<IDomainEvent> domainEvents = new();
 

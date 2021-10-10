@@ -4,14 +4,16 @@ using ItemOrdering.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ItemOrdering.Infrastructure.Migrations
 {
     [DbContext(typeof(ItemOrderingDbContext))]
-    partial class ItemOrderingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211010092938_ChangeDictionaryToHashSet")]
+    partial class ChangeDictionaryToHashSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace ItemOrdering.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderedProducts");
+                    b.ToTable("OrderedProduct");
                 });
 
             modelBuilder.Entity("ItemOrdering.Domain.ShoppingCartAggregate.Product", b =>
@@ -257,7 +259,7 @@ namespace ItemOrdering.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.OrderedProducts", b =>
+            modelBuilder.Entity("ItemOrdering.Domain.OrderAggregate.OrderedProduct", b =>
                 {
                     b.HasOne("ItemOrdering.Domain.OrderAggregate.Order", null)
                         .WithMany("OrderedProducts")

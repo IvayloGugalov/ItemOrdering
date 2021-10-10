@@ -13,7 +13,7 @@ namespace ItemOrdering.Infrastructure.Data
             if (!context.Customers.Any())
             {
                 context.Customers.Add(
-                    Customer.Create(
+                    new Customer(
                         firstName: "Ivaylo",
                         lastName: "Gugalov",
                         address: new Address(
@@ -27,16 +27,16 @@ namespace ItemOrdering.Infrastructure.Data
 
             if (!context.Products.Any())
             {
-                var shop = Shop.Create(@"https:\\shop_1.com", title: "shop_1");
+                var shop = new Shop(@"https:\\shop_1.com", title: "shop_1");
                 var products = new[]
                 {
-                    Product.CreateProduct(
+                    new Product(
                         url: @"https:\\product_1", title: "product_1", description: "This is the description", price: 49.99, shop),
-                    Product.CreateProduct(
+                    new Product(
                         url: @"https:\\product_2", title: "product_2", description: "This is the description", price: 89.99, shop),
-                    Product.CreateProduct(
+                    new Product(
                         url: @"https:\\product_3", title: "product_3", description: "This is the description", price: 100, shop),
-                    Product.CreateProduct(
+                    new Product(
                         url: @"https:\\product_4", title: "product_4", description: "This is the description", price: 0.99, shop),
                 };
 

@@ -16,10 +16,10 @@ namespace ItemOrdering.Web.Endpoints.OrderEndpoint
             this.orderRepository = orderRepository;
         }
 
-        [HttpPost("/create")]
+        [HttpPost(CreateOrderCommand.ROUTE)]
         public async Task<ActionResult<CreateOrderResult>> CreateOrderAsync([FromBody]CreateOrderCommand request)
         {
-            var order = Order.CreateOrder(request.CustomerId, new List<OrderedProduct>());
+            var order = new Order(request.CustomerId, new List<OrderedProduct>());
 
            await this.orderRepository.CreateOrderAsync(order);
 

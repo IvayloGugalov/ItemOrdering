@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using ItemOrdering.Domain.Shared;
 
@@ -9,42 +10,46 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
     {
         public Guid CustomerId { get; }
 
-        public IReadOnlyDictionary<Product, int> ProductsAndAmount => this.productsAndAmount;
-        private readonly Dictionary<Product, int> productsAndAmount = new();
+        public IReadOnlySet<ProductAndAmount> ProductsAndAmount => this.productsAndAmount;
+        private readonly HashSet<ProductAndAmount> productsAndAmount = new();
 
         private ShoppingCart() { }
 
-        private ShoppingCart(Guid customerId)
+        public ShoppingCart(Guid customerId)
         {
+            this.Id = Guid.NewGuid();
             this.CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentNullException(nameof(customerId));
         }
 
-        public static ShoppingCart Create(Guid customerId)
-        {
-            return new ShoppingCart(customerId);
-        }
-
+        /// <summary>
+        /// Adds a product to the Shopping cart, or increases the amount of the product by, when it's already inside the Shopping cart.
+        /// </summary>
+        /// <param name="product"></param>
         public void AddProduct(Product product)
         {
-            if (this.productsAndAmount.ContainsKey(product))
+            if (product is null) throw new ArgumentNullException(nameof(product));
+
+            var existingProduct = this.productsAndAmount.FirstOrDefault(x => x.ProductId == product.Id);
+
+            if (existingProduct is not null)
             {
-                this.productsAndAmount[product] += 1;
+                existingProduct.IncreaseAmount(1);
             }
             else
             {
-                this.productsAndAmount.Add(product, 1);
+                this.productsAndAmount.Add(new ProductAndAmount(product.Id, product.OriginalPrice.Value, 1));
             }
         }
 
-        public bool RemoveProduct(Product product)
+        public bool RemoveProduct(ProductAndAmount product)
         {
             return this.productsAndAmount.Remove(product);
         }
 
-        public int AmountOfProduct(Product product)
+        public int AmountOfProduct(ProductAndAmount product)
         {
-            return this.productsAndAmount.TryGetValue(product, out var amount)
-                ? amount
+            return this.productsAndAmount.TryGetValue(product, out var retrievedProduct)
+                ? retrievedProduct.Amount
                 : 0;
         }
 

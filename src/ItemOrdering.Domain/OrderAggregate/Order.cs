@@ -17,18 +17,13 @@ namespace ItemOrdering.Domain.OrderAggregate
 
         private Order() { }
 
-        private Order(Guid customerId, List<OrderedProduct> orderedProducts)
+        public Order(Guid customerId, List<OrderedProduct> orderedProducts)
         {
             this.Id = Guid.NewGuid();
             this.Created = DateTime.Now;
             this.CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentNullException(nameof(customerId));
 
             this.orderedProducts = orderedProducts;
-        }
-
-        public static Order CreateOrder(Guid customerId, List<OrderedProduct> orderedProducts)
-        {
-            return new Order(customerId, orderedProducts);
         }
 
         public void SetShippingAddress(Address address)

@@ -9,6 +9,7 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Shop> builder)
         {
+            builder.ToTable("Shops");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .ValueGeneratedNever()

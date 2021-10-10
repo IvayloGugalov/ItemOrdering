@@ -37,12 +37,12 @@ namespace ItemOrdering.Domain.Services
         private static Order CreateOrderFromShoppingCart(ShoppingCart shoppingCart)
         {
             var orderedProducts = new List<OrderedProduct>();
-            foreach (var (product, amount) in shoppingCart.ProductsAndAmount)
+            foreach (var productAndAmount in shoppingCart.ProductsAndAmount)
             {
-                orderedProducts.Add(new OrderedProduct(product.Id, product.OriginalPrice.Value, amount));
+                orderedProducts.Add(new OrderedProduct(productAndAmount.ProductId, productAndAmount.Price, productAndAmount.Amount));
                 // TODO: Publish event
             }
-            return Order.CreateOrder(shoppingCart.CustomerId, orderedProducts);
+            return new Order(shoppingCart.CustomerId, orderedProducts);
         }
     }
 }

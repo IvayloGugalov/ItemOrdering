@@ -20,7 +20,7 @@ namespace ItemOrdering.Domain.CustomerAggregate
 
         private Customer() { }
 
-        private Customer(string firstName, string lastName, Address address, Email email)
+        public Customer(string firstName, string lastName, Address address, Email email)
         {
             this.Id = Guid.NewGuid();
             this.FirstName = !string.IsNullOrWhiteSpace(firstName) ? firstName : throw new ArgumentNullException(nameof(firstName));
@@ -29,11 +29,6 @@ namespace ItemOrdering.Domain.CustomerAggregate
             this.Address = address ?? throw new ArgumentNullException(nameof(address));
             // TODO: Add Email validation
             this.Email = !string.IsNullOrWhiteSpace(email.Value) ? email : throw new ArgumentNullException(nameof(email));
-        }
-
-        public static Customer Create(string firstName, string lastName, Address address, Email email)
-        {
-            return new Customer(firstName: firstName, lastName: lastName, address: address, email: email);
         }
 
         public void CreateShoppingCart(Guid shoppingCartId)

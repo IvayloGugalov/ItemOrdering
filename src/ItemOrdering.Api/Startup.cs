@@ -1,4 +1,5 @@
 using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.ShoppingCartAggregate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,7 +30,10 @@ namespace ItemOrdering.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
 
             services.AddRazorPages();
         }

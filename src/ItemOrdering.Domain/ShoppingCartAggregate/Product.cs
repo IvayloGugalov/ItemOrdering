@@ -14,7 +14,7 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
 
         private Product() { }
 
-        private Product(string url, string title, string description, double price, Shop shop)
+        public Product(string url, string title, string description, double price, Shop shop)
         {
             this.Id = Guid.NewGuid();
             this.Url = !string.IsNullOrWhiteSpace(url) ? url : throw new ArgumentNullException(nameof(url));
