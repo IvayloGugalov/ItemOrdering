@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +6,8 @@ using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 {
-    public class Create : BaseAsyncEndpoint
+    [ApiController]
+    public class Create : ControllerBase
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
 
@@ -16,14 +16,14 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
             this.shoppingCartRepository = shoppingCartRepository;
         }
 
-        [HttpPost("{id:guid}")]
-        public async Task<ActionResult<ShoppingCartResult>> CreateShoppingCartAsync(Guid id)
+        [HttpPost(CreateShoppingCartRequest.ROUTE)]
+        public async Task<ActionResult<CreateShoppingCartResponse>> CreateShoppingCartAsync(CreateShoppingCartRequest request)
         {
-            var shoppingCart = new ShoppingCart(id);
+            var shoppingCart = new ShoppingCart(request.CustomerId);
 
             await this.shoppingCartRepository.AddShoppingCart(shoppingCart);
 
-            var result = new ShoppingCartResult(shoppingCart.Id);
+            var result = new CreateShoppingCartResponse { Id = shoppingCart.Id};
 
             return Ok(result);
         }

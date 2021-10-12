@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Domain.ShoppingCartAggregate.Specifications;
 
 namespace ItemOrdering.Infrastructure.Data
 {
@@ -35,9 +36,16 @@ namespace ItemOrdering.Infrastructure.Data
             return await this.context.ShoppingCarts.SingleOrDefaultAsync(x => x.CustomerId == customerId);
         }
 
-        public async Task<ShoppingCart> GetShoppingCartWithProducts(Guid customerId)
+        public async Task<ShoppingCart> GetShoppingCartByCustomerIdAsync(Guid customerId)
         {
-            return await this.context.ShoppingCarts.Include(x => x.ProductsAndAmount).SingleOrDefaultAsync(x => x.CustomerId == customerId);
+            return await this.context.ShoppingCarts
+                .GetProductsForCart(customerId)
+                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
+        }
+
+        public async Task DeleteAsync(ShoppingCart shoppingCart)
+        {
+            await Task.FromResult(this.context.ShoppingCarts.Remove(shoppingCart));
         }
     }
 }

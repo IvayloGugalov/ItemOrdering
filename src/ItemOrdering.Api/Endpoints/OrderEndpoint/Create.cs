@@ -1,34 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.Services;
 
 namespace ItemOrdering.Web.Endpoints.OrderEndpoint
 {
-    public class Create : BaseAsyncEndpoint
+    [ApiController]
+    public class Create : ControllerBase
     {
-        private readonly IOrderRepository orderRepository;
+        private readonly IShoppingCartOrderingService shoppingCartOrderingService;
 
-        public Create(IOrderRepository orderRepository)
+        public Create(IShoppingCartOrderingService shoppingCartOrderingService)
         {
-            this.orderRepository = orderRepository;
+            this.shoppingCartOrderingService = shoppingCartOrderingService;
         }
 
-        [HttpPost(CreateOrderCommand.ROUTE)]
-        public async Task<ActionResult<CreateOrderResult>> CreateOrderAsync([FromBody]CreateOrderCommand request)
+        [HttpPost(CreateOrderRequest.ROUTE)]
+        public async Task<ActionResult> CreateOrderAsync([FromBody]CreateOrderRequest request)
         {
-            var order = new Order(request.CustomerId, new List<OrderedProduct>());
+           await this.shoppingCartOrderingService.CreateOrderFromShoppingCart(request.CustomerId);
 
-           await this.orderRepository.CreateOrderAsync(order);
-
-            var result = new CreateOrderResult()
-            {
-                Id = order.Id
-            };
-
-            return Ok(result);
+           return NoContent();
         }
     }
 }

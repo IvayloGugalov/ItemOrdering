@@ -1,4 +1,5 @@
 using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.Services;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,7 @@ namespace ItemOrdering.Api
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddTransient<IShoppingCartOrderingService, ShoppingCartOrderingService>();
 
             services.AddRazorPages();
         }

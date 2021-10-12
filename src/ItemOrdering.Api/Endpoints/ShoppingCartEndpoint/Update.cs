@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ItemOrdering.Domain.ShoppingCartAggregate;
+
 using Microsoft.AspNetCore.Mvc;
+
+using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 {
-    public class Update : BaseAsyncEndpoint
+    [ApiController]
+    public class Update : ControllerBase
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly IProductRepository productRepository;
@@ -18,24 +19,29 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
             this.productRepository = productRepository;
         }
 
-        [HttpPut("shoppingcart/{id:guid}")]
-        public async Task<ActionResult<ShoppingCartResult>> AddProductToShoppingCartAsync(Guid id, [FromBody]Command request)
+        [HttpPut(UpdateShoppingCartRequest.ROUTE)]
+        public async Task<ActionResult<UpdateShoppingCartResponse>> AddProductToShoppingCartAsync(
+            Guid customerId,
+            UpdateShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartForCustomer(id);
-            var product = await this.productRepository.GetProductAsync(request.ProductId);
+            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartByCustomerIdAsync(customerId);
+
+            if (shoppingCart == null) return NotFound(customerId);
+
+            var product = await this.productRepository.GetProductByIdAsync(request.ProductId);
+
+            if (product == null) return NotFound(request.ProductId);
 
             shoppingCart.AddProduct(product);
 
             await this.shoppingCartRepository.UpdateShoppingCart(shoppingCart);
 
-            var result = new ShoppingCartResult(shoppingCart.Id);
+            var result = new UpdateShoppingCartResponse
+            {
+                ShoppingCart = new ShoppingCartDTO(shoppingCart.Id, shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
+            };
 
             return Ok(result);
         }
-    }
-
-    public class Command
-    {
-        public Guid ProductId{ get; set; }
     }
 }

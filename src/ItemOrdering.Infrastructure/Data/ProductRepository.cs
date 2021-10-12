@@ -16,7 +16,7 @@ namespace ItemOrdering.Infrastructure.Data
             this.context = context;
         }
 
-        public async Task<Product> GetProductAsync(Guid productId)
+        public async Task<Product> GetProductByIdAsync(Guid productId)
         {
             return await this.context.Products.SingleOrDefaultAsync(x => x.Id == productId);
         }

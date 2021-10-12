@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ItemOrdering.Web.Endpoints.OrderEndpoint
 {
-    public class CreateOrderCommand
+    public class CreateOrderRequest
     {
         public const string ROUTE = "{id}/orders";
 
