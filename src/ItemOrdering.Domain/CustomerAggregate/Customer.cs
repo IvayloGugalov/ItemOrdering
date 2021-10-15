@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using ItemOrdering.Domain.Exceptions;
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.Shared;
 
@@ -31,11 +32,11 @@ namespace ItemOrdering.Domain.CustomerAggregate
             this.Email = !string.IsNullOrWhiteSpace(email.Value) ? email : throw new ArgumentNullException(nameof(email));
         }
 
-        public void CreateShoppingCart(Guid shoppingCartId)
+        public void SetShoppingCart(Guid shoppingCartId)
         {
             this.ShoppingCartId = this.ShoppingCartId == Guid.Empty
                 ? shoppingCartId
-                : throw new ShoppingCartMappedException();
+                : throw new ShoppingCartMappedException("Customer already has a shopping cart instance.");
         }
 
         public void AddOrder(Order order)
@@ -53,14 +54,6 @@ namespace ItemOrdering.Domain.CustomerAggregate
         public Customer UpdateCustomer()
         {
             return this;
-        }
-    }
-
-    public class ShoppingCartMappedException : Exception
-    {
-        public ShoppingCartMappedException()
-            : base(message: "Customer already has a shopping cart instance.")
-        {
         }
     }
 }

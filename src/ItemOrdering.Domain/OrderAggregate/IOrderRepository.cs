@@ -6,9 +6,9 @@ namespace ItemOrdering.Domain.OrderAggregate
 {
     public interface IOrderRepository
     {
-        Task<IEnumerable<Order>> GetAllForCustomerAsync(Guid customerId);
-        Task<Order> GetByIdAsync(Guid orderId);
-        Task<Order> CreateOrderAsync(Order order);
+        Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId);
+        Task<Order> GetByIdWithProductsAsync(Guid orderId);
+        Task<Order> AddAsync(Order order);
         Task<Order> UpdateOrder(Order order);
         Task RemoveOrderAsync(Order order);
     }

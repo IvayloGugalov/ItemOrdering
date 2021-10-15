@@ -20,7 +20,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
         [HttpDelete(UpdateShoppingCartRequest.ROUTE)]
         public async Task<ActionResult> AddProductToShoppingCartAsync(Guid customerId)
         {
-            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartByCustomerIdAsync(customerId);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
             if (shoppingCart == null) return NotFound(customerId);
 

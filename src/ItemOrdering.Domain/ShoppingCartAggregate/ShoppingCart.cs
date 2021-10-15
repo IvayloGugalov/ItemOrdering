@@ -22,7 +22,7 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
         }
 
         /// <summary>
-        /// Adds a product to the Shopping cart, or increases the amount of the product by, when it's already inside the Shopping cart.
+        /// Adds a product to the Shopping cart, or increases the amount of the product by 1, when it's already inside the Shopping cart.
         /// </summary>
         /// <param name="product"></param>
         public void AddProduct(Product product)

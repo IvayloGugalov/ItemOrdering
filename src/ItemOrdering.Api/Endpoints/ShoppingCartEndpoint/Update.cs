@@ -24,7 +24,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
             Guid customerId,
             UpdateShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartByCustomerIdAsync(customerId);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
             if (shoppingCart == null) return NotFound(customerId);
 
@@ -34,11 +34,13 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 
             shoppingCart.AddProduct(product);
 
-            await this.shoppingCartRepository.UpdateShoppingCart(shoppingCart);
+            await this.shoppingCartRepository.UpdateAsync(shoppingCart);
 
             var result = new UpdateShoppingCartResponse
             {
-                ShoppingCart = new ShoppingCartDTO(shoppingCart.Id, shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
+                ShoppingCart = new ShoppingCartDTO(
+                    shoppingCart.Id,
+                    shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
             };
 
             return Ok(result);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
+using ItemOrdering.Domain.Exceptions;
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
@@ -21,15 +21,15 @@ namespace ItemOrdering.Domain.Services
 
         public async Task CreateOrderFromShoppingCart(Guid customerId)
         {
-            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartForCustomer(customerId);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
             if (shoppingCart == null)
             {
-                throw new ValidationException("Given customer doesn't have any shopping cart");
+                throw new InvalidShoppingCartForCustomerException("Given customer doesn't have any shopping cart");
             }
 
             var order = CreateOrderFromShoppingCart(shoppingCart);
-            await this.orderRepository.CreateOrderAsync(order);
+            await this.orderRepository.AddAsync(order);
 
             shoppingCart.Clear();
         }

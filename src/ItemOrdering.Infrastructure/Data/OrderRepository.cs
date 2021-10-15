@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+
 using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.OrderAggregate.Specifications;
 
 namespace ItemOrdering.Infrastructure.Data
 {
@@ -15,17 +18,18 @@ namespace ItemOrdering.Infrastructure.Data
             this.context = context;
         }
 
-        public Task<IEnumerable<Order>> GetAllForCustomerAsync(Guid customerId)
+        public Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Order> GetByIdAsync(Guid orderId)
+        public async Task<Order> GetByIdWithProductsAsync(Guid customerId)
         {
-            throw new NotImplementedException();
+            return await this.context.Orders.GetProductsForOrder(customerId)
+                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
         }
 
-        public async Task<Order> CreateOrderAsync(Order order)
+        public async Task<Order> AddAsync(Order order)
         {
             var result = await this.context.Orders.AddAsync(order);
             await this.context.SaveChangesAsync();

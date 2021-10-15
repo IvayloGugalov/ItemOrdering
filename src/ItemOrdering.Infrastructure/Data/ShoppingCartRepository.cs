@@ -17,26 +17,21 @@ namespace ItemOrdering.Infrastructure.Data
             this.context = context;
         }
 
-        public async Task AddShoppingCart(ShoppingCart shoppingCart)
+        public async Task AddAsync(ShoppingCart shoppingCart)
         {
             await this.context.ShoppingCarts.AddAsync(shoppingCart);
             await this.context.SaveChangesAsync();
         }
 
-        public async Task UpdateShoppingCart(ShoppingCart shoppingCart)
+        public async Task UpdateAsync(ShoppingCart shoppingCart)
         {
             this.context.ShoppingCarts.Attach(shoppingCart);
+            this.context.Entry(shoppingCart).State = EntityState.Modified;
 
-            await Task.FromResult(this.context.ShoppingCarts.Update(shoppingCart));
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<ShoppingCart> GetShoppingCartForCustomer(Guid customerId)
-        {
-            return await this.context.ShoppingCarts.SingleOrDefaultAsync(x => x.CustomerId == customerId);
-        }
-
-        public async Task<ShoppingCart> GetShoppingCartByCustomerIdAsync(Guid customerId)
+        public async Task<ShoppingCart> FindByCustomerIncludeProducts(Guid customerId)
         {
             return await this.context.ShoppingCarts
                 .GetProductsForCart(customerId)
@@ -45,7 +40,8 @@ namespace ItemOrdering.Infrastructure.Data
 
         public async Task DeleteAsync(ShoppingCart shoppingCart)
         {
-            await Task.FromResult(this.context.ShoppingCarts.Remove(shoppingCart));
+            this.context.ShoppingCarts.Remove(shoppingCart);
+            await this.context.SaveChangesAsync();
         }
     }
 }

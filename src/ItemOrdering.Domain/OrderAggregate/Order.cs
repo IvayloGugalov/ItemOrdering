@@ -23,7 +23,7 @@ namespace ItemOrdering.Domain.OrderAggregate
             this.Created = DateTime.Now;
             this.CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentNullException(nameof(customerId));
 
-            this.orderedProducts = orderedProducts;
+            this.orderedProducts = orderedProducts.Any() ? orderedProducts : throw new ArgumentNullException(nameof(orderedProducts));
         }
 
         public void SetShippingAddress(Address address)
@@ -33,7 +33,7 @@ namespace ItemOrdering.Domain.OrderAggregate
 
         public double CalculateTotalPrice()
         {
-             return this.OrderedProducts.Sum(item => item.Price);
+             return this.OrderedProducts.Sum(item => item.CalculateTotalPrice);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
         {
             var shoppingCart = new ShoppingCart(request.CustomerId);
 
-            await this.shoppingCartRepository.AddShoppingCart(shoppingCart);
+            await this.shoppingCartRepository.AddAsync(shoppingCart);
 
             var result = new CreateShoppingCartResponse { Id = shoppingCart.Id};
 

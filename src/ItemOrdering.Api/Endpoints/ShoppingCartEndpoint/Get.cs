@@ -17,16 +17,20 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
             this.shoppingCartRepository = shoppingCartRepository;
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ShoppingCartDTO>> AddProductToShoppingCartAsync(Guid id)
+        [HttpGet(GetShoppingCartRequest.ROUTE)]
+        public async Task<ActionResult<GetShoppingCartResponse>> AddProductToShoppingCartAsync(GetShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.GetShoppingCartByCustomerIdAsync(id);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(request.CustomerId);
 
             if (shoppingCart is null) return NotFound();
 
-            var shoppingCartDTO = new ShoppingCartDTO(shoppingCart.Id, shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO());
+            var result = new GetShoppingCartResponse
+            {
+                ShoppingCart = new ShoppingCartDTO(
+                    shoppingCart.Id, shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
+            };
 
-            return Ok(shoppingCartDTO);
+            return Ok(result);
         }
     }
 }
