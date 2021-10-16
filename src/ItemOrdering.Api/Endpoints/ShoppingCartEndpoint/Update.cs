@@ -28,7 +28,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 
             if (shoppingCart == null) return NotFound(customerId);
 
-            var product = await this.productRepository.GetProductByIdAsync(request.ProductId);
+            var product = await this.productRepository.GetByIdAsync(request.ProductId);
 
             if (product == null) return NotFound(request.ProductId);
 

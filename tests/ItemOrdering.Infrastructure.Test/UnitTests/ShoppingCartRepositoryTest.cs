@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
 using ItemOrdering.Infrastructure.Data;
+using ItemOrdering.Infrastructure.Test.EntityBuilders;
 
 namespace ItemOrdering.Infrastructure.Test.UnitTests
 {
@@ -42,13 +43,10 @@ namespace ItemOrdering.Infrastructure.Test.UnitTests
         public async Task UpdateAsync_WillSucceed()
         {
             var shoppingCart = new ShoppingCart(Guid.NewGuid());
-            var shop = new Shop("www.shop.url.com", "my shop");
-            var product = new Product(
-                url: @"www.shop.url.com/product_1", title: "product_1", description: "This is the description", price: 49.99, shop);
-
-            await this.shoppingCartRepository.AddAsync(shoppingCart);
+            var product = ProductBuilder.CreateProduct();
 
             shoppingCart.AddProduct(product);
+            this.dbContext.SeedDataBaseWith(shoppingCart);
 
             await this.shoppingCartRepository.UpdateAsync(shoppingCart);
 
@@ -62,12 +60,10 @@ namespace ItemOrdering.Infrastructure.Test.UnitTests
         {
             var customerId = Guid.NewGuid();
             var shoppingCart = new ShoppingCart(customerId);
-            var shop = new Shop("www.shop.url.com", "my shop");
-            var product = new Product(
-                url: @"www.shop.url.com/product_1", title: "product_1", description: "This is the description", price: 49.99, shop);
+            var product = ProductBuilder.CreateProduct();
 
             shoppingCart.AddProduct(product);
-            await this.shoppingCartRepository.AddAsync(shoppingCart);
+            this.dbContext.SeedDataBaseWith(shoppingCart);
 
             var cartFromDb = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
@@ -78,12 +74,10 @@ namespace ItemOrdering.Infrastructure.Test.UnitTests
         public async Task DeleteAsync_WillSucceed()
         {
             var shoppingCart = new ShoppingCart(Guid.NewGuid());
-            var shop = new Shop("www.shop.url.com", "my shop");
-            var product = new Product(
-                url: @"www.shop.url.com/product_1", title: "product_1", description: "This is the description", price: 49.99, shop);
+            var product = ProductBuilder.CreateProduct();
 
             shoppingCart.AddProduct(product);
-            await this.shoppingCartRepository.AddAsync(shoppingCart);
+            this.dbContext.SeedDataBaseWith(shoppingCart);
 
             await this.shoppingCartRepository.DeleteAsync(shoppingCart);
 

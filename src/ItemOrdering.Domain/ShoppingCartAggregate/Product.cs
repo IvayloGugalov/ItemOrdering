@@ -24,11 +24,6 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
             this.Shop = shop ?? throw new ArgumentNullException(nameof(shop));
         }
 
-        public static Product CreateProduct(string url, string title, string description, double price, Shop shop)
-        {
-            return new Product(url, title, description, price, shop);
-        }
-
         protected Product UpdateProduct(Product item)
         {
             // TODO: Update item

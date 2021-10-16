@@ -5,6 +5,8 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public interface IProductRepository
     {
-        Task<Product> GetProductByIdAsync(Guid productId);
+        Task<Product> GetByIdAsync(Guid productId);
+        Task<Product> AddAsync(Product product);
+        Task DeleteAsync(Product product);
     }
 }

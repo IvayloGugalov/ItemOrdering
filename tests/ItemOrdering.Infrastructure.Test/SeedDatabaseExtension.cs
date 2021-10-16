@@ -1,21 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
+using ItemOrdering.Domain.Shared;
 using ItemOrdering.Infrastructure.Data;
 
 namespace ItemOrdering.Infrastructure.Test
 {
     public static class SeedDatabaseExtension
     {
-
-        public static async Task SeedDataBaseWith(this ItemOrderingDbContext dbContext, int range)
+        /// <summary>
+        /// Adds an entity to the In-Memory Database
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContext"></param>
+        /// <param name="entity"></param>
+        public static void SeedDataBaseWith<T>(this ItemOrderingDbContext dbContext, T entity)
+            where T : Entity
         {
+            dbContext.Set<T>().Add(entity);
+            dbContext.SaveChanges();
+        }
 
-            //await dbContext.Orders.AddRangeAsync(orders);
-            //await dbContext.SaveChangesAsync();
+        /// <summary>
+        /// Adds a range of entities to the In-Memory Database
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dbContext"></param>
+        /// <param name="entities"></param>
+        public static void SeedDataBaseWith<T>(this ItemOrderingDbContext dbContext, IEnumerable<T> entities)
+            where T : Entity
+        {
+            dbContext.Set<T>().AddRange(entities);
+            dbContext.SaveChanges();
         }
     }
 }
