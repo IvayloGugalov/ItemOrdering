@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
-namespace ItemOrdering.Infrastructure.Test.EntityBuilders
+namespace ItemOrdering.Domain.Test.EntityBuilders
 {
     public static class ProductBuilder
     {

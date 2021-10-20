@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-using Microsoft.AspNetCore.Mvc;
-
 namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 {
     public class UpdateShoppingCartRequest
@@ -11,9 +9,9 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
         /// Not able to pass {customerId} with [FromRoute] annotation. Passing it inside the PUT call.
         /// </summary>
         public const string ROUTE = "{customerId:guid}/shoppingcart";
+        public static string BuildRoute(Guid customerId) => ROUTE.Replace("{customerId:guid}", customerId.ToString());
 
         [Required]
-        [FromBody]
         public Guid ProductId { get; set; }
     }
 }

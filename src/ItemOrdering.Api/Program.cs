@@ -1,13 +1,11 @@
 using System;
-
+using ItemOrdering.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
 
-using ItemOrdering.Infrastructure.Data;
-
-namespace ItemOrdering.Api
+namespace ItemOrdering.Web
 {
     public class Program
     {

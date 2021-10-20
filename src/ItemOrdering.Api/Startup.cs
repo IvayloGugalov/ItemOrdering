@@ -1,17 +1,15 @@
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.Services;
 using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
 
-using ItemOrdering.Infrastructure.Data;
-
-namespace ItemOrdering.Api
+namespace ItemOrdering.Web
 {
     public class Startup
     {

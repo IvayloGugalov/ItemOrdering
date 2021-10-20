@@ -4,11 +4,10 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using ItemOrdering.Domain.CustomerAggregate;
 using ItemOrdering.Domain.Exceptions;
 using ItemOrdering.Domain.OrderAggregate;
-using ItemOrdering.Domain.Shared;
 using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Domain.Test.EntityBuilders;
 
 namespace ItemOrdering.Domain.Test.CustomerTests
 {
@@ -18,16 +17,7 @@ namespace ItemOrdering.Domain.Test.CustomerTests
         [Test]
         public void CreateShoppingCart_WhileCartExists_WillThrowException()
         {
-            var customer = new Customer(
-                firstName: "Ivaylo",
-                lastName: "Gugalov",
-                address: new Address(
-                    country: "Bulgaria",
-                    city: "Sofia",
-                    zipCode: 1000,
-                    street: "4-ti Kilometyr",
-                    streetNumber: 1),
-                email: new Email("ivo_mail@mail.bg"));
+            var customer = CustomerBuilder.CreateCustomer();
             var shoppingCart = new ShoppingCart(customer.Id);
 
             customer.SetShoppingCart(shoppingCart.Id);
@@ -38,16 +28,7 @@ namespace ItemOrdering.Domain.Test.CustomerTests
         [Test]
         public void AddOrder_OnAddingDuplicateOrder_WillNotAdd()
         {
-            var customer = new Customer(
-                firstName: "Ivaylo",
-                lastName: "Gugalov",
-                address: new Address(
-                    country: "Bulgaria",
-                    city: "Sofia",
-                    zipCode: 1000,
-                    street: "4-ti Kilometyr",
-                    streetNumber: 1),
-                email: new Email("ivo_mail@mail.bg"));
+            var customer = CustomerBuilder.CreateCustomer();
             var order = new Order(customer.Id, new List<OrderedProduct>
             {
                 new OrderedProduct(Guid.NewGuid(), 100, 1)
@@ -63,16 +44,7 @@ namespace ItemOrdering.Domain.Test.CustomerTests
         [Test]
         public void RemoveOrder_OnNonExistentOrder_WillNotReturnFalse()
         {
-            var customer = new Customer(
-                firstName: "Ivaylo",
-                lastName: "Gugalov",
-                address: new Address(
-                    country: "Bulgaria",
-                    city: "Sofia",
-                    zipCode: 1000,
-                    street: "4-ti Kilometyr",
-                    streetNumber: 1),
-                email: new Email("ivo_mail@mail.bg"));
+            var customer = CustomerBuilder.CreateCustomer();
             var order = new Order(customer.Id, new List<OrderedProduct>
             {
                 new OrderedProduct(Guid.NewGuid(), 100, 1)

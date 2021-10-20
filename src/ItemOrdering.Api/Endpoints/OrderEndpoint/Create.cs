@@ -17,7 +17,7 @@ namespace ItemOrdering.Web.Endpoints.OrderEndpoint
         }
 
         [HttpPost(CreateOrderRequest.ROUTE)]
-        public async Task<ActionResult> CreateOrderAsync([FromBody]CreateOrderRequest request)
+        public async Task<ActionResult> CreateOrderAsync([FromRoute]CreateOrderRequest request)
         {
            await this.shoppingCartOrderingService.CreateOrderFromShoppingCart(request.CustomerId);
 

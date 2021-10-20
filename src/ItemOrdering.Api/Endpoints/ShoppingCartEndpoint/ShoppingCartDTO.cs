@@ -3,5 +3,5 @@ using System.Collections.Generic;
 
 namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 {
-    public record ShoppingCartDTO(Guid Id, IReadOnlySet<ProductAndAmountDTO> ProductsAndAmount);
+    public record ShoppingCartDto(Guid Id, HashSet<ProductAndAmountDTO> ProductsAndAmount);
 }

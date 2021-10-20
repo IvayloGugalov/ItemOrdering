@@ -18,7 +18,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
         }
 
         [HttpGet(GetShoppingCartRequest.ROUTE)]
-        public async Task<ActionResult<GetShoppingCartResponse>> AddProductToShoppingCartAsync(GetShoppingCartRequest request)
+        public async Task<ActionResult<GetShoppingCartResponse>> AddProductToShoppingCartAsync([FromRoute]GetShoppingCartRequest request)
         {
             var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(request.CustomerId);
 
@@ -26,7 +26,7 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 
             var result = new GetShoppingCartResponse
             {
-                ShoppingCart = new ShoppingCartDTO(
+                ShoppingCartDto = new ShoppingCartDto(
                     shoppingCart.Id, shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
             };
 

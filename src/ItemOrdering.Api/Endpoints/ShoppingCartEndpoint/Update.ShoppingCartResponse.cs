@@ -2,6 +2,6 @@
 {
     public class UpdateShoppingCartResponse
     {
-        public ShoppingCartDTO ShoppingCart  { get; set; }
+        public ShoppingCartDto ShoppingCart  { get; set; }
     }
 }

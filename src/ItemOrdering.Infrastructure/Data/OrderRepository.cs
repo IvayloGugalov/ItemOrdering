@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -18,23 +19,24 @@ namespace ItemOrdering.Infrastructure.Data
             this.context = context;
         }
 
-        public Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId)
+        public async Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId)
         {
-            throw new NotImplementedException();
+            return await this.context.Orders.GetProductsForOrder(customerId)
+                .OrderBy(x => x.Created)
+                .ToListAsync();
         }
 
         public async Task<Order> GetByIdWithProductsAsync(Guid customerId)
         {
             return await this.context.Orders.GetProductsForOrder(customerId)
-                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
+                .OrderBy(x => x.Created)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<Order> AddAsync(Order order)
+        public async Task AddAsync(Order order)
         {
-            var result = await this.context.Orders.AddAsync(order);
+            await this.context.Orders.AddAsync(order);
             await this.context.SaveChangesAsync();
-
-            return result.Entity;
         }
 
         public Task<Order> UpdateOrder(Order order)

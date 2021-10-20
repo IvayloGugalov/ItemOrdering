@@ -38,6 +38,12 @@ namespace ItemOrdering.Infrastructure.Data
                 .SingleOrDefaultAsync(x => x.CustomerId == customerId);
         }
 
+        public async Task<ShoppingCart> FindByCustomer(Guid customerId)
+        {
+            return await this.context.ShoppingCarts
+                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
+        }
+
         public async Task DeleteAsync(ShoppingCart shoppingCart)
         {
             this.context.ShoppingCarts.Remove(shoppingCart);

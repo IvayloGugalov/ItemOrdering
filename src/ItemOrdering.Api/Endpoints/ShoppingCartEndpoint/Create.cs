@@ -17,8 +17,9 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
         }
 
         [HttpPost(CreateShoppingCartRequest.ROUTE)]
-        public async Task<ActionResult<CreateShoppingCartResponse>> CreateShoppingCartAsync(CreateShoppingCartRequest request)
+        public async Task<ActionResult<CreateShoppingCartResponse>> CreateShoppingCartAsync([FromRoute]CreateShoppingCartRequest request)
         {
+            // TODO: Should we check for customer id?
             var shoppingCart = new ShoppingCart(request.CustomerId);
 
             await this.shoppingCartRepository.AddAsync(shoppingCart);

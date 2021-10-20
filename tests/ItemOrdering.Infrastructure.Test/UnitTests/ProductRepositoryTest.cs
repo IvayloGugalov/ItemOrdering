@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Infrastructure.Test.EntityBuilders;
+using ItemOrdering.Domain.Test.EntityBuilders;
 
 namespace ItemOrdering.Infrastructure.Test.UnitTests
 {

@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Domain.Test.EntityBuilders;
 using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Infrastructure.Test.EntityBuilders;
 
 namespace ItemOrdering.Infrastructure.Test.UnitTests
 {

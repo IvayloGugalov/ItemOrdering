@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using ItemOrdering.Domain.OrderAggregate;
 
-namespace ItemOrdering.Infrastructure.Test.EntityBuilders
+namespace ItemOrdering.Domain.Test.EntityBuilders
 {
     public static class OrderBuilder
     {

@@ -21,24 +21,32 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 
         [HttpPut(UpdateShoppingCartRequest.ROUTE)]
         public async Task<ActionResult<UpdateShoppingCartResponse>> AddProductToShoppingCartAsync(
-            Guid customerId,
-            UpdateShoppingCartRequest request)
+            [FromRoute]Guid customerId,
+            [FromBody]UpdateShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
-
-            if (shoppingCart == null) return NotFound(customerId);
-
+            // TODO: Should we check for existing Customer Id?
             var product = await this.productRepository.GetByIdAsync(request.ProductId);
 
             if (product == null) return NotFound(request.ProductId);
 
-            shoppingCart.AddProduct(product);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
-            await this.shoppingCartRepository.UpdateAsync(shoppingCart);
+            if (shoppingCart == null)
+            {
+                shoppingCart = new ShoppingCart(customerId);
+                shoppingCart.AddProduct(product);
+
+                await this.shoppingCartRepository.AddAsync(shoppingCart);
+            }
+            else
+            {
+                shoppingCart.AddProduct(product);
+                await this.shoppingCartRepository.UpdateAsync(shoppingCart);
+            }
 
             var result = new UpdateShoppingCartResponse
             {
-                ShoppingCart = new ShoppingCartDTO(
+                ShoppingCart = new ShoppingCartDto(
                     shoppingCart.Id,
                     shoppingCart.ProductsAndAmount.MapProductsAndAmountToDTO())
             };

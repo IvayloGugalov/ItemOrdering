@@ -19,7 +19,7 @@ namespace ItemOrdering.Domain.Services
             this.orderRepository = orderRepository;
         }
 
-        public async Task CreateOrderFromShoppingCart(Guid customerId)
+        public async Task<Order> CreateOrderFromShoppingCart(Guid customerId)
         {
             var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
 
@@ -32,6 +32,9 @@ namespace ItemOrdering.Domain.Services
             await this.orderRepository.AddAsync(order);
 
             shoppingCart.Clear();
+            await this.shoppingCartRepository.UpdateAsync(shoppingCart);
+
+            return order;
         }
 
         private static Order CreateOrderFromShoppingCart(ShoppingCart shoppingCart)

@@ -1,4 +1,6 @@
-﻿namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+﻿using System;
+
+namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
 {
-    public record ProductAndAmountDTO(double Price, int Amount);
+    public record ProductAndAmountDTO(Guid Id, double Price, int Amount);
 }

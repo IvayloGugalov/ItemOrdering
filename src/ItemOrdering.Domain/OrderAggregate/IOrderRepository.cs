@@ -8,7 +8,7 @@ namespace ItemOrdering.Domain.OrderAggregate
     {
         Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId);
         Task<Order> GetByIdWithProductsAsync(Guid orderId);
-        Task<Order> AddAsync(Order order);
+        Task AddAsync(Order order);
         Task<Order> UpdateOrder(Order order);
         Task RemoveOrderAsync(Order order);
     }

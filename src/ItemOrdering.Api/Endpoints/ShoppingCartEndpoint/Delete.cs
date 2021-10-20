@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +16,12 @@ namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
             this.shoppingCartRepository = shoppingCartRepository;
         }
 
-        [HttpDelete(UpdateShoppingCartRequest.ROUTE)]
-        public async Task<ActionResult> AddProductToShoppingCartAsync(Guid customerId)
+        [HttpDelete(DeleteShoppingCartRequest.ROUTE)]
+        public async Task<ActionResult> DeleteShoppingCartAsync([FromRoute]DeleteShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
+            var shoppingCart = await this.shoppingCartRepository.FindByCustomer(request.CustomerId);
 
-            if (shoppingCart == null) return NotFound(customerId);
+            if (shoppingCart == null) return NotFound();
 
             await this.shoppingCartRepository.DeleteAsync(shoppingCart);
 
