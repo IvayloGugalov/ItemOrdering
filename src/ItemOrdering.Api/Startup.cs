@@ -1,10 +1,5 @@
-using ItemOrdering.Domain.OrderAggregate;
-using ItemOrdering.Domain.Services;
-using ItemOrdering.Domain.ShoppingCartAggregate;
-using ItemOrdering.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,18 +18,6 @@ namespace ItemOrdering.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddDbContext<ItemOrderingDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddControllers().AddNewtonsoftJson();
-            services.AddTransient<IOrderRepository, OrderRepository>();
-            services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
-            services.AddTransient<IShoppingCartOrderingService, ShoppingCartOrderingService>();
-
             services.AddRazorPages();
         }
 
@@ -61,7 +44,7 @@ namespace ItemOrdering.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }
