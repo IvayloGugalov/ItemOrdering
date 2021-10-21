@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 using ItemOrdering.Domain.Shared;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public class Shop : Entity
     {
         public string Url { get; }
         public string Title { get; }
 
-        public IReadOnlyCollection<Product> Products => this.products?.AsReadOnly();
+        public IReadOnlyList<Product> Products => this.products?.AsReadOnly();
         private readonly List<Product> products = new();
 
         private Shop() { }

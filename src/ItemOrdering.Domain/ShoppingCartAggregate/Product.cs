@@ -1,26 +1,20 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 using ItemOrdering.Domain.Shared;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public class Product : Entity
     {
-        [Required]
         public string Title { get; private set; }
-        [Required]
         public string Description { get; private set; }
-        [Required]
-        public Price OriginalPrice { get; private set; }
-        [Required]
         public string Url { get; }
-        [Required]
+        public Price OriginalPrice { get; private set; }
         public Shop Shop { get; }
 
         private Product() { }
 
-        private Product(string url, string title, string description, double price, Shop shop)
+        public Product(string url, string title, string description, double price, Shop shop)
         {
             this.Id = Guid.NewGuid();
             this.Url = !string.IsNullOrWhiteSpace(url) ? url : throw new ArgumentNullException(nameof(url));
@@ -28,11 +22,6 @@ namespace ItemOrdering.Domain.OrderAggregate
             this.Description = description;
             this.OriginalPrice = price >= 0 ? new Price(price, this.Id) : throw new ArgumentNullException(nameof(price));
             this.Shop = shop ?? throw new ArgumentNullException(nameof(shop));
-        }
-
-        public static Product CreateProduct(string url, string title, string description, double price, Shop shop)
-        {
-            return new Product(url, title, description, price, shop);
         }
 
         protected Product UpdateProduct(Product item)

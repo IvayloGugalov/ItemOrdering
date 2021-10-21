@@ -1,12 +1,14 @@
 ﻿using System;
 
-namespace ItemOrdering.Domain.OrderAggregate
+namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public record Price
     {
         public double Value { get; }
         public Guid ItemId { get; }
         public DateTime DateCreated { get; }
+
+        private Price() { }
 
         public Price(double value, Guid itemId)
         {
