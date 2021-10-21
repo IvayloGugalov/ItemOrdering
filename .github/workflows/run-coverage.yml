@@ -1,0 +1,25 @@
+name: Test Coverage
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+
+      # Generate coverage report
+    - name: Generate coverage report
+      run: dotnet test ./ItemOrdering.sln --configuration Release
+        /p:CollectCoverage=true
+        /p:CoverletOutput=TestResults/
+        /p:CoverletOutputFormat=opencover
