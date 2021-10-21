@@ -20,22 +20,31 @@ namespace ItemOrdering.Web.Endpoints.OrderEndpoint
         [HttpGet(GetOrdersRequest.ROUTE)]
         public async Task<ActionResult<GetOrdersResponse>> GetAllOrdersForCustomer([FromRoute]GetOrdersRequest request)
         {
-            var orders = await this.orderRepository.GetAllByIdWithProductsAsync(request.CustomerId);
-            if (orders == null || orders.Count() == 0) return NoContent();
+            var orders = await this.orderRepository.GetAllByCustomerIdAsync(request.CustomerId);
+            if (orders == null || !orders.Any()) return NoContent();
 
             var response = new GetOrdersResponse()
             {
-                OrdersDto = orders.MapProductsAndAmountToDTO()
+                OrdersDto = orders.MapToOrdersDto()
             };
 
             return Ok(response);
         }
 
 
-        //[HttpGet(GetOrderRequest.ROUTE)]
-        //public async Task<ActionResult<GetOrderResponse>> GetLatestOrderForCustomer([FromRoute]GetOrderRequest request)
-        //{
-        //    var ord
-        //}
+        [HttpGet(GetOrderRequest.ROUTE)]
+        public async Task<ActionResult<GetOrderResponse>> GetLatestOrderForCustomer([FromRoute]GetOrderRequest request)
+        {
+            var order = await this.orderRepository.GetByCustomerIdWithProductsAsync(request.CustomerId);
+
+            if (order == null) return NoContent();
+
+            var response = new GetOrderResponse()
+            {
+                OrderDto = order.MapToOrderDto()
+            };
+
+            return Ok(response);
+        }
     }
 }

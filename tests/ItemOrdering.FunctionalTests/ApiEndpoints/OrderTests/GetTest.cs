@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using ItemOrdering.Domain.CustomerAggregate;
+
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
+
 using ItemOrdering.FunctionalTests.HttpExtension;
 using ItemOrdering.Infrastructure.Data;
 using ItemOrdering.Web;
 using ItemOrdering.Web.Endpoints.OrderEndpoint;
-using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework;
 
 namespace ItemOrdering.FunctionalTests.ApiEndpoints.OrderTests
 {
@@ -35,21 +34,51 @@ namespace ItemOrdering.FunctionalTests.ApiEndpoints.OrderTests
         }
 
         [Test]
-        public async Task Get_WillSucceed()
+        public async Task Get_WithMultipleOrders_WillSucceed()
         {
-            //using var scope = this.app.Services.CreateScope();
-            //var services = scope.ServiceProvider;
-            //var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
+            using var scope = this.app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
 
-            //var customer = Seeder.CustomerWithMultipleOrders(dbContext, 5);
+            var customer = Seeder.CustomerWithMultipleOrders(dbContext, orderCount: 5);
 
-            //var result = await this.httpClient.GetDeserializedJsonResult<GetOrdersResponse>(GetOrdersRequest.BuildRoute(customer.Id));
+            var result = await this.httpClient.GetDeserializedJsonResult<GetOrdersResponse>(GetOrdersRequest.BuildRoute(customer.Id));
 
-            //var result = await this.httpClient.PostAndReceiveMessage(CreateOrderRequest.BuildRoute(customer.Id));
+            var customerOrdersById = customer.Orders.Select(x => x.Id);
+            var resultOrdersById = result.OrdersDto.Select(x => x.Id);
 
-            //var order = await dbContext.Orders.GetProductsForOrder(customer.Id).SingleOrDefaultAsync();
-            //Assert.AreEqual(HttpStatusCode.NoContent, result.StatusCode);
-            //Assert.AreEqual(customer.Id, order.CustomerId);
+            Assert.AreEqual(customer.Orders.Count, result.OrdersDto.Count);
+            Assert.IsTrue(customerOrdersById.SequenceEqual(resultOrdersById));
+        }
+
+        [Test]
+        public async Task Get_ForCustomerWithNoOrders_WillReturnNoContent()
+        {
+            using var scope = this.app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
+
+            var customer = Seeder.CustomerWithCartAndProducts(dbContext);
+
+            var result = await this.httpClient.GetAsync(GetOrdersRequest.BuildRoute(customer.Id));
+
+            Assert.AreEqual(HttpStatusCode.NoContent, result.StatusCode);
+        }
+
+        [Test]
+        public async Task Get_ForSingleOrder_WillSucceed()
+        {
+            using var scope = this.app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
+
+            var customer = Seeder.CustomerWithMultipleOrders(dbContext, orderCount: 1);
+
+            var order = customer.Orders.First();
+
+            var result = await this.httpClient.GetDeserializedJsonResult<GetOrderResponse>(GetOrderRequest.BuildRoute(customer.Id, order.Id));
+
+            Assert.AreEqual(order.Id, result.OrderDto.Id);
         }
     }
 }

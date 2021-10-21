@@ -4,14 +4,16 @@ using ItemOrdering.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ItemOrdering.Infrastructure.Migrations
 {
     [DbContext(typeof(ItemOrderingDbContext))]
-    partial class ItemOrderingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211021065450_ChangeOrderedProductsToOwnedType")]
+    partial class ChangeOrderedProductsToOwnedType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

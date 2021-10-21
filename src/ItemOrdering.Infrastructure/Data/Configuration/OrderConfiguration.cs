@@ -12,7 +12,7 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(item => item.Id)
+            builder.Property(x => x.Id)
                 .ValueGeneratedNever()
                 .IsRequired();
 
@@ -34,7 +34,23 @@ namespace ItemOrdering.Infrastructure.Data.Configuration
             builder.Navigation(x => x.ShippingAddress)
                 .IsRequired();
 
-            builder.HasMany(x => x.OrderedProducts);
+            builder.OwnsMany(
+                x => x.OrderedProducts,
+                sa =>
+                {
+                    sa.ToTable("OrderedProducts");
+                    sa.HasKey(x => x.Id);
+                    sa.Property(x => x.Id)
+                        .ValueGeneratedOnAdd()
+                        .IsRequired();
+
+                    sa.Property(p => p.ProductId)
+                        .IsRequired();
+                    sa.Property(p => p.Price)
+                        .IsRequired();
+                    sa.Property(p => p.Amount)
+                        .IsRequired();
+                });
             builder.Metadata.FindNavigation(nameof(Order.OrderedProducts))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 

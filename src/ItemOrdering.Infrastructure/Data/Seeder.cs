@@ -49,7 +49,7 @@ namespace ItemOrdering.Infrastructure.Data
             dbContext.SaveChanges();
         }
 
-        public static Customer CustomerWithCartAndProductsInside(ItemOrderingDbContext dbContext)
+        public static Customer CustomerWithCartAndProducts(ItemOrderingDbContext dbContext)
         {
             var customer = CreateCustomer();
             var shoppingCart = new ShoppingCart(customer.Id);
@@ -95,7 +95,7 @@ namespace ItemOrdering.Infrastructure.Data
             return customer;
         }
 
-        public static Customer CreateCustomer() =>
+        private static Customer CreateCustomer() =>
             new Customer(
                 firstName: "Ivaylo",
                 lastName: "Gugalov",
@@ -107,7 +107,7 @@ namespace ItemOrdering.Infrastructure.Data
                     streetNumber: 1),
                 email: new Email("ivo_mail@mail.bg"));
 
-        public static Product[] CreateProducts()
+        private static Product[] CreateProducts()
         {
             var shop = new Shop(@"https:\\shop_1.com", title: "shop_1");
             var products = new[]

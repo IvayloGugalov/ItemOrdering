@@ -5,7 +5,7 @@ namespace ItemOrdering.Web.Endpoints.OrderEndpoint
 {
     public class GetOrderRequest
     {
-        public const string ROUTE = "{customerId:guid}/orders/{orderId:guid}";
+        public const string ROUTE = "{customerId:guid}/order/{orderId:guid}";
         public static string BuildRoute(Guid customerId, Guid orderId) =>
             ROUTE
                 .Replace("{customerId:guid}", customerId.ToString())

@@ -45,7 +45,7 @@ namespace ItemOrdering.FunctionalTests.ApiEndpoints.OrderTests
             var services = scope.ServiceProvider;
             var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
 
-            var customer = Seeder.CustomerWithCartAndProductsInside(dbContext);
+            var customer = Seeder.CustomerWithCartAndProducts(dbContext);
 
             var result = await this.httpClient.PostAndReceiveMessage(CreateOrderRequest.BuildRoute(customer.Id));
 

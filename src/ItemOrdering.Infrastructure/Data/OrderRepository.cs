@@ -19,14 +19,17 @@ namespace ItemOrdering.Infrastructure.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<Order>> GetAllByIdWithProductsAsync(Guid customerId)
+        // We are loading the full navigation properties here and all of the contents.
+        // .AsNoTracking(), .IgnoreAutoIncludes() are not working to skip the navigations.
+        public async Task<List<Order>> GetAllByCustomerIdAsync(Guid customerId)
         {
-            return await this.context.Orders.GetProductsForOrder(customerId)
+            return await this.context.Orders
+                .Where(x => x.CustomerId == customerId)
                 .OrderBy(x => x.Created)
                 .ToListAsync();
         }
 
-        public async Task<Order> GetByIdWithProductsAsync(Guid customerId)
+        public async Task<Order> GetByCustomerIdWithProductsAsync(Guid customerId)
         {
             return await this.context.Orders.GetProductsForOrder(customerId)
                 .OrderBy(x => x.Created)
