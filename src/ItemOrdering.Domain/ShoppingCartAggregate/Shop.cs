@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GuardClauses;
+
 using ItemOrdering.Domain.Shared;
 
 namespace ItemOrdering.Domain.ShoppingCartAggregate
@@ -18,8 +20,8 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
         public Shop(string url, string title)
         {
             this.Id = Guid.NewGuid();
-            this.Url = !string.IsNullOrWhiteSpace(url) ? url : throw new ArgumentNullException(nameof(url));
-            this.Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
+            this.Url = Guard.Against.NullOrWhiteSpace(url, nameof(url));
+            this.Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
         }
 
         public void AddProduct(Product product)

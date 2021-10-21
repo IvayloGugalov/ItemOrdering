@@ -1,4 +1,4 @@
-﻿using System;
+﻿using GuardClauses;
 
 namespace ItemOrdering.Domain.Shared
 {
@@ -12,11 +12,11 @@ namespace ItemOrdering.Domain.Shared
 
         public Address(string country, string city, int zipCode, string street, int streetNumber)
         {
-            this.Country = !string.IsNullOrEmpty(country) ? country : throw new ArgumentNullException(nameof(country));
-            this.City = !string.IsNullOrWhiteSpace(city) ? city : throw new ArgumentNullException(nameof(city));
-            this.ZipCode = zipCode > 0 ? zipCode : throw new ArgumentNullException(nameof(zipCode));
-            this.Street = !string.IsNullOrWhiteSpace(street) ? street : throw new ArgumentNullException(nameof(street));
-            this.StreetNumber = streetNumber >= 0 ? streetNumber : throw new ArgumentNullException(nameof(streetNumber));
+            this.Country = Guard.Against.NullOrWhiteSpace(country, nameof(country));
+            this.City = Guard.Against.NullOrWhiteSpace(city, nameof(city));
+            this.ZipCode = Guard.Against.NegativeOrZero(zipCode, nameof(zipCode));
+            this.Street = Guard.Against.NullOrWhiteSpace(street, nameof(street));
+            this.StreetNumber = Guard.Against.NegativeOrZero(streetNumber, nameof(streetNumber));
         }
 
         public override string ToString()

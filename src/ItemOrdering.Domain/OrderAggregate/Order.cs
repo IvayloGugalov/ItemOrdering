@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using GuardClauses;
+
 using ItemOrdering.Domain.Shared;
 
 namespace ItemOrdering.Domain.OrderAggregate
@@ -17,13 +19,13 @@ namespace ItemOrdering.Domain.OrderAggregate
 
         private Order() { }
 
-        public Order(Guid customerId, List<OrderedProduct> orderedProducts)
+        public Order(Guid customerId, IEnumerable<OrderedProduct> orderedProducts)
         {
             this.Id = Guid.NewGuid();
             this.Created = DateTime.Now;
-            this.CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentNullException(nameof(customerId));
+            this.CustomerId = Guard.Against.NullOrEmpty(customerId, nameof(customerId));
 
-            this.orderedProducts = orderedProducts.Any() ? orderedProducts : throw new ArgumentNullException(nameof(orderedProducts));
+            this.orderedProducts = Guard.Against.NullOrEmpty(orderedProducts, nameof(orderedProducts)).ToList();
         }
 
         public void SetShippingAddress(Address address)

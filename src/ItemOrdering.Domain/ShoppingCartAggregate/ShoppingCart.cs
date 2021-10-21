@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using GuardClauses;
+
 using ItemOrdering.Domain.Shared;
 
 namespace ItemOrdering.Domain.ShoppingCartAggregate
@@ -18,7 +20,7 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
         public ShoppingCart(Guid customerId)
         {
             this.Id = Guid.NewGuid();
-            this.CustomerId = customerId != Guid.Empty ? customerId : throw new ArgumentNullException(nameof(customerId));
+            this.CustomerId = Guard.Against.NullOrEmpty(customerId, nameof(customerId));
         }
 
         /// <summary>

@@ -21,9 +21,9 @@ namespace ItemOrdering.Web.Endpoints.OrderEndpoint
         public static OrderDto MapToOrderDto(this Order order)
         {
             var orderedProductsDto = new List<OrderedProductDto>();
-            foreach (var (id, price, amount) in order.OrderedProducts)
+            foreach (var orderedProduct in order.OrderedProducts)
             {
-                orderedProductsDto.Add(new OrderedProductDto(id, price, amount));
+                orderedProductsDto.Add(new OrderedProductDto(orderedProduct.ProductId, orderedProduct.Price, orderedProduct.Amount));
             }
 
             return new OrderDto(order.Id, order.ShippingAddress, order.Created, orderedProductsDto);

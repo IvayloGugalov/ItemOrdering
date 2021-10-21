@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+
+using GuardClauses;
 
 namespace ItemOrdering.Domain.CustomerAggregate
 {
@@ -8,14 +11,16 @@ namespace ItemOrdering.Domain.CustomerAggregate
 
         public Email(string value)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            Guard.Against.NullOrWhiteSpace(value, nameof(Email));
 
             if (value.Length > 220)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), message: "Email value is longer than 220 characters");
+            }
+
+            if (!Regex.IsMatch(value, @"^(.+)@(.+)$"))
+            {
+                throw new ArgumentException($"Email value: {value}, does not match an acceptable email.");
             }
 
             this.Value = value;

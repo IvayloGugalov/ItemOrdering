@@ -1,5 +1,7 @@
 ﻿using System;
 
+using GuardClauses;
+
 namespace ItemOrdering.Domain.ShoppingCartAggregate
 {
     public record Price
@@ -12,8 +14,8 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
 
         public Price(double value, Guid itemId)
         {
-            this.Value = value > 0 ? value : throw new NullReferenceException("Price value");
-            this.ItemId = itemId != Guid.Empty ? itemId : throw new NullReferenceException(nameof(itemId));
+            this.Value = Guard.Against.NegativeOrZero(value, nameof(value));
+            this.ItemId = Guard.Against.NullOrEmpty(itemId, nameof(itemId));
             this.DateCreated = DateTime.Now;
         }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
 
+using GuardClauses;
+
 using ItemOrdering.Domain.Shared;
 
 namespace ItemOrdering.Domain.ShoppingCartAggregate
@@ -17,11 +19,11 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
         public Product(string url, string title, string description, double price, Shop shop)
         {
             this.Id = Guid.NewGuid();
-            this.Url = !string.IsNullOrWhiteSpace(url) ? url : throw new ArgumentNullException(nameof(url));
-            this.Title = !string.IsNullOrWhiteSpace(title) ? title : throw new ArgumentNullException(nameof(title));
-            this.Description = description;
-            this.OriginalPrice = price >= 0 ? new Price(price, this.Id) : throw new ArgumentNullException(nameof(price));
-            this.Shop = shop ?? throw new ArgumentNullException(nameof(shop));
+            this.Url = Guard.Against.NullOrWhiteSpace(url, nameof(url));
+            this.Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
+            this.Description = Guard.Against.NullOrWhiteSpace(description, nameof(description));
+            this.OriginalPrice = new Price(price, this.Id);
+            this.Shop = Guard.Against.Null(shop, nameof(shop));
         }
 
         protected Product UpdateProduct(Product item)

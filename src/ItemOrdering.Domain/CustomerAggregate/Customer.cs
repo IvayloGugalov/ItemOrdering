@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GuardClauses;
+
 using ItemOrdering.Domain.Exceptions;
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.Shared;
@@ -24,12 +26,10 @@ namespace ItemOrdering.Domain.CustomerAggregate
         public Customer(string firstName, string lastName, Address address, Email email)
         {
             this.Id = Guid.NewGuid();
-            this.FirstName = !string.IsNullOrWhiteSpace(firstName) ? firstName : throw new ArgumentNullException(nameof(firstName));
-            this.LastName = !string.IsNullOrWhiteSpace(lastName) ? lastName : throw new ArgumentNullException(nameof(lastName));
-            // TODO: Add Address validation
-            this.Address = address ?? throw new ArgumentNullException(nameof(address));
-            // TODO: Add Email validation
-            this.Email = !string.IsNullOrWhiteSpace(email.Value) ? email : throw new ArgumentNullException(nameof(email));
+            this.FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
+            this.LastName = Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
+            this.Address = Guard.Against.Null(address, nameof(address));
+            this.Email = Guard.Against.Null(email, nameof(email));
         }
 
         public void SetShoppingCart(Guid shoppingCartId)
