@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace ItemOrdering.Web.Pages
+namespace ItemOrdering.Api.Pages
 {
     public class IndexModel : PageModel
     {

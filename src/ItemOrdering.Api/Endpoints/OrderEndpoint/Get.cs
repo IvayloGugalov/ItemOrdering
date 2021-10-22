@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using ItemOrdering.Domain.OrderAggregate;
+
 using Microsoft.AspNetCore.Mvc;
 
-namespace ItemOrdering.Web.Endpoints.OrderEndpoint
+using ItemOrdering.Domain.OrderAggregate;
+
+namespace ItemOrdering.Api.Endpoints.OrderEndpoint
 {
     [ApiController]
     public class Get : ControllerBase

@@ -9,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using ItemOrdering.Api;
 using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Web;
 
 namespace ItemOrdering.FunctionalTests
 {

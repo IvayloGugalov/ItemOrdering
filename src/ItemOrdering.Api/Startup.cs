@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ItemOrdering.Web
+namespace ItemOrdering.Api
 {
     public class Startup
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ItemOrdering.Web.Endpoints.OrderEndpoint
+namespace ItemOrdering.Api.Endpoints.OrderEndpoint
 {
     public class GetOrderResponse
     {

@@ -2,7 +2,7 @@
 
 using ItemOrdering.Domain.OrderAggregate;
 
-namespace ItemOrdering.Web.Endpoints.OrderEndpoint
+namespace ItemOrdering.Api.Endpoints.OrderEndpoint
 {
     public static class Mappers
     {

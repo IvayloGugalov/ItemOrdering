@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Web;
+using ItemOrdering.Api;
+using ItemOrdering.Api.Endpoints.ShoppingCartEndpoint;
 using ItemOrdering.FunctionalTests.HttpExtension;
-using ItemOrdering.Web.Endpoints.ShoppingCartEndpoint;
+using ItemOrdering.Infrastructure.Data;
 
 namespace ItemOrdering.FunctionalTests.ApiEndpoints.ShoppingCartTests
 {

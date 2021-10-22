@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
-namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Get : ControllerBase

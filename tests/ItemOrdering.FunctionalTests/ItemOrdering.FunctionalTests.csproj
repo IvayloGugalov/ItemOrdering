@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ItemOrdering.Api\ItemOrdering.Web.csproj" />
+    <ProjectReference Include="..\..\src\ItemOrdering.Api\ItemOrdering.Api.csproj" />
     <ProjectReference Include="..\ItemOrdering.Domain.Test\ItemOrdering.Domain.Test.csproj" />
   </ItemGroup>
 

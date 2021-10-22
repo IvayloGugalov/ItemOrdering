@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
 {
     public record ProductAndAmountDTO(Guid Id, double Price, int Amount);
 }

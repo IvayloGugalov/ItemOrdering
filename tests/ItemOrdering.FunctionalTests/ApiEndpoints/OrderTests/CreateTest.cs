@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
+using ItemOrdering.Api;
+using ItemOrdering.Api.Endpoints.OrderEndpoint;
+using ItemOrdering.Api.Endpoints.ShoppingCartEndpoint;
 using ItemOrdering.Domain.OrderAggregate.Specifications;
 using ItemOrdering.FunctionalTests.HttpExtension;
 using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Web;
-using ItemOrdering.Web.Endpoints.OrderEndpoint;
-using ItemOrdering.Web.Endpoints.ShoppingCartEndpoint;
 
 namespace ItemOrdering.FunctionalTests.ApiEndpoints.OrderTests
 {

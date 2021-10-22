@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ItemOrdering.Web.Endpoints.OrderEndpoint
+namespace ItemOrdering.Api.Endpoints.OrderEndpoint
 {
     public class GetOrderRequest
     {

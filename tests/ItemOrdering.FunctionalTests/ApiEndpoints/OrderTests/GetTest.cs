@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
+using ItemOrdering.Api;
+using ItemOrdering.Api.Endpoints.OrderEndpoint;
 using ItemOrdering.FunctionalTests.HttpExtension;
 using ItemOrdering.Infrastructure.Data;
-using ItemOrdering.Web;
-using ItemOrdering.Web.Endpoints.OrderEndpoint;
 
 namespace ItemOrdering.FunctionalTests.ApiEndpoints.OrderTests
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
 {
     public class UpdateShoppingCartRequest
     {

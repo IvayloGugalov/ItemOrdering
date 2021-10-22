@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
-namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Update : ControllerBase

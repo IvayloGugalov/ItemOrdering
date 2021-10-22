@@ -2,7 +2,7 @@
 
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
-namespace ItemOrdering.Web.Endpoints.ShoppingCartEndpoint
+namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
 {
     public static class Mappers
     {

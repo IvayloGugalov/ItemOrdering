@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ItemOrdering.Domain.Services;
 
-namespace ItemOrdering.Web.Endpoints.OrderEndpoint
+namespace ItemOrdering.Api.Endpoints.OrderEndpoint
 {
     [ApiController]
     public class Create : ControllerBase
