@@ -3,14 +3,15 @@
 using GuardClauses;
 
 using ItemOrdering.Domain.Shared;
+using ItemOrdering.Domain.ShoppingCartAggregate;
 
-namespace ItemOrdering.Domain.ShoppingCartAggregate
+namespace ItemOrdering.Domain.ShopAggregate
 {
     public class Product : Entity
     {
+        public string Url { get; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public string Url { get; }
         public Price OriginalPrice { get; private set; }
         public Shop Shop { get; }
 
@@ -26,9 +27,12 @@ namespace ItemOrdering.Domain.ShoppingCartAggregate
             this.Shop = Guard.Against.Null(shop, nameof(shop));
         }
 
-        protected Product UpdateProduct(Product item)
+        protected Product UpdateProduct(string title, string description, double price)
         {
-            // TODO: Update item
+            this.Title = title;
+            this.Description = description;
+            this.OriginalPrice = new Price(price, this.Id);
+
             return this;
         }
     }

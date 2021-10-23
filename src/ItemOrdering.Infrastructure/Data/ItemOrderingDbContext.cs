@@ -2,6 +2,7 @@
 
 using ItemOrdering.Domain.CustomerAggregate;
 using ItemOrdering.Domain.OrderAggregate;
+using ItemOrdering.Domain.ShopAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Infrastructure.Data

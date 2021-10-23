@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using ItemOrdering.Domain.ShoppingCartAggregate;
+
+using ItemOrdering.Domain.ShopAggregate;
 
 namespace ItemOrdering.Domain.Test.EntityBuilders
 {

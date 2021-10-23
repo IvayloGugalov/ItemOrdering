@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,20 @@ namespace ItemOrdering.Api.Endpoints.OrderEndpoint
         public Get(IOrderRepository orderRepository)
         {
             this.orderRepository = orderRepository;
+        }
+
+        [HttpGet("orders")]
+        public ActionResult GetOrders()
+        {
+            return Ok(new List<OrderDto>
+            {
+                new OrderDto(Guid.NewGuid(), null, DateTime.Now, new List<OrderedProductDto>
+                {
+                    new OrderedProductDto(Guid.NewGuid(), 55.12, 10),
+                    new OrderedProductDto(Guid.NewGuid(), 1245.12, 1021),
+                    new OrderedProductDto(Guid.NewGuid(), 5425.12, 102),
+                })
+            });
         }
 
         [HttpGet(GetOrdersRequest.ROUTE)]

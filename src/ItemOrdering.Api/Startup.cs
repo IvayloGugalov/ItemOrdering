@@ -1,5 +1,6 @@
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.Services;
+using ItemOrdering.Domain.ShopAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 using ItemOrdering.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;

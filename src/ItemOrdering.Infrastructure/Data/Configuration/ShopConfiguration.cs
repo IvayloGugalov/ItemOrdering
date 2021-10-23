@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Domain.ShopAggregate;
 
 namespace ItemOrdering.Infrastructure.Data.Configuration
 {

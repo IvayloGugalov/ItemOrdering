@@ -5,7 +5,7 @@ using GuardClauses;
 
 using ItemOrdering.Domain.Shared;
 
-namespace ItemOrdering.Domain.ShoppingCartAggregate
+namespace ItemOrdering.Domain.ShopAggregate
 {
     public class Shop : Entity
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ItemOrdering.Domain.ShoppingCartAggregate
+namespace ItemOrdering.Domain.ShopAggregate
 {
     public interface IProductRepository
     {

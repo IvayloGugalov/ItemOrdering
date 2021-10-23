@@ -7,6 +7,7 @@ using NUnit.Framework;
 using ItemOrdering.Domain.Exceptions;
 using ItemOrdering.Domain.OrderAggregate;
 using ItemOrdering.Domain.Services;
+using ItemOrdering.Domain.ShopAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Domain.Test.ServicesTests

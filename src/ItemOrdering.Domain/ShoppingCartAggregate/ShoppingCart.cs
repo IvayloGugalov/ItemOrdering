@@ -5,6 +5,7 @@ using System.Linq;
 using GuardClauses;
 
 using ItemOrdering.Domain.Shared;
+using ItemOrdering.Domain.ShopAggregate;
 
 namespace ItemOrdering.Domain.ShoppingCartAggregate
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-using ItemOrdering.Domain.ShoppingCartAggregate;
+using ItemOrdering.Domain.ShopAggregate;
 
 namespace ItemOrdering.Infrastructure.Data
 {

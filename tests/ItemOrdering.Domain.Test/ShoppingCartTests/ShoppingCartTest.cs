@@ -3,6 +3,7 @@ using System.Linq;
 
 using NUnit.Framework;
 
+using ItemOrdering.Domain.ShopAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Domain.Test.ShoppingCartTests

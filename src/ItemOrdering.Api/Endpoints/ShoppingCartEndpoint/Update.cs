@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
+using ItemOrdering.Domain.ShopAggregate;
 using ItemOrdering.Domain.ShoppingCartAggregate;
 
 namespace ItemOrdering.Api.Endpoints.ShoppingCartEndpoint
