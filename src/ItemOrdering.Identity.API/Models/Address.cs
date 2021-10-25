@@ -1,13 +1,23 @@
 ﻿using GuardClauses;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ItemOrdering.Identity.API.Models
 {
     public record Address
     {
+        [BsonRequired]
         public string Country { get; }
+
+        [BsonRequired]
         public string City { get; }
+
+        [BsonRequired]
         public int ZipCode { get; }
+
+        [BsonRequired]
         public string Street { get; }
+
+        [BsonRequired]
         public int StreetNumber { get; }
 
         public Address(string country, string city, int zipCode, string street, int streetNumber)

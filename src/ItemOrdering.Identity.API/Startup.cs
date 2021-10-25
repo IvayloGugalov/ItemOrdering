@@ -136,16 +136,19 @@ namespace ItemOrdering.Identity.API
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 
             services.AddIdentityMongoDbProvider<User, MongoRole<Guid>, Guid>(
-                identity =>
+                options =>
                 {
-                    identity.Password.RequireDigit = false;
-                    identity.Password.RequireLowercase = false;
-                    identity.Password.RequireNonAlphanumeric = false;
-                    identity.Password.RequireUppercase = false;
-                    identity.Password.RequiredLength = 1;
-                    identity.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 1;
+                    options.Password.RequiredUniqueChars = 0;
 
-                    identity.User.RequireUniqueEmail = true;
+                    options.User.RequireUniqueEmail = true;
+
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                    options.Lockout.MaxFailedAccessAttempts = 5;
                 },
                 mongo =>
                 {

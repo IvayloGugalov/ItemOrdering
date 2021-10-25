@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using ItemOrdering.Identity.API.Extensions;
 using ItemOrdering.Identity.API.Models;
 
 namespace ItemOrdering.Identity.API.Endpoints.AccountEndpoint
@@ -29,8 +28,6 @@ namespace ItemOrdering.Identity.API.Endpoints.AccountEndpoint
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            if (request.Password != request.ConfirmPassword) return BadRequest(new ErrorResponse("Password does not match confirm password."));
-
             var registrationUser = new User(
                 firstName: request.FirstName,
                 lastName: request.LastName,
@@ -43,18 +40,15 @@ namespace ItemOrdering.Identity.API.Endpoints.AccountEndpoint
 
            if (!result.Succeeded)
            {
-                IdentityErrorDescriber errorDescriber;
-                var error = result.Errors.FirstOrDefault();
+               IdentityErrorDescriber errorDescriber;
+               var error = result.Errors.FirstOrDefault();
 
-                switch (error?.Code)
-                {
-                    case nameof(errorDescriber.DuplicateEmail):
-                        return Conflict(new ErrorResponse("Email already exists."));
-                    case nameof(errorDescriber.DuplicateUserName):
-                        return Conflict(new ErrorResponse("UserName already exists."));
-                    default:
-                        return Conflict(new ErrorResponse(error.Code));
-                }
+               return error?.Code switch
+               {
+                   nameof(errorDescriber.DuplicateEmail) => Conflict(new ErrorResponse("Email already exists.")),
+                   nameof(errorDescriber.DuplicateUserName) => Conflict(new ErrorResponse("UserName already exists.")),
+                   _ => Conflict(new ErrorResponse(error.Code)),
+               };
            }
 
             return Ok(result);

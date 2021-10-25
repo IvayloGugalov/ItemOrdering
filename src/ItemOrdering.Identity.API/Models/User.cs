@@ -1,22 +1,25 @@
 ﻿using System;
 
 using AspNetCore.Identity.Mongo.Model;
-using MongoDB.Bson.Serialization.Attributes;
-
 using GuardClauses;
+using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ItemOrdering.Identity.API.Models
 {
     public sealed class User : MongoUser<Guid>
     {
         [BsonRequired]
-        public string FirstName { get; }
+        [PersonalData]
+        public string FirstName { get; private set; }
 
         [BsonRequired]
-        public string LastName { get; }
+        [PersonalData]
+        public string LastName { get; private  set; }
 
         [BsonRequired]
-        public Address Address { get; }
+        [PersonalData]
+        public Address Address { get; private set; }
 
         public User(string firstName, string lastName, string email, string username, string passwordHash, Address address)
         {

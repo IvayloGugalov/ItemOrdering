@@ -22,9 +22,12 @@ namespace ItemOrdering.Identity.API.Endpoints.AccountEndpoint
         public string Username { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
+        [DataType(DataType.Password)]
+        [Compare(nameof(Password), ErrorMessage = "Password does not match confirm password.")]
         public string ConfirmPassword { get; set; }
 
         [Required]
