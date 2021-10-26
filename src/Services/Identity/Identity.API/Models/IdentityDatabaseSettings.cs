@@ -6,8 +6,10 @@ namespace Identity.API.Models
     public class IdentityDatabaseSettings : IMongoDatabaseSettings
     {
         public string UsersCollectionName { get; set; }
+        public string Host { get; set; }
+        public string Port { get; set; }
         public string RefreshTokensCollectionName { get; set; }
-        public string ConnectionString { get; set; }
+        public string ConnectionString => $"mongodb://{this.Host}:{this.Port}/identity";
         public string DatabaseName { get; set; }
         public SslSettings SslSettings { get; set; }
 
@@ -21,7 +23,9 @@ namespace Identity.API.Models
     {
         public string UsersCollectionName { get; set; }
         public string RefreshTokensCollectionName { get; set; }
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; }
+        public string Host { get; set; }
+        public string Port { get; set; }
         public string DatabaseName { get; set; }
         public SslSettings SslSettings { get; set; }
 

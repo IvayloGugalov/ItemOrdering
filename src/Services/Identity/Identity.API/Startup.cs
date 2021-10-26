@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 
 using AspNetCore.Identity.Mongo;
 using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -106,9 +111,8 @@ namespace Identity.API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API v1"));
+                app.UseHttpsRedirection();
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -120,6 +124,31 @@ namespace Identity.API
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "api/{action}");
+
+                endpoints.MapHealthChecks(
+                    pattern: "/health/ready",
+                    options: new HealthCheckOptions
+                    {
+                        Predicate = check => check.Tags.Contains("ready"),
+                        ResponseWriter = async(context, report) =>
+                        {
+                            var result = JsonSerializer.Serialize(
+                                new
+                                {
+                                    status = report.Status.ToString(),
+                                    checks = report.Entries.Select(entry => new
+                                    {
+                                        name = entry.Key,
+                                        status = entry.Value.Status.ToString(),
+                                        exception = entry.Value.Exception != null ? entry.Value.Exception.Message : "none",
+                                        duration = entry.Value.Duration.ToString()
+                                    })
+                                });
+
+                            context.Response.ContentType = MediaTypeNames.Application.Json;
+                            await context.Response.WriteAsync(result);
+                        }
+                    });
             });
         }
 
@@ -132,6 +161,9 @@ namespace Identity.API
                 sp.GetRequiredService<IOptions<IdentityDatabaseSettings>>().Value);
 
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+
+            var mongoDbSettings = Configuration.GetSection(nameof(IdentityDatabaseSettings))
+                .Get<IdentityDatabaseSettings>();
 
             services.AddIdentityMongoDbProvider<User, MongoRole<Guid>, Guid>(
                 options =>
@@ -150,11 +182,15 @@ namespace Identity.API
                 },
                 mongo =>
                 {
-                    var databaseSettings = Configuration.GetSection(nameof(IdentityDatabaseSettings))
-                        .Get<IdentityDatabaseSettings>();
-
-                    mongo.ConnectionString = databaseSettings.ConnectionString;
+                    mongo.ConnectionString = mongoDbSettings.ConnectionString;
                 });
+
+            services.AddHealthChecks()
+                .AddMongoDb(
+                    mongoDbSettings.ConnectionString,
+                    name: mongoDbSettings.DatabaseName,
+                    timeout: TimeSpan.FromSeconds(3),
+                    tags: new [] { "ready" });
         }
 
         private void ConfigureUsedServices(IServiceCollection services)
