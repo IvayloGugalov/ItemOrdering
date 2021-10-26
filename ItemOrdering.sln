@@ -3,23 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Api", "src\ItemOrdering.Api\ItemOrdering.Api.csproj", "{948AC87B-D04A-4AE8-8420-787F56035D8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.API", "src\Services\Ordering\Ordering.Api\Ordering.API.csproj", "{948AC87B-D04A-4AE8-8420-787F56035D8A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Domain", "src\ItemOrdering.Domain\ItemOrdering.Domain.csproj", "{05177909-E3AF-409A-9C8A-770AF015DA6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Domain", "src\Services\Ordering\Ordering.Domain\Ordering.Domain.csproj", "{05177909-E3AF-409A-9C8A-770AF015DA6F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Infrastructure", "src\ItemOrdering.Infrastructure\ItemOrdering.Infrastructure.csproj", "{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Infrastructure", "src\Services\Ordering\Ordering.Infrastructure\Ordering.Infrastructure.csproj", "{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4E70E73E-050B-408A-A581-41AAD7836FC3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Domain.Test", "tests\ItemOrdering.Domain.Test\ItemOrdering.Domain.Test.csproj", "{F73A987F-9723-406D-AE75-70C242E82D64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Domain.Test", "src\Services\Ordering\Ordering.Domain.Test\Ordering.Domain.Test.csproj", "{F73A987F-9723-406D-AE75-70C242E82D64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.Infrastructure.Test", "tests\ItemOrdering.Infrastructure.Test\ItemOrdering.Infrastructure.Test.csproj", "{F0E98566-4125-46C2-9004-BCFC84DC856F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.Infrastructure.Test", "src\Services\Ordering\Ordering.Infrastructure.Test\Ordering.Infrastructure.Test.csproj", "{F0E98566-4125-46C2-9004-BCFC84DC856F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItemOrdering.FunctionalTests", "tests\ItemOrdering.FunctionalTests\ItemOrdering.FunctionalTests.csproj", "{62FD4D03-6EB1-458D-9937-3FC7EFAF02D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.FunctionalTests", "src\Services\Ordering\Ordering.FunctionalTests\Ordering.FunctionalTests.csproj", "{62FD4D03-6EB1-458D-9937-3FC7EFAF02D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemOrdering.Identity.API", "src\ItemOrdering.Identity.API\ItemOrdering.Identity.API.csproj", "{DBA3F3A3-3E63-41A4-ACCE-3D7290A28C2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "src\Services\Identity\Identity.API\Identity.API.csproj", "{DBA3F3A3-3E63-41A4-ACCE-3D7290A28C2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{F54EBD49-BE0B-4808-8190-04843B3E76B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{1F61BBF7-28A8-442C-8E72-CB2B763641BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,13 +64,15 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{948AC87B-D04A-4AE8-8420-787F56035D8A} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
-		{05177909-E3AF-409A-9C8A-770AF015DA6F} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
-		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
+		{948AC87B-D04A-4AE8-8420-787F56035D8A} = {F54EBD49-BE0B-4808-8190-04843B3E76B9}
+		{05177909-E3AF-409A-9C8A-770AF015DA6F} = {F54EBD49-BE0B-4808-8190-04843B3E76B9}
+		{2BB5ADE0-E074-4B72-9EDD-0CB9A3FAAB1C} = {F54EBD49-BE0B-4808-8190-04843B3E76B9}
 		{F73A987F-9723-406D-AE75-70C242E82D64} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{F0E98566-4125-46C2-9004-BCFC84DC856F} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{62FD4D03-6EB1-458D-9937-3FC7EFAF02D3} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
-		{DBA3F3A3-3E63-41A4-ACCE-3D7290A28C2C} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
+		{DBA3F3A3-3E63-41A4-ACCE-3D7290A28C2C} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
+		{F54EBD49-BE0B-4808-8190-04843B3E76B9} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
+		{1F61BBF7-28A8-442C-8E72-CB2B763641BE} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8016928-19C4-463D-AB4C-1A92860FA316}
