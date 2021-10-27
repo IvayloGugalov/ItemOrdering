@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.Domain.OrderAggregate
 {
     public interface IOrderRepository
     {
-        Task<List<Order>> GetAllByCustomerIdAsync(Guid customerId);
-        Task<Order> GetByCustomerIdWithProductsAsync(Guid customerId);
+        Task<IEnumerable<Order>> GetAllForCustomer(ISpecification<Order> specification);
+        Task<Order> GetForCustomerId(ISpecification<Order> specification);
         Task AddAsync(Order order);
         Task<Order> UpdateOrder(Order order);
         Task RemoveOrderAsync(Order order);

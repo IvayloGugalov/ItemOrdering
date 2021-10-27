@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-
+using Ordering.Domain.Interfaces;
 using Ordering.Domain.OrderAggregate;
-using Ordering.Domain.OrderAggregate.Specifications;
+using Ordering.Domain.Shared;
 
 namespace Ordering.Infrastructure.Data
 {
@@ -21,19 +20,15 @@ namespace Ordering.Infrastructure.Data
 
         // We are loading the full navigation properties here and all of the contents.
         // .AsNoTracking(), .IgnoreAutoIncludes() are not working to skip the navigations.
-        public async Task<List<Order>> GetAllByCustomerIdAsync(Guid customerId)
+        public async Task<IEnumerable<Order>> GetAllForCustomer(ISpecification<Order> specification)
         {
-            return await this.context.Orders
-                .Where(x => x.CustomerId == customerId)
-                .OrderBy(x => x.Created)
-                .ToListAsync();
+            return await this.context.Orders.Specify(specification).ToListAsync();
         }
 
-        public async Task<Order> GetByCustomerIdWithProductsAsync(Guid customerId)
+        public async Task<Order> GetForCustomerId(ISpecification<Order> specification)
         {
-            return await this.context.Orders.GetProductsForOrder(customerId)
-                .OrderBy(x => x.Created)
-                .FirstOrDefaultAsync();
+            return await this.context.Orders.Specify(specification)
+                .SingleOrDefaultAsync();
         }
 
         public async Task AddAsync(Order order)

@@ -2,24 +2,24 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Ordering.Domain.ShoppingCartAggregate;
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.API.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Get : ControllerBase
     {
-        private readonly IShoppingCartRepository shoppingCartRepository;
+        private readonly IShoppingCartService shoppingCartService;
 
-        public Get(IShoppingCartRepository shoppingCartRepository)
+        public Get(IShoppingCartService shoppingCartService)
         {
-            this.shoppingCartRepository = shoppingCartRepository;
+            this.shoppingCartService = shoppingCartService;
         }
 
         [HttpGet(GetShoppingCartRequest.ROUTE)]
-        public async Task<ActionResult<GetShoppingCartResponse>> AddProductToShoppingCartAsync([FromRoute]GetShoppingCartRequest request)
+        public async Task<ActionResult<GetShoppingCartResponse>> GetToShoppingCartAsync([FromRoute]GetShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(request.CustomerId);
+            var shoppingCart = await this.shoppingCartService.GetOrCreateShoppingCartAsync(request.CustomerId);
 
             if (shoppingCart is null) return NotFound();
 

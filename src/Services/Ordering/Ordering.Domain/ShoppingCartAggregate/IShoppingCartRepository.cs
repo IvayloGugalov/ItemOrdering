@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Ordering.Domain.Interfaces;
+
 namespace Ordering.Domain.ShoppingCartAggregate
 {
     public interface IShoppingCartRepository
@@ -8,8 +10,7 @@ namespace Ordering.Domain.ShoppingCartAggregate
         Task AddAsync(ShoppingCart shoppingCart);
         Task UpdateAsync(ShoppingCart shoppingCart);
         Task<ShoppingCart> FindAsync(Guid id);
-        Task<ShoppingCart> FindByCustomerIncludeProducts(Guid customerId);
-        Task<ShoppingCart> FindByCustomer(Guid customerId);
+        Task<ShoppingCart> FindByCustomerAsync(ISpecification<ShoppingCart> specification);
         Task DeleteAsync(ShoppingCart shoppingCart);
     }
 }

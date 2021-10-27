@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-
 using Ordering.Domain.ShoppingCartAggregate;
+using Ordering.Domain.ShoppingCartAggregate.Specifications;
 using Ordering.Domain.Test.EntityBuilders;
 using Ordering.Infrastructure.Data;
 
@@ -65,7 +65,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
             shoppingCart.AddProduct(product);
             this.dbContext.SeedDataBaseWith(shoppingCart);
 
-            var cartFromDb = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
+            var cartFromDb = await this.shoppingCartRepository.FindByCustomerAsync(new ShoppingCartWithProductsSpec(customerId));
 
             Assert.AreEqual(shoppingCart, cartFromDb);
         }

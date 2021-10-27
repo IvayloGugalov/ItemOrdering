@@ -2,6 +2,8 @@
 
 using Microsoft.EntityFrameworkCore;
 
+using Ordering.Domain.Interfaces;
+
 namespace Ordering.Domain.Shared
 {
     public static class SpecificationExtensions
@@ -20,8 +22,15 @@ namespace Ordering.Domain.Shared
                     (current, include) => current.Include(include));
 
             // return the result of the query using the specification's criteria expression
+            if (spec.OrderBy == null)
+            {
+                return secondaryResult
+                    .Where(spec.Criteria);
+            }
+
             return secondaryResult
-                .Where(spec.Criteria);
+                .Where(spec.Criteria)
+                .OrderBy(spec.OrderBy);
         }
     }
 }

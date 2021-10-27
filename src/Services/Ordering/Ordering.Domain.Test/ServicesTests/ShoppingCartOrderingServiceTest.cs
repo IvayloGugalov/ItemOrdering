@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 
 using Ordering.Domain.Exceptions;
+using Ordering.Domain.Interfaces;
 using Ordering.Domain.OrderAggregate;
 using Ordering.Domain.Services;
 using Ordering.Domain.ShopAggregate;
@@ -42,11 +43,11 @@ namespace Ordering.Domain.Test.ServicesTests
 
             shoppingCart.AddProduct(product);
 
-            var shoppingCartOrderingService = new ShoppingCartOrderingService(
+            var shoppingCartOrderingService = new OrderingService(
                 this.shoppingCartRepositoryMock.Object,
                 this.orderRepositoryMock.Object);
 
-            this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerIncludeProducts(shoppingCart.CustomerId))
+            this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerAsync(It.IsAny<ISpecification<ShoppingCart>>()))
                 .ReturnsAsync(shoppingCart);
 
             this.orderRepositoryMock.Setup(_ => _.AddAsync(It.IsAny<Order>()));
@@ -61,11 +62,11 @@ namespace Ordering.Domain.Test.ServicesTests
         public void CreateOrderFromShoppingCart_WithInvalidShoppingCart_WillThrow()
         {
             var customerId = Guid.NewGuid();
-            var shoppingCartOrderingService = new ShoppingCartOrderingService(
+            var shoppingCartOrderingService = new OrderingService(
                 this.shoppingCartRepositoryMock.Object,
                 this.orderRepositoryMock.Object);
 
-            this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerIncludeProducts(customerId))
+            this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerAsync(It.IsAny<ISpecification<ShoppingCart>>()))
                 .ReturnsAsync(It.IsAny<ShoppingCart>());
 
             Assert.ThrowsAsync<InvalidShoppingCartForCustomerException>(async () => await shoppingCartOrderingService.CreateOrderFromShoppingCart(customerId));

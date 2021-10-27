@@ -1,24 +1,15 @@
 ﻿using System;
-using System.Linq;
 
 using Ordering.Domain.Shared;
 
 namespace Ordering.Domain.ShoppingCartAggregate.Specifications
 {
-    public static class ShoppingCartWithProducts
+    public class ShoppingCartWithProductsSpec : BaseSpecification<ShoppingCart>
     {
-        public static IQueryable<ShoppingCart> GetProductsForCart(this IQueryable<ShoppingCart> query, Guid id)
+        public ShoppingCartWithProductsSpec(Guid customerId)
         {
-            return query.Specify(new ShoppingCartWithProductsSpec(id));
-        }
-
-        private class ShoppingCartWithProductsSpec : BaseSpecification<ShoppingCart>
-        {
-            public ShoppingCartWithProductsSpec(Guid customerId)
-            {
-                this.Criteria = x => x.CustomerId == customerId;
-                this.Includes.Add(x => x.ProductsAndAmount);
-            }
+            this.Criteria = x => x.CustomerId == customerId;
+            this.Includes.Add(x => x.ProductsAndAmount);
         }
     }
 }

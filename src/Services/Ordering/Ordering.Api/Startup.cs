@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using Ordering.Domain.Interfaces;
 using Ordering.Domain.OrderAggregate;
 using Ordering.Domain.Services;
 using Ordering.Domain.ShopAggregate;
@@ -37,15 +37,31 @@ namespace Ordering.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x =>
+                {
+                    var authenticationConfiguration = new AuthenticationConfiguration();
+                    // Authentication = json object inside appsettings.json
+                    this.Configuration.Bind("Authentication", authenticationConfiguration);
 
-            
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
+                        ValidIssuer = authenticationConfiguration.Issuer,
+                        ValidAudience = authenticationConfiguration.Audience,
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IShoppingCartRepository, ShoppingCartRepository>();
-            services.AddTransient<IShoppingCartOrderingService, ShoppingCartOrderingService>();
+            services.AddTransient<IOrderingService, OrderingService>();
+            services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -109,28 +125,6 @@ namespace Ordering.API
             {
                 endpoints.MapControllers();
             });
-        }
-
-        protected virtual void ConfigureAuthentication(IServiceCollection services)
-        {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(x =>
-                {
-                    var authenticationConfiguration = new AuthenticationConfiguration();
-                    // Authentication = json object inside appsettings.json
-                    this.Configuration.Bind("Authentication", authenticationConfiguration);
-
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
-                        ValidIssuer = authenticationConfiguration.Issuer,
-                        ValidAudience = authenticationConfiguration.Audience,
-                        ValidateIssuerSigningKey = true,
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
         }
 
         private class AuthenticationConfiguration

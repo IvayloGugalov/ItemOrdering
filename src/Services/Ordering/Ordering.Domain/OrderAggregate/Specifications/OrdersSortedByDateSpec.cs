@@ -4,12 +4,12 @@ using Ordering.Domain.Shared;
 
 namespace Ordering.Domain.OrderAggregate.Specifications
 {
-    public class OrderWithProductsSpec : BaseSpecification<Order>
+    public class OrdersSortedByDateSpec : BaseSpecification<Order>
     {
-        public OrderWithProductsSpec(Guid customerId)
+        public OrdersSortedByDateSpec(Guid customerId)
         {
             this.Criteria = x => x.CustomerId == customerId;
-            this.Includes.Add(x => x.OrderedProducts);
+            this.OrderBy = x => x.Created;
         }
     }
 }

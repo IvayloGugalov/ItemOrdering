@@ -2,30 +2,26 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Ordering.Domain.ShoppingCartAggregate;
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.API.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Delete : ControllerBase
     {
-        private readonly IShoppingCartRepository shoppingCartRepository;
+        private readonly IShoppingCartService shoppingCartService;
 
-        public Delete(IShoppingCartRepository shoppingCartRepository)
+        public Delete(IShoppingCartService shoppingCartService)
         {
-            this.shoppingCartRepository = shoppingCartRepository;
+            this.shoppingCartService = shoppingCartService;
         }
 
         [HttpDelete(DeleteShoppingCartRequest.ROUTE)]
         public async Task<ActionResult> DeleteShoppingCartAsync([FromRoute]DeleteShoppingCartRequest request)
         {
-            var shoppingCart = await this.shoppingCartRepository.FindByCustomer(request.CustomerId);
+            var result = await this.shoppingCartService.DeleteAsync(request.CustomerId);
 
-            if (shoppingCart == null) return NotFound();
-
-            await this.shoppingCartRepository.DeleteAsync(shoppingCart);
-
-            return NoContent();
+            return result ? NoContent() : NotFound();
         }
     }
 }

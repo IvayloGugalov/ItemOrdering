@@ -51,6 +51,15 @@ namespace Ordering.FunctionalTests.ApiEndpoints.ShoppingCartTests
         }
 
         [Test]
+        public async Task Get_WhenNoCartExists_WillCreateAShoppingCart()
+        {
+            var result = await this.httpClient.GetDeserializedJsonResult<GetShoppingCartResponse>(
+                GetShoppingCartRequest.BuildRoute(Guid.NewGuid()));
+
+            Assert.IsTrue(result.ShoppingCartDto.Id != Guid.Empty);
+        }
+
+        [Test, Ignore("Should this be done?")]
         public async Task Get_WithWrongCustomerId_WillReturnNotFound()
         {
             var result = await this.httpClient.GetAndEnsureNotFound(GetShoppingCartRequest.BuildRoute(Guid.NewGuid()));

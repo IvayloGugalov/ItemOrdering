@@ -1,8 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +8,8 @@ using NUnit.Framework;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
-using Ordering.API.Endpoints.ShoppingCartEndpoint;
 using Ordering.Domain.OrderAggregate.Specifications;
+using Ordering.Domain.Shared;
 using Ordering.FunctionalTests.HttpExtension;
 using Ordering.Infrastructure.Data;
 
@@ -49,22 +46,9 @@ namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
 
             var result = await this.httpClient.PostAndReceiveMessage(CreateOrderRequest.BuildRoute(customer.Id));
 
-            var order = await dbContext.Orders.GetProductsForOrder(customer.Id).SingleOrDefaultAsync();
+            var order = await dbContext.Orders.Specify(new OrderWithProductsSpec(customer.Id)).SingleOrDefaultAsync();
             Assert.AreEqual(HttpStatusCode.NoContent, result.StatusCode);
             Assert.AreEqual(customer.Id, order.CustomerId);
-        }
-
-        [Test]
-        public async Task Update_WithWrongCustomerId_WillReturnNotFound()
-        {
-            var body = JsonSerializer.Serialize(
-                new UpdateShoppingCartRequest { ProductId = Guid.NewGuid() });
-
-            var content = new StringContent(body, Encoding.UTF8, "application/json");
-
-            var result = await this.httpClient.PutAndEnsureNotFound(UpdateShoppingCartRequest.BuildRoute(Guid.NewGuid()), content);
-
-            Assert.IsTrue(result.StatusCode == HttpStatusCode.NotFound);
         }
     }
 }

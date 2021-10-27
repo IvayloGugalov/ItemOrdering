@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Ordering.Domain.Interfaces;
+
 namespace Ordering.Domain.Shared
 {
     public abstract class Entity

@@ -3,21 +3,18 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Ordering.Domain.ShopAggregate;
-using Ordering.Domain.ShoppingCartAggregate;
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.API.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Update : ControllerBase
     {
-        private readonly IShoppingCartRepository shoppingCartRepository;
-        private readonly IProductRepository productRepository;
+        private readonly IShoppingCartService shoppingCartService;
 
-        public Update(IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository)
+        public Update(IShoppingCartService shoppingCartService)
         {
-            this.shoppingCartRepository = shoppingCartRepository;
-            this.productRepository = productRepository;
+            this.shoppingCartService = shoppingCartService;
         }
 
         [HttpPut(UpdateShoppingCartRequest.ROUTE)]
@@ -25,25 +22,11 @@ namespace Ordering.API.Endpoints.ShoppingCartEndpoint
             [FromRoute]Guid customerId,
             [FromBody]UpdateShoppingCartRequest request)
         {
-            // TODO: Should we check for existing Customer Id?
-            var product = await this.productRepository.GetByIdAsync(request.ProductId);
+            var shoppingCart = await this.shoppingCartService.GetOrCreateShoppingCartAsync(customerId);
 
-            if (product == null) return NotFound(request.ProductId);
+            var isAdded = await this.shoppingCartService.AddProductToShoppingCartAsync(shoppingCart, request.ProductId);
 
-            var shoppingCart = await this.shoppingCartRepository.FindByCustomerIncludeProducts(customerId);
-
-            if (shoppingCart == null)
-            {
-                shoppingCart = new ShoppingCart(customerId);
-                shoppingCart.AddProduct(product);
-
-                await this.shoppingCartRepository.AddAsync(shoppingCart);
-            }
-            else
-            {
-                shoppingCart.AddProduct(product);
-                await this.shoppingCartRepository.UpdateAsync(shoppingCart);
-            }
+            if (!isAdded) return NotFound(new ErrorResponse("No such product."));
 
             var result = new UpdateShoppingCartResponse
             {

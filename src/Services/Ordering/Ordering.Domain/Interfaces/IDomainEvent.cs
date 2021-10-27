@@ -1,4 +1,4 @@
-﻿namespace Ordering.Domain.Shared
+﻿namespace Ordering.Domain.Interfaces
 {
     public interface IDomainEvent
     {

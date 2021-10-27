@@ -2,27 +2,25 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-using Ordering.Domain.ShoppingCartAggregate;
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.API.Endpoints.ShoppingCartEndpoint
 {
     [ApiController]
     public class Create : ControllerBase
     {
-        private readonly IShoppingCartRepository shoppingCartRepository;
+        private readonly IShoppingCartService shoppingCartService;
 
-        public Create(IShoppingCartRepository shoppingCartRepository)
+        public Create(IShoppingCartService shoppingCartService)
         {
-            this.shoppingCartRepository = shoppingCartRepository;
+            this.shoppingCartService = shoppingCartService;
         }
 
         [HttpPost(CreateShoppingCartRequest.ROUTE)]
         public async Task<ActionResult<CreateShoppingCartResponse>> CreateShoppingCartAsync([FromRoute]CreateShoppingCartRequest request)
         {
             // TODO: Should we check for customer id?
-            var shoppingCart = new ShoppingCart(request.CustomerId);
-
-            await this.shoppingCartRepository.AddAsync(shoppingCart);
+            var shoppingCart = await this.shoppingCartService.GetOrCreateShoppingCartAsync(request.CustomerId);
 
             var result = new CreateShoppingCartResponse { Id = shoppingCart.Id};
 

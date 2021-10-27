@@ -30,7 +30,7 @@ namespace Ordering.Domain.ShoppingCartAggregate
         /// <param name="product"></param>
         public void AddProduct(Product product)
         {
-            if (product is null) throw new ArgumentNullException(nameof(product));
+            Guard.Against.Null(product, nameof(product));
 
             var existingProduct = this.productsAndAmount.FirstOrDefault(x => x.ProductId == product.Id);
 

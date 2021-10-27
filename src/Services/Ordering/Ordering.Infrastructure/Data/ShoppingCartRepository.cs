@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
+using Ordering.Domain.Interfaces;
+using Ordering.Domain.Shared;
 using Ordering.Domain.ShoppingCartAggregate;
-using Ordering.Domain.ShoppingCartAggregate.Specifications;
 
 namespace Ordering.Infrastructure.Data
 {
@@ -36,17 +37,10 @@ namespace Ordering.Infrastructure.Data
             await this.context.SaveChangesAsync();
         }
 
-        public async Task<ShoppingCart> FindByCustomerIncludeProducts(Guid customerId)
+        public async Task<ShoppingCart> FindByCustomerAsync(ISpecification<ShoppingCart> specification)
         {
-            return await this.context.ShoppingCarts
-                .GetProductsForCart(customerId)
-                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
-        }
-
-        public async Task<ShoppingCart> FindByCustomer(Guid customerId)
-        {
-            return await this.context.ShoppingCarts
-                .SingleOrDefaultAsync(x => x.CustomerId == customerId);
+            return await this.context.ShoppingCarts.Specify(specification)
+                .SingleOrDefaultAsync();
         }
 
         public async Task DeleteAsync(ShoppingCart shoppingCart)

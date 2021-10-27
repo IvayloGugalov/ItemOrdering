@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using Ordering.Domain.OrderAggregate;
+using Ordering.Domain.Interfaces;
 
 namespace Ordering.API.Endpoints.OrderEndpoint
 {
     [ApiController]
     public class Get : ControllerBase
     {
-        private readonly IOrderRepository orderRepository;
+        private readonly IOrderingService orderingService;
 
-        public Get(IOrderRepository orderRepository)
+        public Get(IOrderingService orderingService)
         {
-            this.orderRepository = orderRepository;
+            this.orderingService = orderingService;
         }
 
         [HttpGet("orders")]
@@ -42,7 +41,7 @@ namespace Ordering.API.Endpoints.OrderEndpoint
         [HttpGet(GetOrdersRequest.ROUTE)]
         public async Task<ActionResult<GetOrdersResponse>> GetAllOrdersForCustomer([FromRoute]GetOrdersRequest request)
         {
-            var orders = await this.orderRepository.GetAllByCustomerIdAsync(request.CustomerId);
+            var orders = await this.orderingService.GetOrdersForCustomerAsync(request.CustomerId);
             if (orders == null || !orders.Any()) return NoContent();
 
             var response = new GetOrdersResponse()
@@ -58,7 +57,7 @@ namespace Ordering.API.Endpoints.OrderEndpoint
         [Authorize]
         public async Task<ActionResult<GetOrderResponse>> GetLatestOrderForCustomer([FromRoute]GetOrderRequest request)
         {
-            var order = await this.orderRepository.GetByCustomerIdWithProductsAsync(request.CustomerId);
+            var order = await this.orderingService.GetOrderForCustomerAsync(request.CustomerId);
 
             if (order == null) return NoContent();
 
