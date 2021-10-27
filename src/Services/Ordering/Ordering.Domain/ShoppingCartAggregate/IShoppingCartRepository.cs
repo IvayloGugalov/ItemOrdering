@@ -7,6 +7,7 @@ namespace Ordering.Domain.ShoppingCartAggregate
     {
         Task AddAsync(ShoppingCart shoppingCart);
         Task UpdateAsync(ShoppingCart shoppingCart);
+        Task<ShoppingCart> FindAsync(Guid id);
         Task<ShoppingCart> FindByCustomerIncludeProducts(Guid customerId);
         Task<ShoppingCart> FindByCustomer(Guid customerId);
         Task DeleteAsync(ShoppingCart shoppingCart);

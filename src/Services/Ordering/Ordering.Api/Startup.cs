@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using Ordering.Domain.OrderAggregate;
@@ -32,6 +36,10 @@ namespace Ordering.API
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            
+
+            
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IOrderRepository, OrderRepository>();
@@ -94,12 +102,42 @@ namespace Ordering.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+        }
+
+        protected virtual void ConfigureAuthentication(IServiceCollection services)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(x =>
+                {
+                    var authenticationConfiguration = new AuthenticationConfiguration();
+                    // Authentication = json object inside appsettings.json
+                    this.Configuration.Bind("Authentication", authenticationConfiguration);
+
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
+                        ValidIssuer = authenticationConfiguration.Issuer,
+                        ValidAudience = authenticationConfiguration.Audience,
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+        }
+
+        private class AuthenticationConfiguration
+        {
+            public string AccessTokenSecretKey { get; set; }
+            public string Issuer { get; set; }
+            public string Audience { get; set; }
         }
     }
 }

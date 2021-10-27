@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Ordering.Domain.OrderAggregate;
@@ -20,8 +23,11 @@ namespace Ordering.API.Endpoints.OrderEndpoint
         }
 
         [HttpGet("orders")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult GetOrders()
         {
+            var id = HttpContext.User.FindFirstValue("id");
+
             return Ok(new List<OrderDto>
             {
                 new OrderDto(Guid.NewGuid(), null, DateTime.Now, new List<OrderedProductDto>
@@ -49,6 +55,7 @@ namespace Ordering.API.Endpoints.OrderEndpoint
 
 
         [HttpGet(GetOrderRequest.ROUTE)]
+        [Authorize]
         public async Task<ActionResult<GetOrderResponse>> GetLatestOrderForCustomer([FromRoute]GetOrderRequest request)
         {
             var order = await this.orderRepository.GetByCustomerIdWithProductsAsync(request.CustomerId);

@@ -23,6 +23,11 @@ namespace Ordering.Infrastructure.Data
             await this.context.SaveChangesAsync();
         }
 
+        public async Task<ShoppingCart> FindAsync(Guid id)
+        {
+            return await this.context.ShoppingCarts.FindAsync(id);
+        }
+
         public async Task UpdateAsync(ShoppingCart shoppingCart)
         {
             this.context.ShoppingCarts.Attach(shoppingCart);

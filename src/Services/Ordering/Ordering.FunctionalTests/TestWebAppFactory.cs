@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -75,6 +75,9 @@ namespace Ordering.FunctionalTests
                     {
                         options.UseInMemoryDatabase(inMemoryCollectionName);
                     });
+
+                    services.AddAuthentication("Test")
+                        .AddScheme<AuthenticationSchemeOptions, AuthenticationHandlerFactory>("Test", options => { });
                 });
         }
     }
