@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
-using Identity.API.Models;
+using Identity.Domain;
 
 namespace Identity.API.Services.TokenValidators
 {

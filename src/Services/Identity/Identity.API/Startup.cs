@@ -22,12 +22,14 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-
-using Identity.API.Models;
-using Identity.API.Services.Authenticators;
 using Identity.API.Services.Repositories;
 using Identity.API.Services.TokenGenerators;
 using Identity.API.Services.TokenValidators;
+using Identity.Domain;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
+using Identity.Domain.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace Identity.API
 {
@@ -165,7 +167,7 @@ namespace Identity.API
             var mongoDbSettings = Configuration.GetSection(nameof(IdentityDatabaseSettings))
                 .Get<IdentityDatabaseSettings>();
 
-            services.AddIdentityMongoDbProvider<User, MongoRole<Guid>, Guid>(
+            services.AddIdentityMongoDbProvider<AuthUser, UserToRole, Guid>(
                 options =>
                 {
                     options.Password.RequireDigit = false;
@@ -183,7 +185,8 @@ namespace Identity.API
                 mongo =>
                 {
                     mongo.ConnectionString = mongoDbSettings.ConnectionString;
-                });
+                })
+                .AddRoles<IdentityRole>();
 
             services.AddHealthChecks()
                 .AddMongoDb(

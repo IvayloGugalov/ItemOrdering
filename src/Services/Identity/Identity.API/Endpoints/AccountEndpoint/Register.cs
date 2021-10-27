@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -6,16 +7,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
+using Identity.Domain.Entities;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
     [ApiController]
     public class Register : ControllerBase
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public Register(UserManager<User> userManager)
+        public Register(UserManager<AuthUser> userManager)
         {
             this.userManager = userManager;
         }
@@ -28,13 +29,14 @@ namespace Identity.API.Endpoints.AccountEndpoint
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            var registrationUser = new User(
+            var registrationUser = new AuthUser(
                 firstName: request.FirstName,
                 lastName: request.LastName,
                 email: request.Email,
                 username: request.Username,
                 passwordHash: request.Password,
-                address: request.Address);
+                address: request.Address,
+                roles: Array.Empty<RoleToPermissions>());
 
            var result = await this.userManager.CreateAsync(registrationUser, request.Password);
 

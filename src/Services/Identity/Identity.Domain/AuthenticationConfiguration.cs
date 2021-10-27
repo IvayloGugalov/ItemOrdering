@@ -1,4 +1,4 @@
-﻿namespace Identity.API.Models
+﻿namespace Identity.Domain
 {
     public class AuthenticationConfiguration
     {

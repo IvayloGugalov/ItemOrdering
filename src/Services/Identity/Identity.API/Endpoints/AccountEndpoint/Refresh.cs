@@ -3,10 +3,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
-using Identity.API.Services.Authenticators;
-using Identity.API.Services.Repositories;
 using Identity.API.Services.TokenValidators;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -16,13 +15,13 @@ namespace Identity.API.Endpoints.AccountEndpoint
         private readonly IRefreshTokenRepository refreshTokenRepository;
         private readonly IRefreshTokenValidator refreshTokenValidator;
         private readonly IAuthenticator authenticator;
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
         public Refresh(
             IRefreshTokenRepository refreshTokenRepository,
             IRefreshTokenValidator refreshTokenValidator,
             IAuthenticator authenticator,
-            UserManager<User> userManager)
+            UserManager<AuthUser> userManager)
         {
             this.refreshTokenRepository = refreshTokenRepository;
             this.refreshTokenValidator = refreshTokenValidator;
@@ -38,7 +37,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
             if (!this.refreshTokenValidator.Validate(refreshRequest.RefreshTokenValue)) return this.BadRequest(new ErrorResponse("Invalid refresh token"));
 
             // TODO: Expired? Invalid signature? Handle cases
-            var refreshToken = await this.refreshTokenRepository.GetByTokenValue(refreshRequest.RefreshTokenValue);
+            var refreshToken = await this.refreshTokenRepository.GetByTokenValueAsync(refreshRequest.RefreshTokenValue);
             if (refreshToken is null) return NotFound(new ErrorResponse("Invalid refresh token"));
 
             // Invalidate the refresh token

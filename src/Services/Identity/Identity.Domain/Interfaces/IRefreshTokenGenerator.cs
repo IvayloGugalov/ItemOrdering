@@ -1,4 +1,4 @@
-﻿namespace Identity.API.Services.TokenGenerators
+﻿namespace Identity.Domain.Interfaces
 {
     public interface IRefreshTokenGenerator
     {

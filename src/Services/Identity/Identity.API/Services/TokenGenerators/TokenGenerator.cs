@@ -6,6 +6,8 @@ using System.Text;
 
 using Microsoft.IdentityModel.Tokens;
 
+using Identity.Domain.Interfaces;
+
 namespace Identity.API.Services.TokenGenerators
 {
     public class TokenGenerator : ITokenGenerator

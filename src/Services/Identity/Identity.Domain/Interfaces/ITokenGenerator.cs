@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace Identity.API.Services.TokenGenerators
+namespace Identity.Domain.Interfaces
 {
     public interface ITokenGenerator
     {

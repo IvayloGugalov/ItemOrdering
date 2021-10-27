@@ -1,14 +1,16 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 
-namespace Identity.API.Models
+namespace Identity.API
 {
     public class IdentityDatabaseSettings : IMongoDatabaseSettings
     {
         public string UsersCollectionName { get; set; }
+        public string RefreshTokensCollectionName { get; set; }
+        public string RoleToPermissionsCollectionName{ get; set; }
+        public string UserToRolesCollectionName { get; set; }
         public string Host { get; set; }
         public string Port { get; set; }
-        public string RefreshTokensCollectionName { get; set; }
         public string ConnectionString => $"mongodb://{this.Host}:{this.Port}/identity";
         public string DatabaseName { get; set; }
         public SslSettings SslSettings { get; set; }

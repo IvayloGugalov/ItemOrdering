@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Identity.API.Extensions;
-using Identity.API.Models;
+
 using MongoDB.Driver;
+
+using Identity.API.Extensions;
+using Identity.Domain.Entities;
 
 namespace Identity.API.Services.Deprecated
 {
@@ -12,41 +14,41 @@ namespace Identity.API.Services.Deprecated
         [Obsolete("Another way of saving the user to a MongoDB without using Identity from ASP .NET CORE")]
         private interface IUserRepository
         {
-            Task<User> GetByIdAsync(Guid userId);
-            Task<User> GetByEmailAsync(string email);
-            Task<User> GetByUserNameAsync(string username);
-            Task CreateAsync(User user);
+            Task<AuthUser> GetByIdAsync(Guid userId);
+            Task<AuthUser> GetByEmailAsync(string email);
+            Task<AuthUser> GetByUserNameAsync(string username);
+            Task CreateAsync(AuthUser user);
             Task<DeleteResult> DeleteAsync(Guid userId);
         }
 
         private class UserRepository : IUserRepository
         {
-            private readonly IMongoCollection<User> userCollection;
+            private readonly IMongoCollection<AuthUser> userCollection;
 
             public UserRepository(IMongoDatabaseSettings settings)
             {
-                this.userCollection = MongoExtension.GetCollection<User>(settings, settings.UsersCollectionName);
+                this.userCollection = MongoExtension.GetCollection<AuthUser>(settings, settings.UsersCollectionName);
             }
 
-            public async Task<User> GetByIdAsync(Guid userId)
+            public async Task<AuthUser> GetByIdAsync(Guid userId)
             {
                 return await this.userCollection.Find(user => user.Id == userId)
                     .SingleOrDefaultAsync();
             }
 
-            public async Task<User> GetByEmailAsync(string email)
+            public async Task<AuthUser> GetByEmailAsync(string email)
             {
                 return await this.userCollection.Find(user => user.Email == email)
                     .SingleOrDefaultAsync();
             }
 
-            public async Task<User> GetByUserNameAsync(string username)
+            public async Task<AuthUser> GetByUserNameAsync(string username)
             {
                 return await this.userCollection.Find(user => user.UserName == username)
                     .SingleOrDefaultAsync();
             }
 
-            public async Task CreateAsync(User user)
+            public async Task CreateAsync(AuthUser user)
             {
                 await this.userCollection.InsertOneAsync(user);
             }

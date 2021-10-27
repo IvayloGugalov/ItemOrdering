@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
+using Identity.Domain.Entities;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
     [ApiController]
     public class PasswordReset : ControllerBase
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public PasswordReset(UserManager<User> userManager)
+        public PasswordReset(UserManager<AuthUser> userManager)
         {
             this.userManager = userManager;
         }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Identity.API.Models;
+
+using Identity.Domain.Entities;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {

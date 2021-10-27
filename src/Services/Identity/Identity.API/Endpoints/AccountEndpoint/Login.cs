@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
-using Identity.API.Services.Authenticators;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -13,9 +13,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
     public class Login : ControllerBase
     {
         private readonly IAuthenticator authenticator;
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public Login(IAuthenticator authenticator, UserManager<User> userManager)
+        public Login(IAuthenticator authenticator, UserManager<AuthUser> userManager)
         {
             this.authenticator = authenticator;
             this.userManager = userManager;

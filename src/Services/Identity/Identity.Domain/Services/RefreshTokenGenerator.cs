@@ -1,6 +1,6 @@
-﻿using Identity.API.Models;
+﻿using Identity.Domain.Interfaces;
 
-namespace Identity.API.Services.TokenGenerators
+namespace Identity.Domain.Services
 {
     /// <summary>
     /// Generator class for a Refresh Token.

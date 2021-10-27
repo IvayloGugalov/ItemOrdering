@@ -1,8 +1,6 @@
 ﻿using GuardClauses;
 using MongoDB.Driver;
 
-using Identity.API.Models;
-
 namespace Identity.API.Extensions
 {
     public static class MongoExtension

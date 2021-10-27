@@ -3,7 +3,7 @@
 using GuardClauses;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Identity.API.Models
+namespace Identity.Domain.Entities
 {
     public class RefreshToken
     {

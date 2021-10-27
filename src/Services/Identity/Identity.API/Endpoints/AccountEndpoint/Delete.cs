@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
-using Identity.API.Services.Repositories;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -17,9 +17,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
     public class Delete : ControllerBase
     {
         private readonly IRefreshTokenRepository refreshTokenRepository;
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public Delete(UserManager<User> userManager, IRefreshTokenRepository refreshTokenRepository)
+        public Delete(UserManager<AuthUser> userManager, IRefreshTokenRepository refreshTokenRepository)
         {
             this.userManager = userManager;
             this.refreshTokenRepository = refreshTokenRepository;

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Services.Repositories;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {

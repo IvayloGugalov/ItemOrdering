@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 
 using Identity.API.Extensions;
-using Identity.API.Models;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Services.Repositories
 {
@@ -22,21 +23,21 @@ namespace Identity.API.Services.Repositories
             await this.refreshTokensCollection.InsertOneAsync(refreshToken);
         }
 
-        public async Task<DeleteResult> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
             var result = await this.refreshTokensCollection.DeleteOneAsync(rt => rt.Id == id);
 
-            return result;
+            return result.IsAcknowledged;
         }
 
-        public async Task<DeleteResult> DeleteAllForUserAsync(Guid userId)
+        public async Task<bool> DeleteAllForUserAsync(Guid userId)
         {
             var result = await this.refreshTokensCollection.DeleteManyAsync(rt => rt.UserId == userId);
 
-            return result;
+            return result.IsAcknowledged;
         }
 
-        public async Task<RefreshToken> GetByTokenValue(string tokenValue)
+        public async Task<RefreshToken> GetByTokenValueAsync(string tokenValue)
         {
             var refreshToken = await this.refreshTokensCollection.Find(rt => rt.TokenValue == tokenValue)
                 .SingleOrDefaultAsync();

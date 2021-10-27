@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-using Identity.API.Models;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
-namespace Identity.API.Services.TokenGenerators
+namespace Identity.Domain.Services
 {
     public class AccessTokenGenerator : IAccessTokenGenerator
     {
@@ -16,7 +17,7 @@ namespace Identity.API.Services.TokenGenerators
             this.tokenGenerator = tokenGenerator;
         }
 
-        public string GenerateAccessToken(User user)
+        public string GenerateAccessToken(AuthUser user)
         {
             var claims = new List<Claim>
             {

@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-using Identity.API.Endpoints.AccountEndpoint;
-using Identity.API.Models;
-using Identity.API.Services.Repositories;
-using Identity.API.Services.TokenGenerators;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
-namespace Identity.API.Services.Authenticators
+namespace Identity.Domain.Services
 {
     public class Authenticator : IAuthenticator
     {
@@ -23,7 +21,7 @@ namespace Identity.API.Services.Authenticators
             this.refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<LoginResponse> AuthenticateUserAsync(User user)
+        public async Task<AuthenticationTokens> AuthenticateUserAsync(AuthUser user)
         {
             var accessTokenValue = this.accessTokenGenerator.GenerateAccessToken(user);
             var refreshTokenValue = this.refreshTokenGenerator.GenerateRefreshToken();
@@ -32,10 +30,7 @@ namespace Identity.API.Services.Authenticators
 
             await this.refreshTokenRepository.CreateAsync(refreshToken);
 
-            return new LoginResponse
-            {
-                UserAuthenticatedDto = new UserAuthenticatedDto(accessTokenValue, refreshTokenValue)
-            };
+            return new AuthenticationTokens(accessTokenValue, refreshTokenValue);
         }
     }
 }
