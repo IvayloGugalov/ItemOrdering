@@ -17,7 +17,6 @@ namespace Identity.Domain.Entities
         [BsonRequired]
         public string Description { get; private set; }
 
-
         public RoleToPermissions(string roleName, string description, string packedPermissions)
         {
             this.RoleName = Guard.Against.NullOrWhiteSpace(roleName, nameof(roleName));

@@ -7,8 +7,8 @@ namespace Identity.API
     {
         public string UsersCollectionName { get; set; }
         public string RefreshTokensCollectionName { get; set; }
-        public string RoleToPermissionsCollectionName{ get; set; }
-        public string UserToRolesCollectionName { get; set; }
+        public string RolesToPermissionsCollectionName { get; set; }
+        public string UsersToRolesCollectionName { get; set; }
         public string Host { get; set; }
         public string Port { get; set; }
         public string ConnectionString => $"mongodb://{this.Host}:{this.Port}/identity";
@@ -25,6 +25,8 @@ namespace Identity.API
     {
         public string UsersCollectionName { get; set; }
         public string RefreshTokensCollectionName { get; set; }
+        public string RolesToPermissionsCollectionName { get; set; }
+        public string UsersToRolesCollectionName { get; set; }
         public string ConnectionString { get; }
         public string Host { get; set; }
         public string Port { get; set; }

@@ -1,7 +1,10 @@
-﻿namespace Identity.Domain.Interfaces
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Identity.Domain.Interfaces
 {
     public interface IRefreshTokenGenerator
     {
-        string GenerateRefreshToken();
+        Task<string> GenerateRefreshToken(Guid userId);
     }
 }

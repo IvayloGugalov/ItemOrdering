@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 
@@ -27,9 +28,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
         [HttpDelete(DeleteRequest.ROUTE)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> DeleteWithManagerAsync()
+        public async Task<IActionResult> DeleteAsync()
         {
-            var unparsedUserId = HttpContext.User.FindFirstValue("id");
+            var unparsedUserId = HttpContext.User.FindFirstValue(PermissionConstants.UserIdClaimType);
 
             if (!Guid.TryParse(unparsedUserId, out var userId)) return Unauthorized();
 

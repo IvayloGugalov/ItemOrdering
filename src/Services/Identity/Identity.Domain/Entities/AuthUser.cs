@@ -20,15 +20,12 @@ namespace Identity.Domain.Entities
         [PersonalData]
         public string LastName { get; private  set; }
 
+        public IReadOnlyCollection<UserToRole> UserRoles => this.userRoles?.ToList();
         [BsonRequired]
         [PersonalData]
-        public Address Address { get; private set; }
+        private HashSet<UserToRole> userRoles;
 
-        [BsonRequired]
-        [PersonalData]
-        public HashSet<UserToRole> UserRoles { get; private set; }
-
-        public AuthUser(string firstName, string lastName, string email, string username, string passwordHash, Address address, IEnumerable<RoleToPermissions> roles)
+        public AuthUser(string firstName, string lastName, string email, string username, string passwordHash, IEnumerable<RoleToPermissions> roles)
         {
             this.Id = Guid.NewGuid();
             this.FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
@@ -36,10 +33,9 @@ namespace Identity.Domain.Entities
             this.Email = Guard.Against.NullOrWhiteSpace(email, nameof(email));
             this.UserName = Guard.Against.NullOrWhiteSpace(username, nameof(username));
             this.PasswordHash = Guard.Against.NullOrWhiteSpace(passwordHash, nameof(passwordHash));
-            this.Address = Guard.Against.Null(address, nameof(address));
 
             Guard.Against.NullOrEmpty(roles, nameof(roles));
-            this.UserRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
+            this.userRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
         }
 
         public bool AddRoleToUser(RoleToPermissions role)
@@ -48,7 +44,7 @@ namespace Identity.Domain.Entities
 
             if (this.UserRoles.Any(x => x.RoleName == role.RoleName)) return false;
 
-            this.UserRoles.Add(new UserToRole(this.Id, role));
+            this.userRoles.Add(new UserToRole(this.Id, role));
             return true;
         }
 
@@ -57,12 +53,12 @@ namespace Identity.Domain.Entities
             Guard.Against.Null(role, nameof(role));
 
             var foundUserToRole = this.UserRoles.SingleOrDefault(x => x.RoleName == role.RoleName);
-            return this.UserRoles.Remove(foundUserToRole);
+            return this.userRoles.Remove(foundUserToRole);
         }
 
         public void ReplaceAllRoles(IEnumerable<RoleToPermissions> roles)
         {
-            this.UserRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
+            this.userRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
         }
     }
 }

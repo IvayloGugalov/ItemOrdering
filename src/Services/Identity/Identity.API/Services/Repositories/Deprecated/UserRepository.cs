@@ -133,7 +133,7 @@ namespace Identity.API.Services.Deprecated
             //    if (refreshToken is null) return NotFound(new ErrorResponse("Invalid refresh token"));
 
             //    // Invalidate the refresh token
-            //    await this.refreshTokenRepository.DeleteAsync(refreshToken.Id);
+            //    await this.refreshTokenRepository.DeleteByUserIdAsync(refreshToken.Id);
 
             //    var user = await this.userRepository.GetByIdAsync(refreshToken.UserId);
             //    if (user is null) return NotFound(new ErrorResponse("User not found"));
@@ -146,13 +146,13 @@ namespace Identity.API.Services.Deprecated
             #region DeleteUser
             //[HttpDelete(DeleteRequest.ROUTE)]
             //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-            //public async Task<IActionResult> DeleteAsync()
+            //public async Task<IActionResult> DeleteByUserIdAsync()
             //{
             //    var unparsedUserId = HttpContext.User.FindFirstValue("id");
 
             //    if (!Guid.TryParse(unparsedUserId, out var userId)) return Unauthorized();
 
-            //    var deleteUserResult = await this.userRepository.DeleteAsync(userId);
+            //    var deleteUserResult = await this.userRepository.DeleteByUserIdAsync(userId);
             //    if (!deleteUserResult.IsAcknowledged) return BadRequest(new ErrorResponse("Unable to delete user"));
 
             //    await this.refreshTokenRepository.DeleteAllForUserAsync(userId);

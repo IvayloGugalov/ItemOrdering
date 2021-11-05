@@ -6,6 +6,6 @@ namespace Identity.Domain.Interfaces
 {
     public interface IAuthenticator
     {
-        Task<AuthenticationTokens> AuthenticateUserAsync(AuthUser user);
+        Task<AccessAndRefreshToken> AuthenticateUserAsync(AuthUser user);
     }
 }

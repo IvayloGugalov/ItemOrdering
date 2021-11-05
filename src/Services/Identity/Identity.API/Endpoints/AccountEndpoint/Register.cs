@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
@@ -7,18 +6,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Identity.API.Extensions;
 using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
     [ApiController]
     public class Register : ControllerBase
     {
-        private readonly UserManager<AuthUser> userManager;
+        private readonly IUserService userService;
 
-        public Register(UserManager<AuthUser> userManager)
+        public Register(IUserService userService)
         {
-            this.userManager = userManager;
+            this.userService = userService;
         }
 
         [HttpPost(RegisterRequest.ROUTE)]
@@ -29,29 +30,33 @@ namespace Identity.API.Endpoints.AccountEndpoint
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            var registrationUser = new AuthUser(
+            // TODO: Validate that the passed role is real
+            var (roleName, roleDescription) = request.Role.GetAttributeInfo();
+            if (roleDescription == string.Empty) return BadRequest(new ErrorResponse("Role is invalid"));
+
+            var customerPermission = request.Role.GetPermissionAsChar();
+            var roleToPermissions = new RoleToPermissions(roleName, roleDescription, customerPermission.ToString());
+
+            var result = await this.userService.RegisterUserAsync(
                 firstName: request.FirstName,
                 lastName: request.LastName,
                 email: request.Email,
-                username: request.Username,
-                passwordHash: request.Password,
-                address: request.Address,
-                roles: Array.Empty<RoleToPermissions>());
+                userName: request.Username,
+                password: request.Password,
+                roleToPermissions: roleToPermissions);
 
-           var result = await this.userManager.CreateAsync(registrationUser, request.Password);
+            if (!result.Succeeded)
+            {
+                IdentityErrorDescriber errorDescriber;
+                var error = result.Errors.FirstOrDefault();
 
-           if (!result.Succeeded)
-           {
-               IdentityErrorDescriber errorDescriber;
-               var error = result.Errors.FirstOrDefault();
-
-               return error?.Code switch
-               {
-                   nameof(errorDescriber.DuplicateEmail) => Conflict(new ErrorResponse("Email already exists.")),
-                   nameof(errorDescriber.DuplicateUserName) => Conflict(new ErrorResponse("UserName already exists.")),
-                   _ => Conflict(new ErrorResponse(error.Code)),
-               };
-           }
+                return error?.Code switch
+                {
+                    nameof(errorDescriber.DuplicateEmail) => Conflict(new ErrorResponse("Email already exists.")),
+                    nameof(errorDescriber.DuplicateUserName) => Conflict(new ErrorResponse("UserName already exists.")),
+                    _ => Conflict(new ErrorResponse(error.Code)),
+                };
+            }
 
             return Ok(result);
         }

@@ -20,7 +20,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
         [HttpPost(PasswordResetRequest.ROUTE)]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromBody]PasswordResetRequest request)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetRequest request)
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 

@@ -1,9 +1,11 @@
-﻿using Identity.Domain.Entities;
+﻿using System.Threading.Tasks;
+
+using Identity.Domain.Entities;
 
 namespace Identity.Domain.Interfaces
 {
     public interface IAccessTokenGenerator
     {
-        string GenerateAccessToken(AuthUser user);
+        Task<string> GenerateAccessToken(AuthUser user);
     }
 }

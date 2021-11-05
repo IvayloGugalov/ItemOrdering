@@ -10,8 +10,4 @@
     <PackageReference Include="GuardClauses_IG" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Admin\" />
-  </ItemGroup>
-
 </Project>

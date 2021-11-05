@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
-using AspNetCore.Identity.Mongo;
-using AspNetCore.Identity.Mongo.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -18,18 +17,25 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
+using AspNetCore.Identity.Mongo;
+using AspNetCore.Identity.Mongo.Model;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+
+using Identity.API.Policy;
+using Identity.API.Services;
 using Identity.API.Services.Repositories;
-using Identity.API.Services.TokenGenerators;
-using Identity.API.Services.TokenValidators;
+using Identity.API.Services.TokenServices.TokenGenerators;
+using Identity.API.Services.TokenServices.TokenValidators;
 using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 using Identity.Domain.Services;
-using Microsoft.AspNetCore.Identity;
+
 
 namespace Identity.API
 {
@@ -54,10 +60,17 @@ namespace Identity.API
 
             this.ConfigureUsedServices(services);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(x =>
+            services.AddAuthentication(auth =>
                 {
-                    x.TokenValidationParameters = new TokenValidationParameters()
+                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(config =>
+                {
+                    authenticationConfiguration.CheckJwtConfiguration();
+
+                    config.TokenValidationParameters = new TokenValidationParameters
                     {
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
                         ValidIssuer = authenticationConfiguration.Issuer,
@@ -67,7 +80,21 @@ namespace Identity.API
                         ValidateAudience = true,
                         ClockSkew = TimeSpan.Zero
                     };
+                    config.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
+
+            services.AddHttpClient();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -164,10 +191,16 @@ namespace Identity.API
 
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 
+            BsonClassMap.RegisterClassMap<AuthUser>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapField("userRoles").SetElementName(nameof(AuthUser.UserRoles));
+            });
+
             var mongoDbSettings = Configuration.GetSection(nameof(IdentityDatabaseSettings))
                 .Get<IdentityDatabaseSettings>();
 
-            services.AddIdentityMongoDbProvider<AuthUser, UserToRole, Guid>(
+            services.AddIdentityMongoDbProvider<AuthUser, MongoRole<Guid>, Guid>(
                 options =>
                 {
                     options.Password.RequireDigit = false;
@@ -177,7 +210,7 @@ namespace Identity.API
                     options.Password.RequiredLength = 1;
                     options.Password.RequiredUniqueChars = 0;
 
-                    options.User.RequireUniqueEmail = true;
+                    options.User.RequireUniqueEmail = false;
 
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                     options.Lockout.MaxFailedAccessAttempts = 5;
@@ -185,8 +218,7 @@ namespace Identity.API
                 mongo =>
                 {
                     mongo.ConnectionString = mongoDbSettings.ConnectionString;
-                })
-                .AddRoles<IdentityRole>();
+                });
 
             services.AddHealthChecks()
                 .AddMongoDb(
@@ -198,9 +230,22 @@ namespace Identity.API
 
         private void ConfigureUsedServices(IServiceCollection services)
         {
+            services.AddSingleton(new AuthPermissionsOptions
+            {
+                EnumPermissionsType = typeof(Permissions)
+            });
+            services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, PermissionPolicyHandler>();
+            services.AddScoped<IUserClaimsPrincipalFactory<AuthUser>, PermissionsToUserClaimsFactory>();
+
+            services.AddTransient<IUsersPermissionsService, UsersPermissionsService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserToRoleRepository, UserToRoleRepository>();
+            services.AddTransient<IClaimsExtractor, ClaimsExtractor>();
             services.AddTransient<IAuthenticator, Authenticator>();
             services.AddTransient<ITokenGenerator, TokenGenerator>();
             services.AddTransient<IAccessTokenGenerator, AccessTokenGenerator>();
+            services.AddTransient<IAccessTokenValidator, AccessTokenValidator>();
             services.AddTransient<IRefreshTokenGenerator, RefreshTokenGenerator>();
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddTransient<IRefreshTokenValidator, RefreshTokenValidator>();
