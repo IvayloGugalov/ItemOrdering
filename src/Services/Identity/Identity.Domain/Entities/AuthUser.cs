@@ -25,14 +25,14 @@ namespace Identity.Domain.Entities
         [PersonalData]
         private HashSet<UserToRole> userRoles;
 
-        public AuthUser(string firstName, string lastName, string email, string username, string passwordHash, IEnumerable<RoleToPermissions> roles)
+        public AuthUser(string firstName, string lastName, string email, string userName, string password, IEnumerable<RoleToPermissions> roles)
         {
             this.Id = Guid.NewGuid();
             this.FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
             this.LastName = Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
             this.Email = Guard.Against.NullOrWhiteSpace(email, nameof(email));
-            this.UserName = Guard.Against.NullOrWhiteSpace(username, nameof(username));
-            this.PasswordHash = Guard.Against.NullOrWhiteSpace(passwordHash, nameof(passwordHash));
+            this.UserName = Guard.Against.NullOrWhiteSpace(userName, nameof(userName));
+            this.PasswordHash = Guard.Against.NullOrWhiteSpace(password, nameof(password));
 
             Guard.Against.NullOrEmpty(roles, nameof(roles));
             this.userRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
@@ -59,6 +59,12 @@ namespace Identity.Domain.Entities
         public void ReplaceAllRoles(IEnumerable<RoleToPermissions> roles)
         {
             this.userRoles = new HashSet<UserToRole>(roles.Select(x => new UserToRole(this.Id, x)));
+        }
+
+        public void UpdateUserNameAndEmail(string userName, string email)
+        {
+            this.UserName = Guard.Against.NullOrWhiteSpace(userName, nameof(userName));
+            this.Email = Guard.Against.NullOrWhiteSpace(email, nameof(email));
         }
     }
 }

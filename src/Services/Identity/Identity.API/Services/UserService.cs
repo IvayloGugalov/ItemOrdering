@@ -30,17 +30,15 @@ namespace Identity.API.Services
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                username: userName,
-                passwordHash: password,
+                userName: userName,
+                password: password,
                 roles: new[] { roleToPermissions });
-
-            await this.userToRoleRepository.CreateAsync(new UserToRole(registrationUser.Id, roleToPermissions));
 
             var result = await this.userManager.CreateAsync(registrationUser, password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                await this.userToRoleRepository.DeleteByUserIdAsync(registrationUser.Id);
+                await this.userToRoleRepository.CreateAsync(new UserToRole(registrationUser.Id, roleToPermissions));
             }
 
             return result;

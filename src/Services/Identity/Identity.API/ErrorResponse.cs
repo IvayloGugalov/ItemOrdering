@@ -3,7 +3,7 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Identity.API.Endpoints
+namespace Identity.API
 {
     public static class GetModelErrorMessages
     {

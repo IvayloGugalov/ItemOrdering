@@ -25,6 +25,11 @@ namespace Identity.API.Services.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<UserToRole>> GetRolesAsync()
+        {
+            return await this.usersToRolesCollection.AsQueryable().ToListAsync();
+        }
+
         public async Task CreateAsync(UserToRole userToRole)
         {
             await this.usersToRolesCollection.InsertOneAsync(userToRole);

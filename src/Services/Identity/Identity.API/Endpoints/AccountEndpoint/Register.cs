@@ -47,15 +47,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
             if (!result.Succeeded)
             {
-                IdentityErrorDescriber errorDescriber;
-                var error = result.Errors.FirstOrDefault();
-
-                return error?.Code switch
-                {
-                    nameof(errorDescriber.DuplicateEmail) => Conflict(new ErrorResponse("Email already exists.")),
-                    nameof(errorDescriber.DuplicateUserName) => Conflict(new ErrorResponse("UserName already exists.")),
-                    _ => Conflict(new ErrorResponse(error.Code)),
-                };
+                return Conflict(result.GetErrorResponse());
             }
 
             return Ok(result);
