@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Identity.Domain.Entities;
+using Identity.Shared;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {

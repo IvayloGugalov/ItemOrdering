@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using Identity.Domain;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -22,7 +21,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
         public string Username { get; set; }
 
         [Required]
-        public Permissions Role { get; set; }
+        public Permissions.Permissions Role { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

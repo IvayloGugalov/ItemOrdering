@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Identity.API.Extensions;
-using Identity.Domain;
-using Identity.Domain.Entities;
+using Identity.Infrastructure.MongoDB;
 
 namespace Identity.API
 {
@@ -28,20 +26,9 @@ namespace Identity.API
             var services = scope.ServiceProvider;
             try
             {
-                var mongoSettings = services.GetRequiredService<IMongoDatabaseSettings>();
-                var roleToPermissionCollection = MongoExtension.GetCollection<RoleToPermissions>(mongoSettings, mongoSettings.RolesToPermissionsCollectionName);
+                var permissionsSeeder = services.GetRequiredService<IPermissionsSeeder>();
 
-                if (await roleToPermissionCollection.EstimatedDocumentCountAsync() >= 0) return;
-
-                var permissions = (Permissions[])Enum.GetValues(typeof(Permissions));
-
-                foreach (var permission in permissions)
-                {
-                    var (name, description) = permission.GetAttributeInfo();
-                    var packedPermission = permission.GetPermissionAsChar().ToString();
-
-                    await roleToPermissionCollection.InsertOneAsync(new RoleToPermissions(name, description, packedPermission));
-                }
+                await permissionsSeeder.SeedDbWithPermissions();
             }
             catch (Exception e)
             {

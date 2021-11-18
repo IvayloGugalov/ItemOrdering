@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -26,15 +26,15 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
+using Identity.Admin;
 using Identity.API.Policy;
 using Identity.API.Services;
-using Identity.API.Services.Repositories;
-using Identity.API.Services.TokenServices.TokenGenerators;
-using Identity.API.Services.TokenServices.TokenValidators;
-using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 using Identity.Domain.Services;
+using Identity.Infrastructure.MongoDB;
+using Identity.Permissions.Interfaces;
+using Identity.Tokens;
 
 
 namespace Identity.API
@@ -53,46 +53,11 @@ namespace Identity.API
         {
             this.ConfigureMongoServices(services);
 
-            var authenticationConfiguration = new AuthenticationConfiguration();
-            // Authentication = json object inside appsettings.json
-            this.Configuration.Bind("Authentication", authenticationConfiguration);
-            services.AddSingleton(authenticationConfiguration);
-
             this.ConfigureUsedServices(services);
 
-            services.AddAuthentication(auth =>
-                {
-                    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(config =>
-                {
-                    authenticationConfiguration.CheckJwtConfiguration();
+            this.AddAuthentication(services);
 
-                    config.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
-                        ValidIssuer = authenticationConfiguration.Issuer,
-                        ValidAudience = authenticationConfiguration.Audience,
-                        ValidateIssuerSigningKey = true,
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
-                    config.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
-                        {
-                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                            {
-                                context.Response.Headers.Add("Token-Expired", "true");
-                            }
-
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
+            services.AddAdminServices();
 
             services.AddHttpClient();
 
@@ -143,6 +108,16 @@ namespace Identity.API
                 app.UseHttpsRedirection();
             }
 
+            app.UseExceptionHandler(x => x.Run(async context =>
+            {
+                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                var exception = exceptionHandlerPathFeature.Error;
+
+                var result = JsonSerializer.Serialize(new { error = exception.Message });
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(result);
+            }));
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -183,11 +158,11 @@ namespace Identity.API
 
         private void ConfigureMongoServices(IServiceCollection services)
         {
+            services.AddMongoDbStorage()
+                .AddTokenServices();
+
             services.Configure<IdentityDatabaseSettings>(
                 Configuration.GetSection(nameof(IdentityDatabaseSettings)));
-
-            services.AddSingleton<IMongoDatabaseSettings>(sp =>
-                sp.GetRequiredService<IOptions<IdentityDatabaseSettings>>().Value);
 
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 
@@ -228,27 +203,59 @@ namespace Identity.API
                     tags: new [] { "ready" });
         }
 
+        private void AddAuthentication(IServiceCollection services)
+        {
+            var authenticationConfiguration = new AuthenticationConfiguration();
+            // Authentication = json object inside appsettings.json
+            this.Configuration.Bind("Authentication", authenticationConfiguration);
+            services.AddSingleton(authenticationConfiguration);
+
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(config =>
+                {
+                    authenticationConfiguration.CheckJwtConfiguration();
+
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
+                        ValidIssuer = authenticationConfiguration.Issuer,
+                        ValidAudience = authenticationConfiguration.Audience,
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    config.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+        }
+
         private void ConfigureUsedServices(IServiceCollection services)
         {
-            services.AddSingleton(new AuthPermissionsOptions
-            {
-                EnumPermissionsType = typeof(Permissions)
-            });
             services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionPolicyHandler>();
             services.AddScoped<IUserClaimsPrincipalFactory<AuthUser>, PermissionsToUserClaimsFactory>();
 
             services.AddTransient<IUsersPermissionsService, UsersPermissionsService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IUserToRoleRepository, UserToRoleRepository>();
             services.AddTransient<IClaimsExtractor, ClaimsExtractor>();
             services.AddTransient<IAuthenticator, Authenticator>();
-            services.AddTransient<ITokenGenerator, TokenGenerator>();
-            services.AddTransient<IAccessTokenGenerator, AccessTokenGenerator>();
-            services.AddTransient<IAccessTokenValidator, AccessTokenValidator>();
-            services.AddTransient<IRefreshTokenGenerator, RefreshTokenGenerator>();
-            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
-            services.AddTransient<IRefreshTokenValidator, RefreshTokenValidator>();
         }
     }
 }

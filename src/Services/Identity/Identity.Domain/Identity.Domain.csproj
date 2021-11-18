@@ -10,4 +10,9 @@
     <PackageReference Include="GuardClauses_IG" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Identity.Permissions\Identity.Permissions.csproj" />
+    <ProjectReference Include="..\Identity.Tokens\Identity.Tokens.csproj" />
+  </ItemGroup>
+
 </Project>

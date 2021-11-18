@@ -3,9 +3,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
+using Identity.Shared;
+using Identity.Tokens;
+using Identity.Tokens.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {

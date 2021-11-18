@@ -2,8 +2,11 @@
 
 using Microsoft.AspNetCore.Identity;
 
+using Identity.Shared;
+
 namespace Identity.API.Extensions
 {
+    // TODO: Move to Shared?
     public static class IdentityResultExt
     {
 

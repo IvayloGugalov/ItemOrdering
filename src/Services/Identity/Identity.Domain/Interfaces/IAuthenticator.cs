@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 using Identity.Domain.Entities;
+using Identity.Tokens;
 
 namespace Identity.Domain.Interfaces
 {

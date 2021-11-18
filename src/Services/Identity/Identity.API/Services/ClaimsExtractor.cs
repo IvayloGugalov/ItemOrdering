@@ -4,9 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
+using Identity.Permissions;
 
 namespace Identity.API.Services
 {
@@ -32,7 +32,7 @@ namespace Identity.API.Services
             else
             {
                 var roles = user.UserRoles.Select(x =>
-                    (char)Convert.ChangeType(Enum.Parse(typeof(Permissions), x.RoleName), typeof(char)));
+                    (char)Convert.ChangeType(Enum.Parse(typeof(Permissions.Permissions), x.RoleName), typeof(char)));
 
                 var allRoles = new string(roles.ToArray());
 

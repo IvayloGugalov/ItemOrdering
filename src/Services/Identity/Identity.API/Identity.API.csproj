@@ -19,7 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Identity.Admin\Identity.Admin.csproj" />
     <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
+    <ProjectReference Include="..\Identity.Infrastructure.MongoDB\Identity.Infrastructure.MongoDB.csproj" />
+    <ProjectReference Include="..\Identity.Permissions\Identity.Permissions.csproj" />
+    <ProjectReference Include="..\Identity.Tokens\Identity.Tokens.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
-using Identity.Domain;
-using Identity.Domain.Interfaces;
+using Identity.Permissions;
+using Identity.Tokens;
+using Identity.Tokens.Interfaces;
 
 namespace Identity.API.Policy
 {
@@ -14,12 +15,10 @@ namespace Identity.API.Policy
     {
         private readonly IAccessTokenValidator accessTokenValidator;
         private readonly HttpContext httpContext;
-        private readonly Type permissionsType;
 
-        public PermissionPolicyHandler(AuthPermissionsOptions options, IHttpContextAccessor httpContextAccessor, IAccessTokenValidator accessTokenValidator)
+        public PermissionPolicyHandler(IHttpContextAccessor httpContextAccessor, IAccessTokenValidator accessTokenValidator)
         {
             this.accessTokenValidator = accessTokenValidator;
-            this.permissionsType = options.EnumPermissionsType;
             this.httpContext = httpContextAccessor.HttpContext;
         }
 
@@ -48,7 +47,7 @@ namespace Identity.API.Policy
 
             if (permissionsClaim == null) return Task.CompletedTask;
 
-            if (this.permissionsType.ThisPermissionIsAllowed(permissionsClaim.Value, requirement.PermissionName))
+            if (permissionsClaim.IsPermissionAllowed(requirement.PermissionName))
             {
                 context.Succeed(requirement);
             }

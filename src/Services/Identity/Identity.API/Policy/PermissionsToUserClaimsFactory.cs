@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-using Identity.API.Services;
+using Identity.API.Extensions;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 

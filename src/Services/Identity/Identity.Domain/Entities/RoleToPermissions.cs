@@ -7,7 +7,7 @@ namespace Identity.Domain.Entities
 {
     public class RoleToPermissions
     {
-        [BsonRequired]
+        [BsonId]
         public string RoleName { get; private set; }
 
         /// This contains the list of permissions as a series of unicode chars

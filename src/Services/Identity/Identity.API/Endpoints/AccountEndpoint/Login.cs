@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.Domain;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
+using Identity.Shared;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -52,27 +51,11 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
         // TODO: Remove
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HasPermission(Permissions.Customer)]
+        [HasPermission(Permissions.Permissions.Customer)]
         [HttpGet("api/login/secret")]
         public string Secret()
         {
             return "customer secret";
-        }
-    }
-
-    // TODO: Remove, use it inside the projects calling the Auth Api
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-    public class HasPermissionAttribute : AuthorizeAttribute
-    {
-        /// <summary>
-        /// This creates an HasPermission attribute with a Permission enum member
-        /// </summary>
-        /// <param name="permission"></param>
-        public HasPermissionAttribute(object permission) : base(permission?.ToString()!)
-        {
-            if (permission == null) throw new ArgumentNullException(nameof(permission));
-
-            var type = permission.GetType();
         }
     }
 }

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
+    <ProjectReference Include="..\Identity.Infrastructure.MongoDB\Identity.Infrastructure.MongoDB.csproj" />
+    <ProjectReference Include="..\Identity.Shared\Identity.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
