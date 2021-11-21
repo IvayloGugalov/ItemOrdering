@@ -1,5 +1,6 @@
 ﻿using Identity.Domain.Entities;
 using Identity.Tokens.Tokens;
+
 using MongoDB.Driver;
 
 namespace Identity.Infrastructure.MongoDB.Storages
@@ -8,6 +9,7 @@ namespace Identity.Infrastructure.MongoDB.Storages
     {
         IMongoClient Client { get; }
         IMongoDatabase Database { get; }
+        string DatabaseName { get; }
 
         IMongoCollection<RefreshToken> RefreshTokens { get; }
         IMongoCollection<UserToRole> UsersToRoles { get; }

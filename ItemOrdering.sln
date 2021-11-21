@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Admin", "src\Servi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Shared", "src\Services\Identity\Identity.Shared\Identity.Shared.csproj", "{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.FunctionalTests", "src\Services\Identity\Identity.FunctionalTests\Identity.FunctionalTests.csproj", "{CAEF4C21-FECC-4687-87CE-420133706900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAEF4C21-FECC-4687-87CE-420133706900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAEF4C21-FECC-4687-87CE-420133706900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAEF4C21-FECC-4687-87CE-420133706900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAEF4C21-FECC-4687-87CE-420133706900}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{7A994A64-B42A-4A29-835C-A1404CA73820} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
 		{1CCD3249-F80D-484C-B38B-EE7D83C5DA5D} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
 		{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
+		{CAEF4C21-FECC-4687-87CE-420133706900} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8016928-19C4-463D-AB4C-1A92860FA316}

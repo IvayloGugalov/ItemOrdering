@@ -161,17 +161,16 @@ namespace Identity.API
             services.AddMongoDbStorage()
                 .AddTokenServices();
 
-            services.Configure<IdentityDatabaseSettings>(
-                Configuration.GetSection(nameof(IdentityDatabaseSettings)));
-
+            // Registering the settings here, because the default settings are registered here and not before we create MongoStorage
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-
             BsonClassMap.RegisterClassMap<AuthUser>(cm =>
             {
                 cm.AutoMap();
                 cm.MapField("userRoles").SetElementName(nameof(AuthUser.UserRoles));
             });
 
+            services.Configure<IdentityDatabaseSettings>(
+                Configuration.GetSection(nameof(IdentityDatabaseSettings)));
             var mongoDbSettings = Configuration.GetSection(nameof(IdentityDatabaseSettings))
                 .Get<IdentityDatabaseSettings>();
 
