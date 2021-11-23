@@ -1,0 +1,24 @@
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Start dependencies (docker-compose)
+        run: |
+                    docker-compose up
+                    
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+
+      - name: Build
+        run: dotnet build src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj --configuration Debug
+    
+      - name: Test
+        run: dotnet test src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj --configuration Debug
