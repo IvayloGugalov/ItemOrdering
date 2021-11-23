@@ -25,4 +25,4 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f "/../../src/Services/Identity/Identity.FunctionalTests/docker-compose.yml" down
+        run: docker-compose -f "src/Services/Identity/Identity.FunctionalTests/docker-compose.yml" down
