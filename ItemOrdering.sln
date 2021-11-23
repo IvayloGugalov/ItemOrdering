@@ -35,9 +35,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infrastructure.Mon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Admin", "src\Services\Identity\Identity.Admin\Identity.Admin.csproj", "{1CCD3249-F80D-484C-B38B-EE7D83C5DA5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Shared", "src\Services\Identity\Identity.Shared\Identity.Shared.csproj", "{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Shared", "src\Services\Identity\Identity.Shared\Identity.Shared.csproj", "{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.FunctionalTests", "src\Services\Identity\Identity.FunctionalTests\Identity.FunctionalTests.csproj", "{CAEF4C21-FECC-4687-87CE-420133706900}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.FunctionalTests", "src\Services\Identity\Identity.FunctionalTests\Identity.FunctionalTests.csproj", "{CAEF4C21-FECC-4687-87CE-420133706900}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{E96878B6-E3E7-4999-92D8-48A6D7716911}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\run-auth-integration-tests.yml = .github\workflows\run-auth-integration-tests.yml
+		.github\workflows\run-coverage.yml = .github\workflows\run-coverage.yml
+		.github\workflows\runtests.yml = .github\workflows\runtests.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
