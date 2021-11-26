@@ -1,4 +1,11 @@
-on: [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+  workflow_dispatch:
 
 jobs:
   run-auth-integration-tests:
