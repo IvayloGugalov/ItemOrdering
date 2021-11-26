@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
-using Ordering.FunctionalTests.HttpExtension;
 using Ordering.Infrastructure.Data;
 
 namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests

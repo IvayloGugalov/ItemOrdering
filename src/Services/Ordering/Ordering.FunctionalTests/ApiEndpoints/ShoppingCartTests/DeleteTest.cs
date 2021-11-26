@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.ShoppingCartEndpoint;
-using Ordering.FunctionalTests.HttpExtension;
 using Ordering.Infrastructure.Data;
 
 namespace Ordering.FunctionalTests.ApiEndpoints.ShoppingCartTests
