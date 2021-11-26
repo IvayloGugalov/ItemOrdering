@@ -9,21 +9,28 @@ using Identity.Infrastructure.MongoDB.Storages;
 
 namespace Identity.FunctionalTests
 {
-    public class IntegrationTestBase : IClassFixture<TestIdentityWebAppFactory<Startup>>, IDisposable
-    {
-        internal readonly HttpClient client;
-        internal readonly IMongoStorage mongoStorage;
+    [CollectionDefinition(IntegrationTestBase.TEST_COLLECTION_NAME)]
+    public class Base : ICollectionFixture<IntegrationTestBase> { }
 
-        protected IntegrationTestBase(TestIdentityWebAppFactory<Startup> factory)
+    public class IntegrationTestBase : IDisposable
+    {
+        public const string TEST_COLLECTION_NAME = "IntegrationTestBase";
+
+        public HttpClient Client { get; }
+        public IMongoStorage MongoStorage { get; }
+        public TestIdentityWebAppFactory<Startup> Factory { get; }
+
+        public IntegrationTestBase()
         {
-            this.client = factory.CreateClient();
-            this.mongoStorage = factory.Services.GetService<IMongoStorage>();
+            this.Factory = new TestIdentityWebAppFactory<Startup>();
+            this.Client = this.Factory.CreateClient();
+            this.MongoStorage = this.Factory.Services.GetService<IMongoStorage>();
         }
 
         public void Dispose()
         {
-            this.mongoStorage.Client.DropDatabase(this.mongoStorage.DatabaseName);
-            this.client?.Dispose();
+            this.MongoStorage.Client.DropDatabase(this.MongoStorage.DatabaseName);
+            this.Client?.Dispose();
         }
     }
 }

@@ -1,16 +1,21 @@
 on: [push, workflow_dispatch]
 
 jobs:
-  docker:
+  run-auth-integration-tests:
+
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      Test_Project_Path: src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj
+      Docker_Compose_Path: "src/Services/Identity/Identity.FunctionalTests/docker-compose.yml"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         
       - name: Start dependencies (docker-compose)
         run: |
-          docker-compose -f "src/Services/Identity/Identity.FunctionalTests/docker-compose.yml" up -d --build
+          docker-compose -f ${{ env.Docker_Compose_Path }} up -d --build
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -18,11 +23,11 @@ jobs:
           dotnet-version: '5.0.x'
 
       - name: Build
-        run: dotnet build src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj --configuration Debug
+        run: dotnet build ${{ env.Test_Project_Path }} --configuration Debug
     
       - name: Test
-        run: dotnet test src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj --configuration Debug
+        run: dotnet test ${{ env.Test_Project_Path }} --configuration Debug
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f "src/Services/Identity/Identity.FunctionalTests/docker-compose.yml" down
+        run: docker-compose -f ${{ env.Docker_Compose_Path }} down

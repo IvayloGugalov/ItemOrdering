@@ -6,5 +6,13 @@
     "UsersToRolesCollectionName": "UsersToRoles",
     "ConnectionString": "mongodb://localhost:49586/identity",
     "DatabaseName": "identity"
+  },
+  "Authentication": {
+    "AccessTokenSecretKey": "AuthKeyThatMustBeAtaMinimumNumberOfBytesSoItCanSucceedOrItWillThrow",
+    "RefreshTokenSecretKey": "RefreshKeyThatMustBeAtaMinimumNumberOfBytesSoItCanSucceedOrItWillThrow",
+    "AccessTokenExpirationMinutes": "5",
+    "RefreshTokenExpirationMinutes": "5",
+    "Issuer": "https://localhost:5005",
+    "Audience": "https://localhost:5005"
   }
 }
