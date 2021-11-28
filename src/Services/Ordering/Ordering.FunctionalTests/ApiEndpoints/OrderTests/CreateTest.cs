@@ -13,7 +13,7 @@ using Ordering.Domain.OrderAggregate.Specifications;
 using Ordering.Domain.Shared;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
+namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class CreateTest

@@ -12,7 +12,7 @@ using Ordering.API;
 using Ordering.API.Endpoints.ShoppingCartEndpoint;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.FunctionalTests.ApiEndpoints.ShoppingCartTests
+namespace Ordering.Functional.Tests.ApiEndpoints.ShoppingCartTests
 {
     [TestFixture]
     public class DeleteTest

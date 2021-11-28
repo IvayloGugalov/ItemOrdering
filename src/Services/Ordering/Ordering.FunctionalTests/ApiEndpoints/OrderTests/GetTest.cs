@@ -11,7 +11,7 @@ using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
+namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class GetTest
