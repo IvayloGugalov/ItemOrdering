@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      Test_Project_Path: src/Services/Identity/Identity.FunctionalTests/Identity.FunctionalTests.csproj
-      Docker_Compose_Path: "src/Services/Identity/Identity.FunctionalTests/docker-compose.yml"
+      Test_Project_Path: src/Services/Identity/Identity.FunctionalTests/Identity.Functional.Tests.csproj
+      Docker_Compose_Path: "src/Services/Identity/Identity.Functional.Tests/docker-compose.yml"
 
     steps:
       - name: Checkout
