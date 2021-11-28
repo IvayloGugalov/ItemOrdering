@@ -9,18 +9,14 @@ using HttpClientExtensions;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.FunctionalTests.EntityBuilders;
+using Identity.Functional.Tests.EntityBuilders;
 
-namespace Identity.FunctionalTests.AccountEndpointTest
+namespace Identity.Functional.Tests.AccountEndpointTest
 {
     [Collection(IntegrationTestBase.TEST_COLLECTION_NAME)]
     public class PasswordResetTest
     {
         private readonly IntegrationTestBase testBase;
-
-        private const string password = "420420";
-        private const string email = "mus6k@example.com";
-        private const string userName = "Doge123";
 
         public PasswordResetTest(IntegrationTestBase testBase)
         {
@@ -30,14 +26,8 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task PasswordResetTest_WillSucceed()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                PasswordResetTest.email,
-                PasswordResetTest.userName,
-                PasswordResetTest.password,
-                Permissions.Permissions.Customer,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var newPassword = "69696969";
             var data = JsonSerializer.Serialize(
@@ -45,7 +35,7 @@ namespace Identity.FunctionalTests.AccountEndpointTest
                 {
                     NewPassword = newPassword,
                     ConfirmNewPassword = newPassword,
-                    Email = PasswordResetTest.email
+                    Email = testUser.Email
                 });
             var content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -54,7 +44,7 @@ namespace Identity.FunctionalTests.AccountEndpointTest
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = PasswordResetTest.userName, Password = newPassword });
+                new LoginRequest { Username = testUser.UserName, Password = newPassword });
 
             var loginContent = new StringContent(body, Encoding.UTF8, "application/json");
 

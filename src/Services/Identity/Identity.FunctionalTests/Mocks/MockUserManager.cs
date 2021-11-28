@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace Identity.FunctionalTests.Mocks
+namespace Identity.Functional.Tests.Mocks
 {
     public static class MockUserManager
     {

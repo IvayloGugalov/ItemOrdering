@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using FluentAssertions;
@@ -12,20 +11,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.FunctionalTests.EntityBuilders;
+using Identity.Functional.Tests.EntityBuilders;
 using Identity.Tokens;
 using Identity.Tokens.Interfaces;
 
-namespace Identity.FunctionalTests.AccountEndpointTest
+using JsonSerializer = System.Text.Json.JsonSerializer;
+
+namespace Identity.Functional.Tests.AccountEndpointTest
 {
-    [Collection("IntegrationTestBase")]
+    [Collection(IntegrationTestBase.TEST_COLLECTION_NAME)]
     public class LoginTest
     {
         private readonly IntegrationTestBase testBase;
-
-        private const string userName = "Martia66n123";
-        private const string email = "m66usk@example.com";
-        private const string password = "420420";
 
         public LoginTest(IntegrationTestBase testBase)
         {
@@ -35,17 +32,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WillSucceed()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                LoginTest.email,
-                LoginTest.userName,
-                LoginTest.password,
-                Permissions.Permissions.Customer,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = LoginTest.userName, Password = LoginTest.password });
+                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -62,17 +53,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WithWrongUserName_WillFail()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                "mus77k@example.com",
-                "66546 name",
-                LoginTest.password,
-                Permissions.Permissions.Customer,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = LoginTest.userName + "..", Password = LoginTest.password });
+                new LoginRequest { Username = testUser.UserName + "..", Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -85,17 +70,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WithWrongPassword_WillFail()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                "m334usk@example.com",
-                "123 name",
-                LoginTest.password,
-                Permissions.Permissions.Customer,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = LoginTest.userName, Password = LoginTest.password + ".." });
+                new LoginRequest { Username = testUser.UserName, Password = testUser.Password + ".." });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -109,17 +88,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public void Test_Secret_WithPermission()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                LoginTest.email,
-                LoginTest.userName,
-                LoginTest.password,
-                Permissions.Permissions.Customer,
-                this.testBase.Factory);;
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = LoginTest.userName, Password = LoginTest.password });
+                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 

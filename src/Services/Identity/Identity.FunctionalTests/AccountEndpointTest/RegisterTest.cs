@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -9,12 +10,13 @@ using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
 
-namespace Identity.FunctionalTests.AccountEndpointTest
+namespace Identity.Functional.Tests.AccountEndpointTest
 {
     [Collection(IntegrationTestBase.TEST_COLLECTION_NAME)]
     public class RegisterTest
     {
         private readonly IntegrationTestBase testBase;
+        private string registeredUserName;
 
         public RegisterTest(IntegrationTestBase testBase)
         {
@@ -24,17 +26,19 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task RegisterTest_WillSucceed()
         {
+            var testUser = this.testBase.GetRandomUser();
             var data = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
-                    FirstName = "Elonk",
-                    LastName = "Musk",
-                    Email = "mu3sk@example.com",
-                    Username = "M3artian123",
-                    Role = Permissions.Permissions.Customer,
-                    Password = "420420",
-                    ConfirmPassword = "420420"
+                    FirstName = testUser.FirstName,
+                    LastName = testUser.LastName,
+                    Email = testUser.Email,
+                    Username = testUser.UserName,
+                    Role = Enum.Parse<Permissions.Permissions>(testUser.Permissions),
+                    Password = testUser.Password,
+                    ConfirmPassword = testUser.Password
                 });
+            this.registeredUserName = testUser.UserName;
 
             var content = new StringContent(data, Encoding.UTF8, "application/json");
 
@@ -47,16 +51,17 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task RegisterTest_OnInvalidRole_WillReturnABadRequest()
         {
+            var testUser = this.testBase.GetRandomUser();
             var data = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
-                    FirstName = "Elonk",
-                    LastName = "Musk",
-                    Email = "m1usk@example.com",
-                    Username = "Ma1rtian123",
+                    FirstName = testUser.FirstName,
+                    LastName = testUser.LastName,
+                    Email = testUser.Email,
+                    Username = testUser.UserName,
                     Role = (Permissions.Permissions)1,
-                    Password = "420420",
-                    ConfirmPassword = "420420"
+                    Password = testUser.Password,
+                    ConfirmPassword = testUser.Password
                 });
 
             var content = new StringContent(data, Encoding.UTF8, "application/json");
@@ -77,7 +82,7 @@ namespace Identity.FunctionalTests.AccountEndpointTest
                     FirstName = "Elonk",
                     LastName = "Musk",
                     Email = "mu2sk@example.com",
-                    Username = "M2artian123",
+                    Username = this.registeredUserName,
                     Role = Permissions.Permissions.Customer,
                     Password = "420420",
                     ConfirmPassword = "420420"

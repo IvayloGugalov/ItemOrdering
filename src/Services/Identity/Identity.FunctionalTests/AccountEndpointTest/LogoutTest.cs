@@ -12,19 +12,16 @@ using MongoDB.Driver;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.FunctionalTests.EntityBuilders;
+using Identity.Functional.Tests.EntityBuilders;
 using Identity.Infrastructure.MongoDB.Storages;
 using Identity.Tokens.Tokens;
 
-namespace Identity.FunctionalTests.AccountEndpointTest
+namespace Identity.Functional.Tests.AccountEndpointTest
 {
     [Collection(IntegrationTestBase.TEST_COLLECTION_NAME)]
     public class LogoutTest
     {
         private readonly IntegrationTestBase testBase;
-
-        private const string userName = "M5artian123";
-        private const string password = "420420";
 
         public LogoutTest(IntegrationTestBase testBase)
         {
@@ -34,17 +31,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task LogoutTest_WillSucceed()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                "mu35sk@example.com",
-                LogoutTest.userName,
-                LogoutTest.password,
-                Permissions.Permissions.NotSet,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = LogoutTest.userName, Password = LogoutTest.password });
+                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 

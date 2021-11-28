@@ -9,17 +9,14 @@ using HttpClientExtensions;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.FunctionalTests.EntityBuilders;
+using Identity.Functional.Tests.EntityBuilders;
 
-namespace Identity.FunctionalTests.AccountEndpointTest
+namespace Identity.Functional.Tests.AccountEndpointTest
 {
     [Collection(IntegrationTestBase.TEST_COLLECTION_NAME)]
     public class RefreshTest
     {
         private readonly IntegrationTestBase testBase;
-
-        private const string userName = "Ma1223122rtian123";
-        private const string password = "420420";
 
         public RefreshTest(IntegrationTestBase testBase)
         {
@@ -29,17 +26,11 @@ namespace Identity.FunctionalTests.AccountEndpointTest
         [Fact]
         public async Task RefreshTest_WillSucceed()
         {
-            AuthUserCreator.Create(
-                "Elonk",
-                "Musk",
-                "mu0sk@example.com",
-                RefreshTest.userName,
-                RefreshTest.password,
-                Permissions.Permissions.ShopOwner,
-                this.testBase.Factory);
+            var testUser = this.testBase.GetRandomUser();
+            AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = RefreshTest.userName, Password = RefreshTest.password });
+                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 

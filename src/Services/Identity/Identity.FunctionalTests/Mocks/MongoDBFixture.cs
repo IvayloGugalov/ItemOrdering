@@ -7,7 +7,7 @@ using Mongo2Go;
 using Identity.Infrastructure.MongoDB;
 using Identity.Infrastructure.MongoDB.Storages;
 
-namespace Identity.FunctionalTests.Mocks
+namespace Identity.Functional.Tests.Mocks
 {
     public class MongoDBFixture : IDisposable
     {

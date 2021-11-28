@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 
-namespace Identity.FunctionalTests.Proxies
+namespace Identity.Functional.Tests.Proxies
 {
     public class UserManagerProxy : IUserProxy
     {

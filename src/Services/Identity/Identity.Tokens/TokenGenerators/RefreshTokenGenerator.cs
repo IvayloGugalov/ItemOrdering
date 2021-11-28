@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Identity.Permissions;
 using Identity.Tokens.Interfaces;
 using Identity.Tokens.Tokens;
 
@@ -32,7 +34,8 @@ namespace Identity.Tokens.TokenGenerators
                 secretKey: this.authConfiguration.RefreshTokenSecretKey,
                 issuer: this.authConfiguration.Issuer,
                 audience: this.authConfiguration.Audience,
-                tokenExpirationMinutes: this.authConfiguration.RefreshTokenExpirationMinutes);
+                tokenExpirationMinutes: this.authConfiguration.RefreshTokenExpirationMinutes,
+                claims: new[] { new Claim(PermissionConstants.UserIdClaimType, userId.ToString()), });
 
             var refreshToken = new RefreshToken(refreshTokenValue, userId);
 

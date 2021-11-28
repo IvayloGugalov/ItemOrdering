@@ -3,13 +3,13 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using Identity.API;
-using Identity.FunctionalTests.Proxies;
+using Identity.Functional.Tests.Proxies;
 
-namespace Identity.FunctionalTests
+namespace Identity.Functional.Tests
 {
     public class TestIdentityWebAppFactory<TStartup> : WebApplicationFactory<Startup>
     {

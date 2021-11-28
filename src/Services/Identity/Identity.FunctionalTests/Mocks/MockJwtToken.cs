@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 using Microsoft.IdentityModel.Tokens;
 
-namespace Identity.FunctionalTests.Mocks
+namespace Identity.Functional.Tests.Mocks
 {
     public static class MockJwtToken
     {
