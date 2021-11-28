@@ -17,7 +17,7 @@ namespace Identity.Functional.Tests
         private static readonly string TEST_SETTINGS_JSON =
             Path.Combine(
                 Path.GetFullPath(
-                    Path.Combine("..", "..", "..", "..", "Identity.FunctionalTests")),
+                    Path.Combine("..", "..", "..", "..", "Identity.Functional.Tests")),
             "test_settings.json");
 
 

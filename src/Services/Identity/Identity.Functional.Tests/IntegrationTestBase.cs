@@ -21,7 +21,7 @@ namespace Identity.Functional.Tests
         private static readonly string TEST_DATA_JSON =
             Path.Combine(
                 Path.GetFullPath(
-                    Path.Combine("..", "..", "..", "..", "Identity.FunctionalTests")),
+                    Path.Combine("..", "..", "..", "..", "Identity.Functional.Tests")),
                 "test_data.json");
 
         private readonly Random random = new ();

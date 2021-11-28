@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Admin", "src\Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Shared", "src\Services\Identity\Identity.Shared\Identity.Shared.csproj", "{1AF4046B-23B8-49DA-92C6-4EE2B79E2A04}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Functional.Tests", "src\Services\Identity\Identity.FunctionalTests\Identity.Functional.Tests.csproj", "{CAEF4C21-FECC-4687-87CE-420133706900}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Functional.Tests", "src\Services\Identity\Identity.Functional.Tests\Identity.Functional.Tests.csproj", "{CAEF4C21-FECC-4687-87CE-420133706900}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{E96878B6-E3E7-4999-92D8-48A6D7716911}"
 	ProjectSection(SolutionItems) = preProject
