@@ -46,9 +46,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		.github\workflows\runtests.yml = .github\workflows\runtests.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClientExtensions", "src\Services\HttpClientExtensions\HttpClientExtensions.csproj", "{E4AE9635-657F-48A9-9EDF-96FA7CEC5AE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientExtensions", "src\Services\HttpClientExtensions\HttpClientExtensions.csproj", "{E4AE9635-657F-48A9-9EDF-96FA7CEC5AE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Infrastructure.MongoDB.Test", "src\Services\Identity\Identity.Infrastructure.MongoDB.Test\Identity.Infrastructure.MongoDB.Test.csproj", "{79B4A9EB-D5D7-4255-A181-88335363119C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Integration.Tests", "src\Services\Identity\Identity.Integration.Tests\Identity.Integration.Tests.csproj", "{79B4A9EB-D5D7-4255-A181-88335363119C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
