@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Ordering.FunctionalTests
+namespace Ordering.Functional.Tests
 {
     public class AuthenticationHandlerFactory : AuthenticationHandler<AuthenticationSchemeOptions>
     {

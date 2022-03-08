@@ -3,10 +3,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
-using Identity.API.Services.Authenticators;
-using Identity.API.Services.Repositories;
-using Identity.API.Services.TokenValidators;
+using Identity.Domain.Entities;
+using Identity.Domain.Interfaces;
+using Identity.Shared;
+using Identity.Tokens;
+using Identity.Tokens.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -16,13 +17,13 @@ namespace Identity.API.Endpoints.AccountEndpoint
         private readonly IRefreshTokenRepository refreshTokenRepository;
         private readonly IRefreshTokenValidator refreshTokenValidator;
         private readonly IAuthenticator authenticator;
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
         public Refresh(
             IRefreshTokenRepository refreshTokenRepository,
             IRefreshTokenValidator refreshTokenValidator,
             IAuthenticator authenticator,
-            UserManager<User> userManager)
+            UserManager<AuthUser> userManager)
         {
             this.refreshTokenRepository = refreshTokenRepository;
             this.refreshTokenValidator = refreshTokenValidator;
@@ -31,14 +32,20 @@ namespace Identity.API.Endpoints.AccountEndpoint
         }
 
         [HttpPost(RefreshRequest.ROUTE)]
-        public async Task<ActionResult> RefreshTokenWithManagerAsync([FromBody]RefreshRequest refreshRequest)
+        public async Task<ActionResult> RefreshTokenAsync([FromBody] RefreshRequest refreshRequest)
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            if (!this.refreshTokenValidator.Validate(refreshRequest.RefreshTokenValue)) return this.BadRequest(new ErrorResponse("Invalid refresh token"));
+            var validationResult = this.refreshTokenValidator.Validate(refreshRequest.RefreshTokenValue);
+            switch (validationResult)
+            {
+                case TokenValidationResult.TokenExpired:
+                    return this.BadRequest(new ErrorResponse("Token has expired"));
+                case TokenValidationResult.InvalidSignature:
+                    return this.BadRequest(new ErrorResponse("Token has invalid signature"));
+            }
 
-            // TODO: Expired? Invalid signature? Handle cases
-            var refreshToken = await this.refreshTokenRepository.GetByTokenValue(refreshRequest.RefreshTokenValue);
+            var refreshToken = await this.refreshTokenRepository.GetByTokenValueAsync(refreshRequest.RefreshTokenValue);
             if (refreshToken is null) return NotFound(new ErrorResponse("Invalid refresh token"));
 
             // Invalidate the refresh token
@@ -47,7 +54,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
             var user = await this.userManager.FindByIdAsync(refreshToken.UserId.ToString());
             if (user is null) return NotFound(new ErrorResponse("User not found"));
 
-            var response = await this.authenticator.AuthenticateUserAsync(user);
+            var (newAccessToken, newRefreshToken) = await this.authenticator.AuthenticateUserAsync(user);
+            var response = new UserAuthenticatedDto(newAccessToken, newRefreshToken);
+
             return Ok(response);
         }
     }

@@ -4,23 +4,24 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
+using Identity.Domain.Entities;
+using Identity.Shared;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
     [ApiController]
     public class PasswordReset : ControllerBase
     {
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public PasswordReset(UserManager<User> userManager)
+        public PasswordReset(UserManager<AuthUser> userManager)
         {
             this.userManager = userManager;
         }
 
         [HttpPost(PasswordResetRequest.ROUTE)]
         [AllowAnonymous]
-        public async Task<IActionResult> ResetPassword([FromBody]PasswordResetRequest request)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] PasswordResetRequest request)
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 

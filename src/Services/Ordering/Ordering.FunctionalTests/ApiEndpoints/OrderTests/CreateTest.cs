@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
 using Ordering.Domain.OrderAggregate.Specifications;
 using Ordering.Domain.Shared;
-using Ordering.FunctionalTests.HttpExtension;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
+namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class CreateTest

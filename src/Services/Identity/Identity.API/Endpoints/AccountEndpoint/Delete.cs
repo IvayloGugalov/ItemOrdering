@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Models;
-using Identity.API.Services.Repositories;
+using Identity.Domain.Entities;
+using Identity.Permissions;
+using Identity.Shared;
+using Identity.Tokens.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -17,9 +19,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
     public class Delete : ControllerBase
     {
         private readonly IRefreshTokenRepository refreshTokenRepository;
-        private readonly UserManager<User> userManager;
+        private readonly UserManager<AuthUser> userManager;
 
-        public Delete(UserManager<User> userManager, IRefreshTokenRepository refreshTokenRepository)
+        public Delete(UserManager<AuthUser> userManager, IRefreshTokenRepository refreshTokenRepository)
         {
             this.userManager = userManager;
             this.refreshTokenRepository = refreshTokenRepository;
@@ -27,9 +29,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
         [HttpDelete(DeleteRequest.ROUTE)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> DeleteWithManagerAsync()
+        public async Task<IActionResult> DeleteAsync()
         {
-            var unparsedUserId = HttpContext.User.FindFirstValue("id");
+            var unparsedUserId = HttpContext.User.FindFirstValue(PermissionConstants.UserIdClaimType);
 
             if (!Guid.TryParse(unparsedUserId, out var userId)) return Unauthorized();
 

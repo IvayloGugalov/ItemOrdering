@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using Identity.API.Services.Repositories;
+using Identity.Permissions;
+using Identity.Tokens.Interfaces;
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -24,7 +25,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> LogoutAsync()
         {
-            var unparsedUserId = HttpContext.User.FindFirstValue("id");
+            var unparsedUserId = HttpContext.User.FindFirstValue(PermissionConstants.UserIdClaimType);
 
             if (!Guid.TryParse(unparsedUserId, out var userId)) return Unauthorized();
 

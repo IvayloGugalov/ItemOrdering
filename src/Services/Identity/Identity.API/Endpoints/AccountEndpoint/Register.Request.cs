@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Identity.API.Models;
+
 
 namespace Identity.API.Endpoints.AccountEndpoint
 {
@@ -21,6 +21,9 @@ namespace Identity.API.Endpoints.AccountEndpoint
         public string Username { get; set; }
 
         [Required]
+        public Permissions.Permissions Role { get; set; }
+
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -28,8 +31,5 @@ namespace Identity.API.Endpoints.AccountEndpoint
         [DataType(DataType.Password)]
         [Compare(nameof(Password), ErrorMessage = "Password does not match confirm password.")]
         public string ConfirmPassword { get; set; }
-
-        [Required]
-        public Address Address { get; set; }
     }
 }
