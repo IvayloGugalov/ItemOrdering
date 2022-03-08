@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Ordering.FunctionalTests.HttpExtension
+namespace HttpClientExtensions
 {
     public static class HttpClientExtensionMethods
     {
@@ -99,7 +99,7 @@ namespace Ordering.FunctionalTests.HttpExtension
             {
                 response = await client.PostAsync(requestUri, content);
             }
-           
+
             response.EnsureSuccessStatusCode();
 
             var responseToSend = await response.Content.ReadFromJsonAsync<T>();

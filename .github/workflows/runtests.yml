@@ -1,6 +1,15 @@
 name: Item Ordering Build & Test
 
-on: [push, pull_request, workflow_dispatch]
+on: 
+  push:
+    paths:
+      - '!src/Services/Identity/**'
+  pull_request:
+    paths:
+      - '!src/Services/Identity/**'
+  workflow_dispatch:
+    paths:
+      - '!src/Services/Identity/**'  
 
 jobs:
   build:

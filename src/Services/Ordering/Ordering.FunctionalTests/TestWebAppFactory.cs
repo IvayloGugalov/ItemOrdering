@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Ordering.API;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.FunctionalTests
+namespace Ordering.Functional.Tests
 {
     public class TestWebAppFactory<TStartup> : WebApplicationFactory<Startup>
     {

@@ -1,4 +1,8 @@
-﻿using GuardClauses;
+﻿using System;
+using GuardClauses;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 using Identity.Domain.Entities;
@@ -10,6 +14,7 @@ namespace Identity.Infrastructure.MongoDB.Storages
     {
         public IMongoClient Client { get; }
         public IMongoDatabase Database { get; }
+        public string DatabaseName { get; }
 
         public IMongoCollection<RefreshToken> RefreshTokens { get; }
         public IMongoCollection<UserToRole> UsersToRoles { get; }
@@ -26,10 +31,11 @@ namespace Identity.Infrastructure.MongoDB.Storages
             //{
             //    settings.Credential = MongoCredential.CreateCredential("admin", options.Username, options.Password);
             //}
-
+            
             this.Client = new MongoClient(settings);
 
-            this.Database = this.Client.GetDatabase(options.DatabaseName);
+            this.DatabaseName = options.DatabaseName;
+            this.Database = this.Client.GetDatabase(this.DatabaseName);
 
             this.RefreshTokens = this.Database.GetCollection<RefreshToken>(options.RefreshTokensCollectionName ?? "RefreshTokens");
             this.UsersToRoles = this.Database.GetCollection<UserToRole>(options.UsersToRolesCollectionName ?? "UsersToRoles");

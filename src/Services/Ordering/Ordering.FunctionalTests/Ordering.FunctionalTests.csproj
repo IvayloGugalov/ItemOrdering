@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\HttpClientExtensions\HttpClientExtensions.csproj" />
     <ProjectReference Include="..\Ordering.Api\Ordering.API.csproj" />
     <ProjectReference Include="..\Ordering.Domain.Test\Ordering.Domain.Test.csproj" />
   </ItemGroup>
