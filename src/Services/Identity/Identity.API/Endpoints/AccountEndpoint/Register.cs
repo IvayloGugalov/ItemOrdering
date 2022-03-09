@@ -31,11 +31,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
             // TODO: Validate that the passed role is real
-            var (roleName, roleDescription) = request.Role.GetAttributeInfo();
-            if (roleDescription == string.Empty) return BadRequest(new ErrorResponse("Role is invalid"));
-
-            var customerPermission = request.Role.GetPermissionAsChar();
-            var roleToPermissions = new RoleToPermissions(roleName, roleDescription, customerPermission.ToString());
+            var roleToPermissions = new RoleToPermissions(request.Role);
 
             var result = await this.userService.RegisterUserAsync(
                 firstName: request.FirstName,

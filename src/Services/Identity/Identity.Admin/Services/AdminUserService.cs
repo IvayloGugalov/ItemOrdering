@@ -63,7 +63,7 @@ namespace Identity.Admin.Services
             if (roles.Any())
             {
                 foundRoles = this.rolesToPermissionsRepository.QueryRoleToPermissions()
-                    .Where(x => roles.Contains(x.RoleName))
+                    .Where(x => roles.Contains(x.DisplayName))
                     .ToList();
             }
 

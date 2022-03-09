@@ -50,6 +50,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientExtensions", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Integration.Tests", "src\Services\Identity\Identity.Integration.Tests\Identity.Integration.Tests.csproj", "{79B4A9EB-D5D7-4255-A181-88335363119C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Admin.React", "src\Services\Identity\Identity.Admin.React\Identity.Admin.React.csproj", "{86346944-EECC-4312-AF01-07E69D5FCBF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{79B4A9EB-D5D7-4255-A181-88335363119C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79B4A9EB-D5D7-4255-A181-88335363119C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79B4A9EB-D5D7-4255-A181-88335363119C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +149,7 @@ Global
 		{CAEF4C21-FECC-4687-87CE-420133706900} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{E4AE9635-657F-48A9-9EDF-96FA7CEC5AE2} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{79B4A9EB-D5D7-4255-A181-88335363119C} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
+		{86346944-EECC-4312-AF01-07E69D5FCBF4} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8016928-19C4-463D-AB4C-1A92860FA316}

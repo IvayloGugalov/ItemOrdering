@@ -27,7 +27,7 @@ namespace Identity.Permissions
             return permissionsClaim.Value.IsThisPermissionAllowed(permissionAsChar);
         }
 
-        public static List<string> ConvertPackedPermissionToNames(this string packedPermissions)
+        public static List<string> ConvertPackedPermissionsToNames(this string packedPermissions)
         {
             if (packedPermissions == null) return null;
 

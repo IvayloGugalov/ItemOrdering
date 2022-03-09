@@ -51,6 +51,16 @@ namespace Identity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("_allowMySpecificDomains", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+                //options.AddPolicy(name: "_allowMySpecificDomains",
+                //    builder =>
+                //    {
+                //        builder.WithOrigins("http://myApp", "http://myApi");
+                //    });
+            });
+            
             this.ConfigureMongoServices(services);
 
             this.ConfigureUsedServices(services);
@@ -100,6 +110,8 @@ namespace Identity.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(policyName: "_allowMySpecificDomains");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

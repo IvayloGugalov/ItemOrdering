@@ -50,7 +50,7 @@ namespace Identity.Admin.Services
             var packedPermissions = "";
             foreach (var permissionName in permissionNames)
             {
-                if (Enum.TryParse(typeof(Permissions.Permissions), permissionName, ignoreCase: true, out _))
+                if (Enum.TryParse<Permissions.Permissions>(permissionName, ignoreCase: true, out _))
                 {
                     packedPermissions += (char)Convert.ChangeType(permissionName, typeof(char));
                 }

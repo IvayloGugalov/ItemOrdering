@@ -6,17 +6,20 @@ namespace Identity.Permissions
     {
         NotSet = 0,
 
-        [Display(GroupName = "Customer", Name = "Access to only basic features", Description = "Customer with limited permissions (ordering).")]
+        [Display(Name = "Customer", Description = "Customer with limited permissions (ordering).")]
         Customer = 1000,
 
-        [Display(GroupName = "Shop Admins", Name = "Can access some shop features", Description = "Employee of the shop and has limited access.")]
-        ShopEmployee = 20000,
+        [Display(Name = "Shop Employee", Description = "Employee of the shop and has limited access.")]
+        ShopEmployee = 2000,
 
-        [Display(GroupName = "Shop Admins", Name = "Access all shop features", Description = "Owner of a shop with full access for it.")]
-        ShopOwner = 21000,
+        [Display(Name = "Shop Admin", Description = "Owner of a shop with full access for it.")]
+        ShopOwner = 2100,
 
-        [Display(GroupName = "Super Admin", Name = "Access All", Description = "Overall Admin with no access limitations.")]
-        AccessAll = ushort.MaxValue,
+        [Display(Name = "Admin", Description = "Admin with some access limitations.")]
+        Admin = ushort.MaxValue / 2,
+
+        [Display(Name = "Super Admin", Description = "Overall Admin with no access limitations.")]
+        SuperAdmin = ushort.MaxValue,
 
     }
 }

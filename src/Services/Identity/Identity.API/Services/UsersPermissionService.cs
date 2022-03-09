@@ -13,7 +13,7 @@ namespace Identity.API.Services
         {
             var packedPermissions = user.GetPackedPermissionsFromUser();
 
-            return packedPermissions.ConvertPackedPermissionToNames();
+            return packedPermissions.ConvertPackedPermissionsToNames();
         }
     }
 }

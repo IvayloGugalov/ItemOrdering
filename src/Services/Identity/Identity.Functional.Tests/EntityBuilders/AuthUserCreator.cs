@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Identity.API;
 using Identity.Domain.Entities;
 using Identity.Functional.Tests.Proxies;
-using Identity.Permissions;
 
 namespace Identity.Functional.Tests.EntityBuilders
 {
@@ -18,7 +17,6 @@ namespace Identity.Functional.Tests.EntityBuilders
             var userManagerProxy = scope.ServiceProvider.GetService<IUserProxy>();
 
             var permission = Enum.Parse<Permissions.Permissions>(testUser.Permissions);
-            var (roleName, roleDescription) = permission.GetAttributeInfo();
 
             userManagerProxy.CreateUser(
                 testUser.FirstName,
@@ -26,10 +24,7 @@ namespace Identity.Functional.Tests.EntityBuilders
                 testUser.Email,
                 testUser.UserName,
                 testUser.Password,
-                new RoleToPermissions(
-                    roleName,
-                    roleDescription,
-                    permission.GetPermissionAsChar().ToString()));
+                new RoleToPermissions(permission));
         }
     }
 }
