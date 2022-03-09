@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Identity.API.Extensions;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
-using Identity.Permissions;
 using Identity.Shared;
 
 namespace Identity.API.Endpoints.AccountEndpoint
@@ -31,6 +32,8 @@ namespace Identity.API.Endpoints.AccountEndpoint
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
             // TODO: Validate that the passed role is real
+            if (Enum.GetValues<Permissions.Permissions>().Contains(request.Role)) return BadRequest(new ErrorResponse("Role is invalid"));
+
             var roleToPermissions = new RoleToPermissions(request.Role);
 
             var result = await this.userService.RegisterUserAsync(
