@@ -19,7 +19,7 @@ namespace Identity.Permissions
             }
             catch
             {
-                return (name, string.Empty);
+                return (string.Empty, string.Empty);
             }
         }
 

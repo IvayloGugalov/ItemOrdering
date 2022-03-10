@@ -45,7 +45,7 @@ namespace Identity.Domain.Entities
         {
             var (roleName, description) = permissions.GetNameAndDescription();
             this.RoleName = Guard.Against.NullOrWhiteSpace(roleName, nameof(roleName));
-            this.DisplayName = permissions.GetDisplayName();
+            this.DisplayName = Guard.Against.NullOrWhiteSpace(permissions.GetDisplayName(), nameof(this.DisplayName));
 
             this.Update(permissions.GetPermissionAsChar().ToString(), description);
         }

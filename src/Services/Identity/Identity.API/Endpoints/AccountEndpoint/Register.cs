@@ -31,8 +31,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            // TODO: Validate that the passed role is real
-            if (Enum.GetValues<Permissions.Permissions>().Contains(request.Role)) return BadRequest(new ErrorResponse("Role is invalid"));
+            if (!Enum.GetValues<Permissions.Permissions>().Contains(request.Role)) return BadRequest(new ErrorResponse("Role is invalid"));
 
             var roleToPermissions = new RoleToPermissions(request.Role);
 
