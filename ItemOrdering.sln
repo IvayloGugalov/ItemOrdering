@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientExtensions", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Integration.Tests", "src\Services\Identity\Identity.Integration.Tests\Identity.Integration.Tests.csproj", "{79B4A9EB-D5D7-4255-A181-88335363119C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Admin.React", "src\Services\Identity\Identity.Admin.React\Identity.Admin.React.csproj", "{86346944-EECC-4312-AF01-07E69D5FCBF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Admin.React", "src\Services\Identity\Identity.Admin.React\Identity.Admin.React.csproj", "{86346944-EECC-4312-AF01-07E69D5FCBF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

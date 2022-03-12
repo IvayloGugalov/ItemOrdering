@@ -1,5 +1,5 @@
 name: Identity Functional Tests Run
-
+# TODO: https://github.com/Tyrrrz/GitHubActionsTestLogger
 on:
   workflow_dispatch:
   push:
