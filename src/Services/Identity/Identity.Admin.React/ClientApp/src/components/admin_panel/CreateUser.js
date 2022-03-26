@@ -4,11 +4,11 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { variables } from '../../Variables';
 import InputForm from './InputForm';
+import { variables } from '../../Variables';
+import useAxiosPrivate from '../../custom-hooks/useAxiosPrivate'
 
-function CreateUser() {
-
+const CreateUser = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -18,74 +18,51 @@ function CreateUser() {
   const [selectedRole, setSelectedRole] = useState(roles[0]);
   const [error, setError] = useState('');
 
-  
-  useEffect(() =>{
-      async function fetchRoles() {
-      try{
-        let response = await fetch(variables.API_URL + "admin/get-roles");
-        setRoles(await response.json());
-      }
-      catch (e){
-        console.error(e);
-      }
-    };
-    fetchRoles();
+  const axiosPrivate = useAxiosPrivate();
+
+  const getRoles = async () => {
+    try {
+      const response = await axiosPrivate.get(variables.IDENTITY_API_URL + "admin/get-roles",
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true
+      });
+
+      const roles = response?.data;
+      setRoles(roles);
+    }
+    catch (e){
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    setError('');
+  }, [firstName, lastName, email, userName, password, roles]);
+
+  useEffect(() => {
+    getRoles();
   }, []);
 
-  // https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/
-  // const [selectedRoles, setSelectedRoles] = useState([]);
-  // const [checkedState, setCheckedState] = useState(new Array(roles.length).fill(false));
-  
-  // const handleOnChange = (selectedRole, position) => {
-  //   const updatedCheckedState = checkedState.map((item, index) =>
-  //     index === position ? !item : item
-  //   );
-
-  //   // console.log(updatedCheckedState)
-  //   setCheckedState(updatedCheckedState);
-
-  //   console.log(roles.find(x => x == selectedRole));
-  //   console.log(selectedRoles.find(x => x == selectedRole));
-
-  //   updatedCheckedState.reduce(
-  //     (previous, currentState, index) => {
-  //       if (currentState == true) {
-  //         console.log('adding')
-  //         setSelectedRoles((prevSelectedRoles) => {
-  //           return [...prevSelectedRoles, roles[index]];
-  //         })
-  //       }
-  //       else if(selectedRoles.find(x => x == roles[index])){
-  //         console.log('removing')
-  //         setSelectedRoles((selectedRoles) => {
-  //           return selectedRoles.filter((role) => role !== selectedRole);
-  //       })}
-  //     }
-  //   );
-
-  //   console.log(selectedRoles)
-  // };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (firstName && lastName && email && userName && password) {
-      
-      fetch(variables.API_URL + 'admin/create-user', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+      try {
+        const response = await axiosPrivate.post(variables.IDENTITY_API_URL + 'admin/create-user',
+        JSON.stringify({
           firstName: firstName,
           lastName: lastName,
           email: email,
           userName: userName,
           password: password,
-          roles: [selectedRole]})
-      })
-      .then(async response =>{
-        if (response.ok){
+          roles: [selectedRole]}),
+          {
+            headers: { 'Accept': 'application/json' },
+            withCredentials: true
+          }
+        );
+      
+        if (response?.status === 200){
           alert("Success")
 
           setFirstName('');
@@ -94,22 +71,18 @@ function CreateUser() {
           setEmail('');
           setPassword('');
         }
-        else{
-          throw new Error('Network response was not ok.');
-        }
-      },(error)=>{
-        alert('Failed');
-      });    
+      } catch (err) {
+        alert(`Failed: ${err}`);
+        setTimeout(() => {
+          setError('')
+          }, 3000);
+      }
     }
     else {
       setTimeout(() => {
-        console.log({firstName, lastName, email, password, userName})
-        setError('Fill all the text boxes')
+        setError('Fill all the text boxes');
       });
-      setTimeout(() => {
-        setError('')
-      },3000);
-    }
+    };
   };
 
   return (
@@ -156,20 +129,6 @@ function CreateUser() {
                 })}
             </Form.Select>
           </FloatingLabel>
-
-          {/* {roles.map((role, index) => {
-            return (
-              <div key={role} className="mb-3">
-                <Form.Check
-                  inline
-                  id={index}
-                  label={role}
-                  name={role}
-                  checked={checkedState[index]}
-                  onChange={() => handleOnChange(role, index)} />
-              </div>
-            );
-          })} */}
 
         </Col>
       </Row>

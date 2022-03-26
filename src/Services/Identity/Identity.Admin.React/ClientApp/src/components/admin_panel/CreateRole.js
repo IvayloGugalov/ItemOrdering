@@ -1,45 +1,65 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { variables } from '../../Variables';
 import InputForm from './InputForm';
-
+import { variables } from '../../Variables';
+import useAxiosPrivate from '../../custom-hooks/useAxiosPrivate'
 
 function CreateRole() {
   const [roleName, setRoleName] = useState('');
   const [description, setDescription] = useState('');
-  const [accessLevel, setAccessLevel] = useState('');
+  const [accessLevel, setAccessLevel] = useState('0');
+  const [accessLevelInfo, setAccessLevelInfo] = useState('Low access level');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e) => {
+  const errorRef = useRef();
+  const axiosPrivate = useAxiosPrivate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (roleName && description && accessLevel){
-      fetch(variables.API_URL + 'admin/create-role', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          roleName: roleName,
-          description: description,
-          accessLevel: accessLevel
-        })
-        .then(async response =>{
-          if (response.ok){
-            alert("Success")
+      try {
+        const response = await axiosPrivate.post(variables.IDENTITY_API_URL + 'admin/create-role',
+          JSON.stringify({
+            roleName: roleName,
+            description: description,
+            accessLevel: accessLevel}
+            ),
+          {
+            headers: { 'Accept': 'application/json' },
+            withCredentials: true
           }
-          else{
-            throw new Error('Network response was not ok.');
-          }
-        })
-      })
+        );
+      } catch (err) {
+        if (!err?.response) {
+            setErrorMsg('Error, no response');
+        } else {
+            setErrorMsg(`Adding a new role failed ${err}`);
+        }
+      }    
+    };
+  }
+
+  const handleRoleLevel = (e) => {
+    setAccessLevel(e);
+    switch (e) {
+      case "0":
+        setAccessLevelInfo("Low access level");
+        break;
+      case "1":
+        setAccessLevelInfo("Normal access level");
+        break;        
+      case "2":
+        setAccessLevelInfo("Privileged access level");
+        break;
+      case "3":
+        setAccessLevelInfo("Administrator access level");
+        break;
+      default:
+        console.log('default');
     }
-  };
-
-  const handleAccessChange = (e) => {
-
   };
 
   return (
@@ -53,15 +73,9 @@ function CreateRole() {
             <InputForm property={roleName} placeHolder="Enter Role Name" type="text" handleChange={setRoleName} />
           </Col>
 
-          <Col md={{span: 4, offset: 1}}>
-            <Row>
+          <Col md={{span: 4}}>
+            <Row className='ml-3'>
               <p style={{textAlignment: 'center'}}>Choose role access</p>
-            </Row>
-            <Row>
-              {/* <Form.Range onChange={handleAccessChange} /> */}
-
-              <input type="range" ></input>
-
             </Row>
           </Col>
         </Row>
@@ -69,7 +83,24 @@ function CreateRole() {
         <Row>
           <Col md={{span: 4, offset: 2}}>
             <InputForm property={description} placeHolder="Enter Role Description" type="text" handleChange={setDescription}/>
-          </Col>          
+          </Col>  
+          <Col md={{span: 4}} className='ml-3'>
+            <div>
+              <input
+                  type="range"
+                  value={accessLevel}
+                  class="form-range"
+                  min="0"
+                  max="3"
+                  step="1"
+                  id="roleLevelRange"
+                  onChange={(e) => handleRoleLevel(e.target.value)} />
+            </div>
+
+            <div>
+              <p>{accessLevelInfo}</p>
+            </div>
+          </Col>        
         </Row>
 
       </Form>
@@ -81,6 +112,12 @@ function CreateRole() {
           </Button>
         </Col>
       </Row>
+
+      <p ref={errorRef} className={errorMsg
+               ? "errmsg"
+               : "offscreen"}>
+                   {errorMsg}
+               </p>
     </article>
   );
 }

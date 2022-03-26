@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-
 export class User extends Component {
   static displayName = User.name;
 
