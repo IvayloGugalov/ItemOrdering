@@ -20,7 +20,6 @@ namespace Identity.Functional.Tests
                     Path.Combine("..", "..", "..", "..", "Identity.Functional.Tests")),
             "test_settings.json");
 
-
         protected override IHost CreateHost(IHostBuilder builder)
         {
             var host = builder.Build();

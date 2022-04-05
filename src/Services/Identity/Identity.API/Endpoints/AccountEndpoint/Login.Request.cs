@@ -7,7 +7,8 @@ namespace Identity.API.Endpoints.AccountEndpoint
         public const string ROUTE = "api/login";
 
         [Required]
-        public string Username { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

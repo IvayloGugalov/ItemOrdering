@@ -16,5 +16,10 @@
         /// This is the char for the AccessAll permission
         /// </summary>
         public const char PackedAccessAllPermission = (char)ushort.MaxValue;
+
+        /// <summary>
+        /// Character separating permissions
+        /// </summary>
+        public const char PermissionsSeparator = ',';
     }
 }

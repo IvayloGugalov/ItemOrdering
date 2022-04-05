@@ -21,10 +21,19 @@ namespace Identity.Permissions
             return user?.Claims.SingleOrDefault(x => x.Type == PermissionConstants.PackedPermissionClaimType)?.Value;
         }
 
-        public static bool IsPermissionAllowed(this Claim permissionsClaim, string permissionName)
+        public static bool IsPermissionAllowed(this Claim permissionsClaim, string permissionNames)
         {
-            var permissionAsChar = (char)Convert.ChangeType(Enum.Parse(typeof(Permissions), permissionName), typeof(char));
-            return permissionsClaim.Value.IsThisPermissionAllowed(permissionAsChar);
+            var splitPermissions = permissionNames.Split(PermissionConstants.PermissionsSeparator);
+
+            var isPermissionAllowed = false;
+            foreach (var permissionAsChar in splitPermissions)
+            {
+                var parsedChar = (char)Convert.ChangeType(Enum.Parse<Permissions>(permissionAsChar), typeof(char));
+
+                isPermissionAllowed |= permissionsClaim.Value.IsThisPermissionAllowed(parsedChar);
+            }
+
+            return isPermissionAllowed;
         }
 
         public static List<string> ConvertPackedPermissionsToNames(this string packedPermissions)

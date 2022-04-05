@@ -44,7 +44,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = newPassword });
+                new LoginRequest { Email = testUser.Email, Password = newPassword });
 
             var loginContent = new StringContent(body, Encoding.UTF8, "application/json");
 

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Identity.API.Extensions;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
 using Identity.Shared;
@@ -31,33 +33,55 @@ namespace Identity.API.Endpoints.AccountEndpoint
             this.userManager = userManager;
         }
 
-        [HttpPost(RefreshRequest.ROUTE)]
-        public async Task<ActionResult> RefreshTokenAsync([FromBody] RefreshRequest refreshRequest)
+        [HttpGet(RefreshRequest.ROUTE)]
+        public async Task<ActionResult> RefreshTokenAsync()
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            var validationResult = this.refreshTokenValidator.Validate(refreshRequest.RefreshTokenValue);
-            switch (validationResult)
+            var (_, refreshTokenValue) = this.HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == AppendCookieExtension.REFRESH_TOKEN_NAME);
+            if (string.IsNullOrEmpty(refreshTokenValue)) return Unauthorized(new ErrorResponse("No refresh token found"));
+
+            var refreshTokenValidationResult = this.refreshTokenValidator.Validate(refreshTokenValue);
+            switch (refreshTokenValidationResult)
             {
-                case TokenValidationResult.TokenExpired:
-                    return this.BadRequest(new ErrorResponse("Token has expired"));
                 case TokenValidationResult.InvalidSignature:
-                    return this.BadRequest(new ErrorResponse("Token has invalid signature"));
+                    return Unauthorized(new ErrorResponse("Token has invalid signature"));
+                case TokenValidationResult.EncryptionKeyNotFound:
+                    return Unauthorized(new ErrorResponse("No encryption on token"));
+                case TokenValidationResult.Unknown:
+                    return Unauthorized(new ErrorResponse("Unknown error"));
             }
 
-            var refreshToken = await this.refreshTokenRepository.GetByTokenValueAsync(refreshRequest.RefreshTokenValue);
-            if (refreshToken is null) return NotFound(new ErrorResponse("Invalid refresh token"));
-
-            // Invalidate the refresh token
-            await this.refreshTokenRepository.DeleteAsync(refreshToken.Id);
+            var refreshToken = await this.refreshTokenRepository.GetByTokenValueAsync(refreshTokenValue);
+            if (refreshToken is null) return Unauthorized(new ErrorResponse("No refresh token found"));
 
             var user = await this.userManager.FindByIdAsync(refreshToken.UserId.ToString());
             if (user is null) return NotFound(new ErrorResponse("User not found"));
 
-            var (newAccessToken, newRefreshToken) = await this.authenticator.AuthenticateUserAsync(user);
-            var response = new UserAuthenticatedDto(newAccessToken, newRefreshToken);
+            var roles = string.Concat(user.UserRoles.Select(x => x.Role.PackedPermissionsInRole));
 
-            return Ok(response);
+            if (refreshTokenValidationResult == TokenValidationResult.Success)
+            {
+                var newAccessToken = await this.authenticator.RefreshAccessToken(user);
+                var response = new UserAuthenticatedDto(
+                    AccessToken: newAccessToken,
+                    Roles: roles);
+
+                return Ok(response);
+            }
+            else
+            {
+                // Invalidate the refresh token
+                await this.refreshTokenRepository.DeleteAsync(refreshToken.Id);
+
+                var (newAccessToken, newRefreshToken) = await this.authenticator.AuthenticateUserAsync(user);
+                var response = new UserAuthenticatedDto(
+                    AccessToken: newAccessToken,
+                    Roles: roles);
+
+                this.HttpContext.Response.Cookies.AppendRefreshToken(newRefreshToken);
+                return Ok(response);
+            }
         }
     }
 }

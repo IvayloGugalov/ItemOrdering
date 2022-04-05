@@ -8,6 +8,6 @@ namespace Identity.API.Endpoints.AdminEndpoint
         public const string ROUTE = "api/admin/delete-user";
 
         [Required]
-        public Guid UserId{ get; set; }
+        public string Email { get; set; }
     }
 }
