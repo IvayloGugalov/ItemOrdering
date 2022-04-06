@@ -47,7 +47,7 @@ namespace Identity.API.Policy
 
             if (permissionsClaim == null) return Task.CompletedTask;
 
-            if (permissionsClaim.IsPermissionAllowed(requirement.PermissionName))
+            if (permissionsClaim.IsPermissionAllowed(requirement.PermissionNames))
             {
                 context.Succeed(requirement);
             }

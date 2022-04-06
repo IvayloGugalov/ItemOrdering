@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -21,6 +22,7 @@ namespace Identity.Shared
         public ErrorResponse(string errorMessage)
             : this(new List<string> { errorMessage }) { }
 
+        [JsonConstructor]
         public ErrorResponse(IEnumerable<string> errorMessages)
         {
             this.ErrorMessages = errorMessages;

@@ -23,15 +23,15 @@ namespace Identity.API.Endpoints.AdminEndpoint
         {
             if (!this.ModelState.IsValid) return null;
 
-            var users = await Task.Run(() => this.adminUserService.QueryAuthUsersAsync());
+            var usersQuery = await Task.Run(() => this.adminUserService.QueryAuthUsersAsync());
 
-            var userDtos = new List<UserDto>();
-            foreach (var authUser in users)
+            var users = new List<UserDto>();
+            foreach (var authUser in usersQuery)
             {
-                userDtos.Add(new UserDto(authUser.FirstName, authUser.LastName, authUser.Email, authUser.UserName, authUser.UserRoles.Select(x => x.RoleName)));
+                users.Add(new UserDto(authUser.FirstName, authUser.LastName, authUser.Email, authUser.UserName, authUser.UserRoles.Select(x => x.RoleName)));
             }
 
-            return Ok(userDtos);
+            return Ok(users);
         }
     }
 }

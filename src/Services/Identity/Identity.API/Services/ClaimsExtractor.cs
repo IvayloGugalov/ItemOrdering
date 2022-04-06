@@ -42,7 +42,7 @@ namespace Identity.API.Services
             return claims;
         }
 
-        private async Task<string>  GetPermissionsForUser(Guid userId)
+        private async Task<string> GetPermissionsForUser(Guid userId)
         {
             var permissionsForUser = (await this.userToRoleRepository.GetRolesForAuthUserAsync(userId))
                 .Select(x => x.Role.PackedPermissionsInRole)

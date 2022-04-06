@@ -30,7 +30,7 @@ namespace Identity.API.Endpoints.AdminEndpoint
 
             var roles = await Task.Run(() => this.adminRoleService.QueryRoleToPermissions());
             var roleNames = roles.ToList()
-                .Where(x => x.RoleName != "NotSet")
+                .Where(x => x.RoleName != Permissions.Permissions.NotSet.GetDisplayName())
                 .Select(x => Enum.Parse<Permissions.Permissions>(x.RoleName).GetDisplayName());
 
             var result = JsonConvert.SerializeObject(roleNames);

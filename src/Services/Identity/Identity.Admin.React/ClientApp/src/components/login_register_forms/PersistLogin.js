@@ -16,6 +16,7 @@ const PersistLogin = () => {
       }
       catch (err)  {
         console.error(err);
+        localStorage.removeItem('email');
       }
       finally {
         setIsLoading(false);

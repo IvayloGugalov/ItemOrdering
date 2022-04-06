@@ -31,7 +31,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
             AuthUserCreator.Create(testUser, this.testBase.Factory);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
+                new LoginRequest { Email = testUser.Email, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 

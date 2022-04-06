@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
@@ -25,14 +26,28 @@ namespace Identity.Domain.Services
 
         public async Task<AccessAndRefreshToken> AuthenticateUserAsync(AuthUser user)
         {
+            var accessTokenValue = await this.RefreshAccessToken(user);
+            var refreshTokenValue = await this.RefreshRefreshToken(user.Id);
+
+            return new AccessAndRefreshToken(accessTokenValue, refreshTokenValue);
+        }
+
+        public async Task<string> RefreshAccessToken(AuthUser user)
+        {
             var accessTokenValue = await this.accessTokenGenerator.GenerateAccessToken(
                 () => this.claimsExtractor.GetClaimForAuthUser(user),
                 user.Id,
                 userEmail: user.Email,
                 userName: user.UserName);
-            var refreshTokenValue = await this.refreshTokenGenerator.GenerateRefreshToken(user.Id);
 
-            return new AccessAndRefreshToken(accessTokenValue, refreshTokenValue);
+            return accessTokenValue;
+        }
+
+        public async Task<string> RefreshRefreshToken(Guid userId)
+        {
+            var refreshTokenValue = await this.refreshTokenGenerator.GenerateRefreshToken(userId);
+
+            return refreshTokenValue;
         }
     }
 }

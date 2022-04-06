@@ -4,27 +4,29 @@ import axios from "../api/axios";
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
-  
 
   const refresh = async () => {
-    const cookies = document.cookie.replace('access_token=', '');
-    console.log(cookies);
-    const response = await axios.post(variables.IDENTITY_API_URL + "refresh", {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies}` }
+    const response = await axios.get(variables.IDENTITY_API_URL + "refresh", {
+      headers: {'Content-Type': 'application/json'},
+      withCredentials: true
     });
+
+    const accessToken = response?.data?.accessToken;
 
     setAuth(prev => {
-      console.log(JSON.stringify(prev));
-      console.log(JSON.stringify(response.data.accessToken));
+      console.log(`Previous auth ${JSON.stringify(prev)}`);
+      console.log(`New token ${JSON.stringify(response.data.accessToken)}`);
+
+      const roles = response?.data?.roles?.split(''); 
       return {
         ...prev,
-        accessToken: response.data.accessToken,
-        roles: response.data.roles}
+        email: localStorage.getItem('email'),
+        accessToken: accessToken,
+        roles: roles
+      }
     });
 
-    return response.data.accessToken;
+    return accessToken;
   }
 
   return refresh;

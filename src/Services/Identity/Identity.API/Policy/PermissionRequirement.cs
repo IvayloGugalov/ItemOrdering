@@ -6,11 +6,11 @@ namespace Identity.API.Policy
 {
     public class PermissionRequirement : IAuthorizationRequirement
     {
-        public string PermissionName { get; }
+        public string PermissionNames { get; }
 
-        public PermissionRequirement(string permissionName)
+        public PermissionRequirement(string permissionNames)
         {
-            this.PermissionName = Guard.Against.NullOrEmpty(permissionName, nameof(permissionName));
+            this.PermissionNames = Guard.Against.NullOrEmpty(permissionNames, nameof(permissionNames));
         }
     }
 }

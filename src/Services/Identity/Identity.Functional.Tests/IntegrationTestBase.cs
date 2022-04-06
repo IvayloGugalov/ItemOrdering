@@ -46,7 +46,7 @@ namespace Identity.Functional.Tests
             this.TestUsers = LoadTestUsersFromFile().ToArray();
         }
 
-        public TestAuthUser GetRandomUser() => this.TestUsers[random.Next(499)];
+        public TestAuthUser GetRandomUser() => this.TestUsers[random.Next(this.TestUsers.Length - 1)];
 
         public void Dispose()
         {
@@ -58,17 +58,7 @@ namespace Identity.Functional.Tests
         {
             using var streamReader = new StreamReader(IntegrationTestBase.TEST_DATA_JSON);
             var json = streamReader.ReadToEnd();
-            return JsonConvert.DeserializeObject<TestAuthUser[]>(json);
+            return JsonConvert.DeserializeObject<TestAuthUser[]>(json, new JsonSerializerSettings{ NullValueHandling = NullValueHandling.Include });
         }
-    }
-
-    public class TestAuthUser
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string UserName { get; set; }
-        public string Permissions { get; set; }
     }
 }

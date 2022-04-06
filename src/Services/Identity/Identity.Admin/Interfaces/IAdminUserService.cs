@@ -22,7 +22,7 @@ namespace Identity.Admin.Interfaces
             string password,
             IEnumerable<string> roleNames);
 
-        Task<bool> DeleteAuthUserAsync(Guid userId);
+        Task<bool> DeleteAuthUserAsync(string email);
         Task<bool> UpdateUserAsync(Guid userId, string newUserName, string newEmail);
         Task<bool> UpdateUserRolesAsync(Guid userId, string roleName);
         Task<bool> RemoveRoleFromUser(Guid userId, string roleName);

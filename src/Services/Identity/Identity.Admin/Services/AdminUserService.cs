@@ -89,9 +89,9 @@ namespace Identity.Admin.Services
             return null;
         }
 
-        public async Task<bool> DeleteAuthUserAsync(Guid userId)
+        public async Task<bool> DeleteAuthUserAsync(string email)
         {
-            var user = await this.FindAuthUserByIdAsync(userId);
+            var user = await this.FindAuthUserByEmailAsync(email);
 
             if (user == null) return false;
 

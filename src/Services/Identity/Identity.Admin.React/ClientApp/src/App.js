@@ -11,7 +11,7 @@ import RequiresAuth from './components/RequiresAuth';
 import PersistLogin from './components/login_register_forms/PersistLogin';
 import Missing from './components/Missing';
 import Unauthorized from './components/Unauthorized';
-import { Home } from './components/Home';
+import Home from './components/Home';
 
 import './custom.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
