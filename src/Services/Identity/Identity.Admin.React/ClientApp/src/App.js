@@ -40,7 +40,7 @@ function App() {
         {/* default page */}
         <Route path='*' element={<Missing/>} />
       </Route>
-      
+
     </Routes>
   );
 }

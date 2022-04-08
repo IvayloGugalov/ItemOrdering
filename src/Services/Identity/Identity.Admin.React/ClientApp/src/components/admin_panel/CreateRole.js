@@ -38,7 +38,7 @@ function CreateRole() {
         } else {
             setErrorMsg(`Adding a new role failed ${err}`);
         }
-      }    
+      }
     };
   }
 
@@ -50,7 +50,7 @@ function CreateRole() {
         break;
       case "1":
         setAccessLevelInfo("Normal access level");
-        break;        
+        break;
       case "2":
         setAccessLevelInfo("Privileged access level");
         break;
@@ -83,7 +83,7 @@ function CreateRole() {
         <Row>
           <Col md={{span: 4, offset: 2}}>
             <InputForm property={description} placeHolder="Enter Role Description" type="text" handleChange={setDescription}/>
-          </Col>  
+          </Col>
           <Col md={{span: 4}} className='ml-3'>
             <div>
               <input
@@ -100,7 +100,7 @@ function CreateRole() {
             <div>
               <p>{accessLevelInfo}</p>
             </div>
-          </Col>        
+          </Col>
         </Row>
 
       </Form>

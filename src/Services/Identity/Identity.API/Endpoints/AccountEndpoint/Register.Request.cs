@@ -21,9 +21,6 @@ namespace Identity.API.Endpoints.AccountEndpoint
         public string Username { get; set; }
 
         [Required]
-        public Permissions.Permissions Role { get; set; }
-
-        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

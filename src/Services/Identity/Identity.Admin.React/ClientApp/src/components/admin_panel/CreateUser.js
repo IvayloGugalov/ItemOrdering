@@ -61,7 +61,7 @@ const CreateUser = () => {
             withCredentials: true
           }
         );
-      
+
         if (response?.status === 200){
           alert("Success")
 

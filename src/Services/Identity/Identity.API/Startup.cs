@@ -189,10 +189,10 @@ namespace Identity.API
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 1;
+                    options.Password.RequiredLength = 6;
                     options.Password.RequiredUniqueChars = 0;
 
-                    options.User.RequireUniqueEmail = false;
+                    options.User.RequireUniqueEmail = true;
 
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                     options.Lockout.MaxFailedAccessAttempts = 5;

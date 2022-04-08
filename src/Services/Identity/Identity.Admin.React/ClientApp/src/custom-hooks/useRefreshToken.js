@@ -17,7 +17,7 @@ const useRefreshToken = () => {
       console.log(`Previous auth ${JSON.stringify(prev)}`);
       console.log(`New token ${JSON.stringify(response.data.accessToken)}`);
 
-      const roles = response?.data?.roles?.split(''); 
+      const roles = response?.data?.roles?.split('');
       return {
         ...prev,
         email: localStorage.getItem('email'),

@@ -47,7 +47,7 @@ const Login = () => {
       const roles = response?.data?.roles?.split('');
 
       setAuth({ email, password, roles, accessToken });
-      navigate('/home', { replace : true });      
+      navigate('/home', { replace : true });
     } catch (err) {
       if (!err.response) {
           setErrorMsg(`Error, no response ${err}`);
