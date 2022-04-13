@@ -22,8 +22,8 @@ namespace Identity.API.Endpoints.AccountEndpoint
 
         [HttpPost(RegisterRequest.ROUTE)]
         [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> RegisterWithManagerAsync([FromBody] RegisterRequest request)
         {
             var result = await this.userService.RegisterUserAsync(
@@ -39,7 +39,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
                 return Conflict(result.GetErrorResponse());
             }
 
-            return Ok(result);
+            return Ok();
         }
     }
 }

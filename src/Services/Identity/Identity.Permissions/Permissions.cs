@@ -4,6 +4,7 @@ namespace Identity.Permissions
 {
     public enum Permissions : ushort
     {
+        [Display(Name = "NotSet", Description = "No permissions.")]
         NotSet = 0,
 
         [Display(Name = "Customer", Description = "Customer with limited permissions (ordering).")]

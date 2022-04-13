@@ -21,7 +21,7 @@ namespace Identity.API.Endpoints.AdminEndpoint
             this.adminUserService = adminUserService;
         }
 
-        [HttpPost(DeleteUserRequest.ROUTE)]
+        [HttpDelete(DeleteUserRequest.ROUTE)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HasPermissions(Permissions.Permissions.Admin, Permissions.Permissions.SuperAdmin)]
         public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserRequest request)
@@ -29,11 +29,16 @@ namespace Identity.API.Endpoints.AdminEndpoint
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
             var currentUserEmail = this.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            if (currentUserEmail == request.Email) return BadRequest("Can't delete yourself!");
+            if (currentUserEmail == request.Email) return BadRequest(new ErrorResponse("Can't delete yourself!"));
 
-            var isDeleted = await this.adminUserService.DeleteAuthUserAsync(request.Email);
+            var result = await this.adminUserService.DeleteAuthUserAsync(request.Email);
 
-            return isDeleted ? Ok() : BadRequest("Unable to delete user");
+            if (result.HasErrors)
+            {
+                return BadRequest(new ErrorResponse(result.GetErrorMessages()));
+            }
+
+            return Ok();
         }
     }
 }

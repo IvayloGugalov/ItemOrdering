@@ -28,7 +28,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task RegisterTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
+            var testUser = this.testBase.UserFactory.GetRandomUser();
             var data = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
@@ -51,7 +51,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task RegisterTest_OnDuplicateUserName_WillReturnConflict()
         {
-            var testUser = this.testBase.GetRandomUser();
+            var testUser = this.testBase.UserFactory.GetRandomUser();
             var data = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
@@ -68,7 +68,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
             var response = await this.testBase.Client.PostAsync(RegisterRequest.ROUTE, content);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var testUserWithSameName = this.testBase.GetRandomUser();
+            var testUserWithSameName = this.testBase.UserFactory.GetRandomUser();
             var newData = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
@@ -93,7 +93,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task RegisterTest_OnDuplicateEmail_WillReturnConflict()
         {
-            var testUser = this.testBase.GetRandomUser();
+            var testUser = this.testBase.UserFactory.GetRandomUser();
             var data = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
@@ -110,13 +110,13 @@ namespace Identity.Functional.Tests.AccountEndpointTest
             var response = await this.testBase.Client.PostAsync(RegisterRequest.ROUTE, content);
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var testUserWithSameName = this.testBase.GetRandomUser();
+            var testUserWithSameName = this.testBase.UserFactory.GetRandomUser();
             var newData = JsonSerializer.Serialize(
                 new RegisterRequest
                 {
                     FirstName = testUserWithSameName.FirstName,
                     LastName = testUserWithSameName.LastName,
-                    Email = testUser.Email, // Same userName
+                    Email = testUser.Email, // Same email
                     Username = testUserWithSameName.UserName, 
                     Password = testUserWithSameName.Password,
                     ConfirmPassword = testUserWithSameName.Password

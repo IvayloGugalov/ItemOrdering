@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Identity.Admin.Interfaces;
+using Identity.Permissions;
 using Identity.Shared;
 
 namespace Identity.API.Endpoints.AdminEndpoint
@@ -19,12 +21,12 @@ namespace Identity.API.Endpoints.AdminEndpoint
             this.adminUserService = adminUserService;
         }
 
-        // TODO: [HasPermission(Permissions.Permissions.Admin)]
         [HttpPost(CreateUserRequest.ROUTE)]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterUserAsync([FromBody] CreateUserRequest request)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HasPermissions(Permissions.Permissions.Admin, Permissions.Permissions.SuperAdmin)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<CreateUserResponse>> RegisterUserAsync([FromBody] CreateUserRequest request)
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
@@ -36,12 +38,12 @@ namespace Identity.API.Endpoints.AdminEndpoint
                 password: request.Password,
                 roleNames: request.Roles);
 
-            if (result != null)
+            if (result.HasErrors)
             {
-                return Conflict(result);
+                return Conflict(new ErrorResponse(result.GetErrorMessages()));
             }
 
-            return Ok();
+            return Ok(new CreateUserResponse { User = result.Result.MapAuthUserToUserDto() });
         }
     }
 }

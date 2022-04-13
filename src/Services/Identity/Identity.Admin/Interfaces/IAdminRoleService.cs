@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using GenericStatus;
+
 using Identity.Domain.Entities;
 
 namespace Identity.Admin.Interfaces
@@ -11,8 +13,8 @@ namespace Identity.Admin.Interfaces
         IQueryable<RoleToPermissions> QueryRoleToPermissions();
         Task<bool> IsRoleNameExistingAsync(string roleName);
         IQueryable<AuthUser> QueryUsersUsingThisRole(string roleName);
-        Task<bool> CreateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null);
-        Task<bool> UpdateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null);
-        Task<bool> DeleteRoleAsync(string roleName, bool removeFromUsers);
+        Task<IGenericStatus> CreateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null);
+        Task<IGenericStatus> UpdateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null);
+        Task<IGenericStatus<bool>> DeleteRoleAsync(string roleName, bool removeFromUsers);
     }
 }

@@ -34,7 +34,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
         }
 
         [HttpGet(RefreshRequest.ROUTE)]
-        public async Task<ActionResult> RefreshTokenAsync()
+        public async Task<ActionResult<RefreshResponse>> RefreshTokenAsync()
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
@@ -63,11 +63,11 @@ namespace Identity.API.Endpoints.AccountEndpoint
             if (refreshTokenValidationResult == TokenValidationResult.Success)
             {
                 var newAccessToken = await this.authenticator.RefreshAccessToken(user);
-                var response = new UserAuthenticatedDto(
+                var userAuthenticatedDto = new UserAuthenticatedDto(
                     AccessToken: newAccessToken,
                     Roles: roles);
 
-                return Ok(response);
+                return new RefreshResponse {AuthenticationAndRoles = userAuthenticatedDto};
             }
             else
             {
@@ -75,12 +75,12 @@ namespace Identity.API.Endpoints.AccountEndpoint
                 await this.refreshTokenRepository.DeleteAsync(refreshToken.Id);
 
                 var (newAccessToken, newRefreshToken) = await this.authenticator.AuthenticateUserAsync(user);
-                var response = new UserAuthenticatedDto(
+                var userAuthenticatedDto = new UserAuthenticatedDto(
                     AccessToken: newAccessToken,
                     Roles: roles);
 
                 this.HttpContext.Response.Cookies.AppendRefreshToken(newRefreshToken);
-                return Ok(response);
+                return new RefreshResponse { AuthenticationAndRoles = userAuthenticatedDto };
             }
         }
     }

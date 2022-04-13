@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using Identity.Admin.Interfaces;
+using Identity.Permissions;
 
 namespace Identity.API.Endpoints.AdminEndpoint
 {
@@ -19,19 +22,17 @@ namespace Identity.API.Endpoints.AdminEndpoint
         }
 
         [HttpGet(GetUsersRequest.ROUTE)]
-        public async Task<IActionResult> GetUsersAsync()
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HasPermissions(Permissions.Permissions.Admin, Permissions.Permissions.SuperAdmin)]
+        public async Task<ActionResult<List<UserDto>>> GetUsersAsync()
         {
             if (!this.ModelState.IsValid) return null;
 
             var usersQuery = await Task.Run(() => this.adminUserService.QueryAuthUsersAsync());
 
-            var users = new List<UserDto>();
-            foreach (var authUser in usersQuery)
-            {
-                users.Add(new UserDto(authUser.FirstName, authUser.LastName, authUser.Email, authUser.UserName, authUser.UserRoles.Select(x => x.RoleName)));
-            }
+            var response = usersQuery.ToList().Select(user => user.MapAuthUserToUserDto());
 
-            return Ok(users);
+            return Ok(response);
         }
     }
 }

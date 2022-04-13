@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /src/ItemOrdering.Identity.API/appsettings.json
 *.cer
+/Nuget.config

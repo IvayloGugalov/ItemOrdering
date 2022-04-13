@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 using Identity.API;
 using Identity.Functional.Tests.Proxies;
+using Identity.Infrastructure.MongoDB;
 
 namespace Identity.Functional.Tests
 {
@@ -26,8 +28,17 @@ namespace Identity.Functional.Tests
 
             // Get service provider.
             var serviceProvider = host.Services;
-            
-            // do stuff if needed
+
+            try
+            {
+                var permissionsSeeder = serviceProvider.GetRequiredService<IPermissionsSeeder>();
+
+                permissionsSeeder.SeedDbWithPermissions().GetAwaiter().GetResult();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             host.Start();
             return host;
@@ -44,7 +55,7 @@ namespace Identity.Functional.Tests
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddTransient<IUserProxy, UserManagerProxy>();
+                    services.AddScoped<IUserProxy, UserManagerProxy>();
                 });
         }
     }

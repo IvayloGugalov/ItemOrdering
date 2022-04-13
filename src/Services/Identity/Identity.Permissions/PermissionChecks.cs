@@ -52,6 +52,20 @@ namespace Identity.Permissions
             return permissionNames;
         }
 
+        public static string GetPackedPermissionsFromEnumerable(this IEnumerable<string> permissionNames)
+        {
+           var packedPermissions = "";
+            foreach (var permissionName in permissionNames)
+            {
+                if (Enum.TryParse<Permissions>(permissionName, ignoreCase: true, out var value))
+                {
+                    packedPermissions += (char)Convert.ChangeType(value, typeof(char));
+                }
+            }
+
+            return packedPermissions;
+        }
+
         private static bool IsThisPermissionAllowed(this string packedPermissions, char permissionAsChar)
         {
             return packedPermissions.Contains(permissionAsChar)

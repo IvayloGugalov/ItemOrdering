@@ -6,7 +6,6 @@ using MongoDB.Driver;
 
 using Identity.Domain.Entities;
 using Identity.Infrastructure.MongoDB.Storages;
-using Identity.Permissions;
 
 namespace Identity.Infrastructure.MongoDB
 {

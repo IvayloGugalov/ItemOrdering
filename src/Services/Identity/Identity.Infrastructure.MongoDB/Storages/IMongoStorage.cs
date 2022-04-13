@@ -11,6 +11,7 @@ namespace Identity.Infrastructure.MongoDB.Storages
         IMongoDatabase Database { get; }
         string DatabaseName { get; }
 
+        IMongoCollection<AuthUser> Users { get; }
         IMongoCollection<RefreshToken> RefreshTokens { get; }
         IMongoCollection<UserToRole> UsersToRoles { get; }
         IMongoCollection<RoleToPermissions> RolesToPermissions { get; }

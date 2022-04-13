@@ -31,10 +31,8 @@ namespace Identity.API.Services
             // TODO: Maybe this isn't needed
             else
             {
-                var roles = user.UserRoles.Select(x =>
-                    (char)Convert.ChangeType(Enum.Parse(typeof(Permissions.Permissions), x.RoleName), typeof(char)));
-
-                var allRoles = new string(roles.ToArray());
+                var allRoles = user.UserRoles.Select(x => x.RoleName)
+                    .GetPackedPermissionsFromEnumerable();
 
                 claims.Add(new Claim(PermissionConstants.PackedPermissionClaimType, allRoles));
             }

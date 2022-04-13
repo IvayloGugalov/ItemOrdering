@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 using GuardClauses;
 using MongoDB.Bson.Serialization.Attributes;
@@ -41,13 +40,13 @@ namespace Identity.Domain.Entities
             this.Update(packedPermissions, description);
         }
 
-        public RoleToPermissions(Permissions.Permissions permissions)
+        public RoleToPermissions(Permissions.Permissions permission)
         {
-            var (roleName, description) = permissions.GetNameAndDescription();
+            var (roleName, description) = permission.GetNameAndDescription();
             this.RoleName = Guard.Against.NullOrWhiteSpace(roleName, nameof(roleName));
-            this.DisplayName = Guard.Against.NullOrWhiteSpace(permissions.GetDisplayName(), nameof(this.DisplayName));
+            this.DisplayName = Guard.Against.NullOrWhiteSpace(permission.GetDisplayName(), nameof(this.DisplayName));
 
-            this.Update(permissions.GetPermissionAsChar().ToString(), description);
+            this.Update(permission.GetPermissionAsChar().ToString(), description);
         }
 
         public void Update(string packedPermissions, string description = null)
@@ -62,7 +61,7 @@ namespace Identity.Domain.Entities
         public override string ToString()
         {
             var description = this.Description == null ? "" : $"(description = {this.Description})";
-            return $"{this.RoleName} {description} has {this.PackedPermissionsInRole.Length} permissions.";
+            return $"{this.RoleName} {description} has {this.PackedPermissionsInRole.Length} permission.";
         }
     }
 }
