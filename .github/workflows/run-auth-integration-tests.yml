@@ -31,6 +31,9 @@ jobs:
         with:
           dotnet-version: '5.0.x'
 
+      - name: Add guthub packages as source
+        run: dotnet nuget add source --username "IvayloGugalov" --password ${{ secrets.PACKAGE_TOKEN }} --store-password-in-clear-text --name git "https://nuget.pkg.github.com/IvayloGugalov/index.json"
+
       - name: Build
         run: dotnet build ${{ env.Test_Project_Path }} --configuration Debug
     
