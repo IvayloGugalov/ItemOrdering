@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 using GuardClauses;
 using MongoDB.Bson.Serialization.Attributes;
@@ -34,8 +36,9 @@ namespace Identity.Domain.Entities
         /// <param name="packedPermissions"></param>
         public RoleToPermissions(string roleName, string description, string packedPermissions)
         {
-            this.RoleName = Guard.Against.NullOrWhiteSpace(roleName, nameof(roleName))
-                .Where(c => !char.IsWhiteSpace(c)).ToString();
+            this.RoleName = RoleToPermissions.GetStringFromChars(
+                Guard.Against.NullOrWhiteSpace(roleName, nameof(roleName))
+                    .Where(c => !char.IsWhiteSpace(c)));
             this.DisplayName = roleName;
             this.Update(packedPermissions, description);
         }
@@ -62,6 +65,16 @@ namespace Identity.Domain.Entities
         {
             var description = this.Description == null ? "" : $"(description = {this.Description})";
             return $"{this.RoleName} {description} has {this.PackedPermissionsInRole.Length} permission.";
+        }
+
+        private static string GetStringFromChars(IEnumerable<char> charSequence)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in charSequence)
+            {
+                sb.Append(c);
+            }
+            return sb.ToString();
         }
     }
 }

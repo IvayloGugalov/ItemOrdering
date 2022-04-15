@@ -13,13 +13,13 @@ using Identity.Permissions;
 
 namespace Identity.Admin.Services
 {
-    public class AdminRoleService : IAdminRoleService
+    public class AdminRolesesService : IAdminRolesService
     {
         private readonly IRoleToPermissionRepository rolesToPermissionsRepository;
         private readonly IUserToRoleRepository usersToRolesRepository;
         private readonly UserManager<AuthUser> userManager;
 
-        public AdminRoleService(IRoleToPermissionRepository rolesToPermissionsRepository, IUserToRoleRepository usersToRolesRepository, UserManager<AuthUser> userManager)
+        public AdminRolesesService(IRoleToPermissionRepository rolesToPermissionsRepository, IUserToRoleRepository usersToRolesRepository, UserManager<AuthUser> userManager)
         {
             this.rolesToPermissionsRepository = rolesToPermissionsRepository;
             this.usersToRolesRepository = usersToRolesRepository;
@@ -38,35 +38,39 @@ namespace Identity.Admin.Services
             return await this.rolesToPermissionsRepository.GetByRoleNameAsync(roleName) != null;
         }
 
-        public IQueryable<AuthUser> QueryUsersUsingThisRole(string roleName)
+        public IQueryable<AuthUser> QueryUsersByRole(string roleName)
         {
             return this.userManager.Users.Where(x => x.UserRoles.Any(y => y.RoleName == roleName));
         }
 
-        public async Task<IGenericStatus> CreateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null)
+        public async Task<IGenericStatus<RoleToPermissions>> CreateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null)
         {
             if (string.IsNullOrEmpty(roleName)) throw new ArgumentNullException(nameof(roleName));
             if (permissionNames == null) throw new ArgumentNullException(nameof(permissionNames));
 
-            var status = new GenericStatus.GenericStatus();
+            var status = new GenericStatus<RoleToPermissions>();
 
             if (await this.rolesToPermissionsRepository.GetByRoleNameAsync(roleName) != null) return status.AddError($"Role {roleName} already exists");
 
+            // The permissions set on the role must match the existing permission types in Permissions.Permissions
             var packedPermissions = permissionNames.GetPackedPermissionsFromEnumerable();
 
-            if (!packedPermissions.Any()) return status.AddError("None of the passed permissions exist in the database");
+            if (!packedPermissions.Any()) return status.AddError($"None of the passed permission names match the permissions set in {nameof(Permissions.Permissions)}");
 
-            await this.rolesToPermissionsRepository.CreateAsync(new RoleToPermissions(roleName, description, packedPermissions));
+            var role = new RoleToPermissions(roleName, description, packedPermissions);
 
-            return status;
+            await this.rolesToPermissionsRepository.CreateAsync(role);
+
+            return status.SetResult(role);
         }
 
-        public async Task<IGenericStatus> UpdateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null)
+        // TODO: Decide whether to merge the old information with the new one
+        public async Task<IGenericStatus<RoleToPermissions>> UpdateRoleToPermissionsAsync(string roleName, IEnumerable<string> permissionNames, string description = null)
         {
             if (string.IsNullOrEmpty(roleName)) throw new ArgumentNullException(nameof(roleName));
             if (permissionNames == null) throw new ArgumentNullException(nameof(permissionNames));
 
-            var status = new GenericStatus.GenericStatus();
+            var status = new GenericStatus<RoleToPermissions>();
 
             var existingRolePermission = await this.rolesToPermissionsRepository.GetByRoleNameAsync(roleName);
             if (existingRolePermission == null) return status.AddError($"Role {roleName} does not exist");
@@ -78,6 +82,7 @@ namespace Identity.Admin.Services
             existingRolePermission.Update(packedPermissions, description);
             await this.rolesToPermissionsRepository.UpdateAsync(existingRolePermission);
 
+            status.SetResult(existingRolePermission);
             return status;
         }
 

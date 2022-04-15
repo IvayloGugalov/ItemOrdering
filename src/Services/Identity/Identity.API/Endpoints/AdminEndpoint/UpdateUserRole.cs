@@ -20,7 +20,7 @@ namespace Identity.API.Endpoints.AdminEndpoint
             this.adminUserService = adminUserService;
         }
 
-        [HttpPost(UpdateUserRoleRequest.ROUTE)]
+        [HttpPut(UpdateUserRoleRequest.ROUTE)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HasPermissions(Permissions.Permissions.Admin, Permissions.Permissions.SuperAdmin)]
         public async Task<ActionResult<UpdateUserRoleResponse>> UpdateUserRoleAsync([FromBody] UpdateUserRoleRequest request)

@@ -54,7 +54,7 @@ namespace Identity.Permissions
 
         public static string GetPackedPermissionsFromEnumerable(this IEnumerable<string> permissionNames)
         {
-           var packedPermissions = "";
+            var packedPermissions = "";
             foreach (var permissionName in permissionNames)
             {
                 if (Enum.TryParse<Permissions>(permissionName, ignoreCase: true, out var value))

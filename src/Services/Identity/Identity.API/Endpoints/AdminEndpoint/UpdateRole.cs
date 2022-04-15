@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,28 +11,28 @@ using Identity.Shared;
 namespace Identity.API.Endpoints.AdminEndpoint
 {
     [ApiController]
-    public class GetRoles : ControllerBase
+    public class UpdateRole : ControllerBase
     {
         private readonly IAdminRolesService adminRolesService;
 
-        public GetRoles(IAdminRolesService adminRolesService)
+        public UpdateRole(IAdminRolesService adminRolesService)
         {
             this.adminRolesService = adminRolesService;
         }
 
-        [HttpGet(GetRolesRequest.ROUTE)]
+        [HttpPut(UpdateRoleRequest.ROUTE)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HasPermissions(Permissions.Permissions.Admin, Permissions.Permissions.SuperAdmin)]
-        public async Task<ActionResult<GetRolesResponse>> GetRolesAsync()
+        public async Task<ActionResult<UpdateRoleResponse>> UpdateRoleAsync([FromBody] UpdateRoleRequest request)
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            var roles = await Task.Run(() => this.adminRolesService.QueryRoleToPermissions());
-            var roleNames = roles.ToList()
-                .Where(x => x.RoleName != Permissions.Permissions.NotSet.GetDisplayName())
-                .Select(x => Enum.Parse<Permissions.Permissions>(x.RoleName).GetDisplayName());
+            var result = await this.adminRolesService.UpdateRoleToPermissionsAsync(
+                roleName: request.RoleName,
+                permissionNames: request.PermissionNames,
+                description: request.Description);
 
-            return Ok(new GetRolesResponse { Roles = roleNames } );
+            return Ok(new UpdateRoleResponse { RoleToPermission = new RoleToPermissionDto(result.Result.DisplayName, result.Result.PackedPermissionsInRole) });
         }
     }
 }
