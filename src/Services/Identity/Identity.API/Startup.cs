@@ -41,6 +41,8 @@ namespace Identity.API
 {
     public class Startup
     {
+        private const string ALLOWED_ORIGIN_SETTING = "AllowedMyOriginDomain";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -106,6 +108,12 @@ namespace Identity.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API v1"));
                 app.UseHttpsRedirection();
+                app.UseCors(builder => builder
+                    .WithOrigins(this.Configuration[ALLOWED_ORIGIN_SETTING])
+                    .SetIsOriginAllowed(host => true)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
             }
 
             app.UseExceptionHandler(x => x.Run(async context =>
@@ -181,10 +189,10 @@ namespace Identity.API
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 1;
+                    options.Password.RequiredLength = 6;
                     options.Password.RequiredUniqueChars = 0;
 
-                    options.User.RequireUniqueEmail = false;
+                    options.User.RequireUniqueEmail = true;
 
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
                     options.Lockout.MaxFailedAccessAttempts = 5;
@@ -215,34 +223,33 @@ namespace Identity.API
                 auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(config =>
+            .AddJwtBearer(config =>
+            {
+                authenticationConfiguration.CheckJwtConfiguration();
+
+                config.TokenValidationParameters = new TokenValidationParameters
                 {
-                    authenticationConfiguration.CheckJwtConfiguration();
-
-                    config.TokenValidationParameters = new TokenValidationParameters
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
+                    ValidIssuer = authenticationConfiguration.Issuer,
+                    ValidAudience = authenticationConfiguration.Audience,
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ClockSkew = TimeSpan.Zero,
+                };
+                config.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
                     {
-                        IssuerSigningKey =
-                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationConfiguration.AccessTokenSecretKey)),
-                        ValidIssuer = authenticationConfiguration.Issuer,
-                        ValidAudience = authenticationConfiguration.Audience,
-                        ValidateIssuerSigningKey = true,
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
-                    config.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = context =>
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
                         {
-                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                            {
-                                context.Response.Headers.Add("Token-Expired", "true");
-                            }
-
-                            return Task.CompletedTask;
+                            context.Response.Headers.Add("Token-Expired", "true");
                         }
-                    };
-                });
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
         }
 
         private void ConfigureUsedServices(IServiceCollection services)

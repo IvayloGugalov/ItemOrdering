@@ -16,6 +16,7 @@ namespace Identity.Infrastructure.MongoDB.Storages
         public IMongoDatabase Database { get; }
         public string DatabaseName { get; }
 
+        public IMongoCollection<AuthUser> Users { get; }
         public IMongoCollection<RefreshToken> RefreshTokens { get; }
         public IMongoCollection<UserToRole> UsersToRoles { get; }
         public IMongoCollection<RoleToPermissions> RolesToPermissions { get; }
@@ -37,6 +38,7 @@ namespace Identity.Infrastructure.MongoDB.Storages
             this.DatabaseName = options.DatabaseName;
             this.Database = this.Client.GetDatabase(this.DatabaseName);
 
+            this.Users = this.Database.GetCollection<AuthUser>(options.UsersCollectionName ?? "Users");
             this.RefreshTokens = this.Database.GetCollection<RefreshToken>(options.RefreshTokensCollectionName ?? "RefreshTokens");
             this.UsersToRoles = this.Database.GetCollection<UserToRole>(options.UsersToRolesCollectionName ?? "UsersToRoles");
             this.RolesToPermissions = this.Database.GetCollection<RoleToPermissions>(options.RolesToPermissionsCollectionName ?? "RolesToPermissions");

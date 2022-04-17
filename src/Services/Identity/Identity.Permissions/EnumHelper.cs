@@ -6,34 +6,53 @@ namespace Identity.Permissions
 {
     public static class EnumHelper
     {
-        public static (string, string) GetAttributeInfo(this Enum enumValue)
+        public static (string, string) GetNameAndDescription(this Permissions enumValue)
         {
+            var name = enumValue.ToString();
             try
             {
-                var enumType = enumValue.GetType();
-                var name = enumValue.ToString();
-                var memberInfos = enumType.GetMember(name);
+                var description = enumValue.GetEnumAttributes().Description;
 
-                var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
-                var valueAttributes = enumValueMemberInfo?.GetCustomAttributes(typeof(DisplayAttribute), false);
-
-                if (valueAttributes == null) return (name, string.Empty);
-
-                var description = ((DisplayAttribute)valueAttributes[0]).Description;
-                return (name, description);
+                return string.IsNullOrEmpty(description)
+                    ? (name, string.Empty)
+                    : (name, description);
             }
             catch
             {
-                return (enumValue.ToString(), string.Empty);
+                return (string.Empty, string.Empty);
             }
         }
 
-        public static char GetPermissionAsChar(this Enum enumValue)
+        public static string GetDisplayName(this Permissions enumValue)
+        {
+            try
+            {
+                return enumValue.GetEnumAttributes().Name;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public static char GetPermissionAsChar(this Permissions enumValue)
+        {
+            if (Enum.TryParse<Permissions>(enumValue.ToString(), ignoreCase: true, out var value))
+            {
+                return (char)Convert.ChangeType(value, typeof(char));
+            }
+            throw new ArgumentException("Invalid permission value", nameof(enumValue));
+        }
+
+        private static DisplayAttribute GetEnumAttributes(this Permissions enumValue)
         {
             var enumType = enumValue.GetType();
-            var name = enumValue.ToString();
+            var memberInfos = enumType.GetMember(enumValue.ToString());
 
-            return (char)Convert.ChangeType(Enum.Parse(enumType, name), typeof(char));
+            var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+            var valueAttributes = enumValueMemberInfo?.GetCustomAttributes(typeof(DisplayAttribute), false);
+
+            return (DisplayAttribute)valueAttributes[0];
         }
     }
 }

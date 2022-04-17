@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
+using HttpClientExtensions;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Xunit;
 
 using Identity.API;
+using Identity.API.Endpoints.AccountEndpoint;
+using Identity.Functional.Tests.EntityBuilders;
 using Identity.Infrastructure.MongoDB.Storages;
 
 namespace Identity.Functional.Tests
@@ -18,57 +20,39 @@ namespace Identity.Functional.Tests
 
     public class IntegrationTestBase : IDisposable
     {
-        private static readonly string TEST_DATA_JSON =
-            Path.Combine(
-                Path.GetFullPath(
-                    Path.Combine("..", "..", "..", "..", "Identity.Functional.Tests")),
-                "test_data.json");
-
-        private readonly Random random = new ();
-
         public const string TEST_COLLECTION_NAME = "IntegrationCollection";
 
         public HttpClient Client { get; }
         public IMongoStorage MongoStorage { get; }
         public TestIdentityWebAppFactory<Startup> Factory { get; }
-
-        /// <summary>
-        /// 500 randomly generated users
-        /// </summary>
-        public TestAuthUser[] TestUsers { get; }
+        public UserFactory UserFactory { get; }
 
         public IntegrationTestBase()
         {
             this.Factory = new TestIdentityWebAppFactory<Startup>();
             this.Client = this.Factory.CreateClient();
             this.MongoStorage = this.Factory.Services.GetService<IMongoStorage>();
-
-            this.TestUsers = LoadTestUsersFromFile().ToArray();
+            this.UserFactory = new UserFactory(this.Factory);
         }
 
-        public TestAuthUser GetRandomUser() => this.TestUsers[random.Next(499)];
+        public TestAuthUser AddAuthorization(Permissions.Permissions permission)
+        {
+            var user = this.UserFactory.CreateRandomUser(roles: new [] { permission });
+
+            var body = JsonSerializer.Serialize(new LoginRequest { Email = user.Email, Password = user.Password });
+            var loginContent = new StringContent(body, Encoding.UTF8, "application/json");
+
+            var (accessToken, _) = this.Client.PostAndReceiveResult<UserAuthenticatedDto>(LoginRequest.ROUTE, loginContent).GetAwaiter().GetResult();
+
+            this.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            return user;
+        }
 
         public void Dispose()
         {
             this.MongoStorage.Client.DropDatabase(this.MongoStorage.DatabaseName);
             this.Client?.Dispose();
         }
-
-        private static IEnumerable<TestAuthUser> LoadTestUsersFromFile()
-        {
-            using var streamReader = new StreamReader(IntegrationTestBase.TEST_DATA_JSON);
-            var json = streamReader.ReadToEnd();
-            return JsonConvert.DeserializeObject<TestAuthUser[]>(json);
-        }
-    }
-
-    public class TestAuthUser
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string UserName { get; set; }
-        public string Permissions { get; set; }
     }
 }

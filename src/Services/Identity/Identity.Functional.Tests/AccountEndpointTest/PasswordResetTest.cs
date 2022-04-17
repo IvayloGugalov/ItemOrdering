@@ -9,7 +9,6 @@ using HttpClientExtensions;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.Functional.Tests.EntityBuilders;
 
 namespace Identity.Functional.Tests.AccountEndpointTest
 {
@@ -26,8 +25,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task PasswordResetTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var newPassword = "69696969";
             var data = JsonSerializer.Serialize(
@@ -44,7 +42,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = newPassword });
+                new LoginRequest { Email = testUser.Email, Password = newPassword });
 
             var loginContent = new StringContent(body, Encoding.UTF8, "application/json");
 

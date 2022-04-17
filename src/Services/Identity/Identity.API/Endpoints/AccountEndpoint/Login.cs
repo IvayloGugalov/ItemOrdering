@@ -1,13 +1,14 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Identity.API.Extensions;
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
+using Identity.Permissions;
 using Identity.Shared;
 
 namespace Identity.API.Endpoints.AccountEndpoint
@@ -35,23 +36,26 @@ namespace Identity.API.Endpoints.AccountEndpoint
         {
             if (!this.ModelState.IsValid) return BadRequest(GetModelErrorMessages.BadRequestModelState(this.ModelState));
 
-            var user = await this.userManager.FindByNameAsync(loginRequest.Username);
-            if (user is null) return Unauthorized(new ErrorResponse("UserName does not exist."));
+            var user = await this.userManager.FindByEmailAsync(loginRequest.Email);
+            if (user is null) return Unauthorized(new ErrorResponse("Email does not exist."));
 
             var isPasswordCorrect = await this.userManager.CheckPasswordAsync(user, loginRequest.Password);
             if (!isPasswordCorrect) return Unauthorized(new ErrorResponse("Password is incorrect."));
 
-            var (newAccessToken, newRefreshToken) = await this.authenticator.AuthenticateUserAsync(user);
-            var response = new UserAuthenticatedDto(newAccessToken, newRefreshToken);
+            var (accessToken, refreshToken) = await this.authenticator.AuthenticateUserAsync(user);
+            var roles = string.Concat(user.UserRoles.Select(x => x.Role.PackedPermissionsInRole));
 
             await this.signInManager.PasswordSignInAsync(user, loginRequest.Password, false, false);
+            var response = new UserAuthenticatedDto(accessToken, roles);
+
+            this.HttpContext.Response.Cookies.AppendRefreshToken(refreshToken);
 
             return Ok(response);
         }
 
         // TODO: Remove
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HasPermission(Permissions.Permissions.Customer)]
+        [HasPermissions(Permissions.Permissions.Customer)]
         [HttpGet("api/login/secret")]
         public string Secret()
         {

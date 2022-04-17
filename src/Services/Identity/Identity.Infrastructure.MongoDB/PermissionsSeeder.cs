@@ -6,7 +6,6 @@ using MongoDB.Driver;
 
 using Identity.Domain.Entities;
 using Identity.Infrastructure.MongoDB.Storages;
-using Identity.Permissions;
 
 namespace Identity.Infrastructure.MongoDB
 {
@@ -34,10 +33,7 @@ namespace Identity.Infrastructure.MongoDB
 
             foreach (var permission in permissions)
             {
-                var (name, description) = permission.GetAttributeInfo();
-                var packedPermission = permission.GetPermissionAsChar().ToString();
-
-                await roleToPermissionCollection.InsertOneAsync(new RoleToPermissions(name, description, packedPermission));
+                await roleToPermissionCollection.InsertOneAsync(new RoleToPermissions(permission));
             }
         }
     }

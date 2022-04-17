@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -6,12 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using FluentAssertions;
-using HttpClientExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.Functional.Tests.EntityBuilders;
+using Identity.API.Extensions;
 using Identity.Tokens;
 using Identity.Tokens.Interfaces;
 
@@ -32,20 +33,23 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
+                new LoginRequest { Email = testUser.Email, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
-            var (accessToken, _) = await this.testBase.Client.PostAndReceiveResult<UserAuthenticatedDto>(LoginRequest.ROUTE, content);
+            var loginResponse = await this.testBase.Client.PostAsync(LoginRequest.ROUTE, content);
+            var (accessToken, _) = await loginResponse.Content.ReadFromJsonAsync<UserAuthenticatedDto>() ?? throw new NullReferenceException(nameof(UserAuthenticatedDto));
 
             // Assert
             using var scope = this.testBase.Factory.Services.CreateScope();
             var accessTokenValidator = scope.ServiceProvider.GetService<IAccessTokenValidator>();
 
+            loginResponse.Headers.SingleOrDefault(x => x.Key == "Set-Cookie").Value
+                .FirstOrDefault(x => x.Contains(AppendCookieExtension.REFRESH_TOKEN_NAME))
+                .Should().NotBeNullOrEmpty("refresh token must be set upon sign in");
             accessTokenValidator.Validate(accessToken, out _)
                 .Should().Be(TokenValidationResult.Success);
         }
@@ -53,11 +57,10 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WithWrongUserName_WillFail()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName + "..", Password = testUser.Password });
+                new LoginRequest { Email = testUser.Email + "..", Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -70,11 +73,10 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task LoginTest_WithWrongPassword_WillFail()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = testUser.Password + ".." });
+                new LoginRequest { Email = testUser.Email, Password = testUser.Password + ".." });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -88,11 +90,10 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public void Test_Secret_WithPermission()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
-                new LoginRequest { Username = testUser.UserName, Password = testUser.Password });
+                new LoginRequest { Email = testUser.Email, Password = testUser.Password });
 
             var content = new StringContent(body, Encoding.UTF8, "application/json");
 

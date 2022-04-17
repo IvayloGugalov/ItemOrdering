@@ -21,13 +21,22 @@ namespace Identity.Permissions
             return user?.Claims.SingleOrDefault(x => x.Type == PermissionConstants.PackedPermissionClaimType)?.Value;
         }
 
-        public static bool IsPermissionAllowed(this Claim permissionsClaim, string permissionName)
+        public static bool IsPermissionAllowed(this Claim permissionsClaim, string permissionNames)
         {
-            var permissionAsChar = (char)Convert.ChangeType(Enum.Parse(typeof(Permissions), permissionName), typeof(char));
-            return permissionsClaim.Value.IsThisPermissionAllowed(permissionAsChar);
+            var splitPermissions = permissionNames.Split(PermissionConstants.PermissionsSeparator);
+
+            var isPermissionAllowed = false;
+            foreach (var permissionAsChar in splitPermissions)
+            {
+                var parsedChar = (char)Convert.ChangeType(Enum.Parse<Permissions>(permissionAsChar), typeof(char));
+
+                isPermissionAllowed |= permissionsClaim.Value.IsThisPermissionAllowed(parsedChar);
+            }
+
+            return isPermissionAllowed;
         }
 
-        public static List<string> ConvertPackedPermissionToNames(this string packedPermissions)
+        public static List<string> ConvertPackedPermissionsToNames(this string packedPermissions)
         {
             if (packedPermissions == null) return null;
 
@@ -41,6 +50,20 @@ namespace Identity.Permissions
             }
 
             return permissionNames;
+        }
+
+        public static string GetPackedPermissionsFromEnumerable(this IEnumerable<string> permissionNames)
+        {
+            var packedPermissions = "";
+            foreach (var permissionName in permissionNames)
+            {
+                if (Enum.TryParse<Permissions>(permissionName, ignoreCase: true, out var value))
+                {
+                    packedPermissions += (char)Convert.ChangeType(value, typeof(char));
+                }
+            }
+
+            return packedPermissions;
         }
 
         private static bool IsThisPermissionAllowed(this string packedPermissions, char permissionAsChar)

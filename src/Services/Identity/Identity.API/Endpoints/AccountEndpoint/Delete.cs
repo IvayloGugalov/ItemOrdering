@@ -31,7 +31,7 @@ namespace Identity.API.Endpoints.AccountEndpoint
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteAsync()
         {
-            var unparsedUserId = HttpContext.User.FindFirstValue(PermissionConstants.UserIdClaimType);
+            var unparsedUserId = this.HttpContext.User.FindFirstValue(PermissionConstants.UserIdClaimType);
 
             if (!Guid.TryParse(unparsedUserId, out var userId)) return Unauthorized();
 
