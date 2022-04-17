@@ -42,7 +42,7 @@ namespace Identity.Functional.Tests.AdminEndpointTest
 
             var updateUserRoleContent = new StringContent(requestData, Encoding.UTF8, "application/json");
 
-            var response = await this.testBase.Client.PostAsync(UpdateUserRoleRequest.ROUTE, updateUserRoleContent);
+            var response = await this.testBase.Client.PutAsync(UpdateUserRoleRequest.ROUTE, updateUserRoleContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var result = await response.Content.ReadFromJsonAsync<UpdateUserRoleResponse>();

@@ -32,7 +32,7 @@ namespace Identity.API.Endpoints.AdminEndpoint
             var roles = await Task.Run(() => this.adminRolesService.QueryRoleToPermissions());
             var roleNames = roles.ToList()
                 .Where(x => x.RoleName != Permissions.Permissions.NotSet.GetDisplayName())
-                .Select(x => Enum.Parse<Permissions.Permissions>(x.RoleName).GetDisplayName());
+                .Select(x => x.DisplayName);
 
             return Ok(new GetRolesResponse { Roles = roleNames } );
         }
