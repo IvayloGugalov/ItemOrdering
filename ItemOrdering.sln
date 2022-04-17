@@ -41,6 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Functional.Tests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{E96878B6-E3E7-4999-92D8-48A6D7716911}"
 	ProjectSection(SolutionItems) = preProject
+		Nuget.config = Nuget.config
 		.github\workflows\run-auth-integration-tests.yml = .github\workflows\run-auth-integration-tests.yml
 		.github\workflows\run-coverage.yml = .github\workflows\run-coverage.yml
 		.github\workflows\runtests.yml = .github\workflows\runtests.yml

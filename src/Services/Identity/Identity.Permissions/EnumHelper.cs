@@ -37,7 +37,11 @@ namespace Identity.Permissions
 
         public static char GetPermissionAsChar(this Permissions enumValue)
         {
-            return (char)Convert.ChangeType(Enum.Parse<Permissions>(enumValue.ToString()), typeof(char));
+            if (Enum.TryParse<Permissions>(enumValue.ToString(), ignoreCase: true, out var value))
+            {
+                return (char)Convert.ChangeType(value, typeof(char));
+            }
+            throw new ArgumentException("Invalid permission value", nameof(enumValue));
         }
 
         private static DisplayAttribute GetEnumAttributes(this Permissions enumValue)

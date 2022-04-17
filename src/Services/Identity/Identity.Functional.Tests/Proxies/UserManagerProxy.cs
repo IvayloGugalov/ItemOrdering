@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -9,33 +10,44 @@ namespace Identity.Functional.Tests.Proxies
 {
     public class UserManagerProxy : IUserProxy
     {
-        private readonly IUserService userService;
+        private readonly IUserToRoleRepository userToRoleRepository;
         private readonly UserManager<AuthUser> userManager;
 
-        public UserManagerProxy(IUserService userService, UserManager<AuthUser> userManager)
+        public UserManagerProxy(IUserToRoleRepository userToRoleRepository, UserManager<AuthUser> userManager)
         {
-            this.userService = userService;
+            this.userToRoleRepository = userToRoleRepository;
             this.userManager = userManager;
         }
 
-        public void CreateUser(
+        public AuthUser CreateUser(
             string firstName,
             string lastName,
             string email,
             string userName,
             string password,
-            RoleToPermissions roleToPermissions)
+            List<RoleToPermissions> roleToPermissions)
         {
             try
             {
-                this.userService.RegisterUserAsync(
-                        firstName,
-                        lastName,
-                        email,
-                        userName,
-                        password,
-                        roleToPermissions)
-                    .GetAwaiter().GetResult();
+                var registrationUser = new AuthUser(
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    userName: userName,
+                    password: password,
+                    roles: roleToPermissions);
+
+                var result = this.userManager.CreateAsync(registrationUser, password).GetAwaiter().GetResult();
+
+                if (result.Succeeded)
+                {
+                    foreach (var permission in roleToPermissions)
+                    {
+                        this.userToRoleRepository.CreateAsync(new UserToRole(registrationUser.Id, permission)).GetAwaiter().GetResult();
+                    }
+                }
+
+                return registrationUser;
             }
             catch (Exception e)
             {
@@ -52,13 +64,13 @@ namespace Identity.Functional.Tests.Proxies
 
     public interface IUserProxy
     {
-        void CreateUser(
+        AuthUser CreateUser(
             string firstName,
             string lastName,
             string email,
             string userName,
             string password,
-            RoleToPermissions roleToPermissions);
+            List<RoleToPermissions> roleToPermissions);
 
         AuthUser GetUserByEmail(string email);
     }

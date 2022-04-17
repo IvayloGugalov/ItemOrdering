@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Identity.Domain.Entities;
@@ -11,6 +12,8 @@ namespace Identity.API.Endpoints.AdminEndpoint
     {
         public static UserDto MapAuthUserToUserDto(this AuthUser authUser)
         {
+            _ = authUser ?? throw new ArgumentNullException(nameof(authUser));
+
             return new UserDto(
                 FirstName: authUser.FirstName,
                 LastName: authUser.LastName,

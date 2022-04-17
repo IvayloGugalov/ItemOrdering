@@ -12,7 +12,6 @@ using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
 using Identity.API.Extensions;
-using Identity.Functional.Tests.EntityBuilders;
 using Identity.Shared;
 
 namespace Identity.Functional.Tests.AccountEndpointTest
@@ -30,8 +29,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task RefreshTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
                 new LoginRequest { Email = testUser.Email, Password = testUser.Password });

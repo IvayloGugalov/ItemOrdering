@@ -10,7 +10,7 @@ namespace Identity.Admin
         public static IServiceCollection AddAdminServices(this IServiceCollection services)
         {
             services.AddTransient<IAdminUserService, AdminUserService>();
-            services.AddTransient<IAdminRoleService, AdminRoleService>();
+            services.AddTransient<IAdminRolesService, AdminRolesesService>();
 
             return services;
         }

@@ -42,7 +42,7 @@ const UsersTable = () => {
 
   const handleDeleteUser = async (email) => {
     try {
-      const response = await axiosPrivate.post(variables.IDENTITY_API_URL + 'admin/delete-user',
+      const response = await axiosPrivate.delete(variables.IDENTITY_API_URL + 'admin/delete-user',
         JSON.stringify({email}),
         {
           headers: {'Content-Type': 'application/json'},

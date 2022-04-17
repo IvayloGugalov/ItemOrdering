@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.Functional.Tests.EntityBuilders;
 using Identity.Tokens;
 using Identity.Tokens.Interfaces;
 
@@ -31,8 +30,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task LogoutTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
                 new LoginRequest { Email = testUser.Email, Password = testUser.Password });

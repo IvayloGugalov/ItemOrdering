@@ -10,7 +10,6 @@ using HttpClientExtensions;
 using Xunit;
 
 using Identity.API.Endpoints.AccountEndpoint;
-using Identity.Functional.Tests.EntityBuilders;
 
 namespace Identity.Functional.Tests.AccountEndpointTest
 {
@@ -27,8 +26,7 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task DeleteTest_WillSucceed()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
+            var testUser = this.testBase.UserFactory.CreateRandomUser();
 
             var body = JsonSerializer.Serialize(
                 new LoginRequest { Email = testUser.Email, Password = testUser.Password });
@@ -48,9 +46,6 @@ namespace Identity.Functional.Tests.AccountEndpointTest
         [Fact]
         public async Task DeleteTest_WithUnauthorizedUser_WillFail()
         {
-            var testUser = this.testBase.GetRandomUser();
-            AuthUserCreator.Create(testUser, this.testBase.Factory);
-
             this.testBase.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "SomeRandomTokenValue");
 
             var response = await this.testBase.Client.DeleteAsync(DeleteRequest.ROUTE);
