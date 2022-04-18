@@ -1,5 +1,6 @@
 using System;
 
+using GuidGenerator;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +28,8 @@ namespace Ordering.API
             try
             {
                 var context = services.GetRequiredService<ItemOrderingDbContext>();
-                Seeder.Initialize(context);
+                var guidGenerator = services.GetRequiredService<IGuidGeneratorService>();
+                Seeder.Initialize(context, guidGenerator);
             }
             catch (Exception ex)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using GuardClauses;
-
+using GuidGenerator;
 using Ordering.Domain.Shared;
 
 namespace Ordering.Domain.OrderAggregate
@@ -19,9 +19,12 @@ namespace Ordering.Domain.OrderAggregate
 
         private Order() { }
 
-        public Order(Guid customerId, IEnumerable<OrderedProduct> orderedProducts)
+        public Order(
+            Guid customerId,
+            IEnumerable<OrderedProduct> orderedProducts,
+            IGuidGeneratorService guidGenerator)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = guidGenerator.GenerateGuid();
             this.Created = DateTime.Now;
             this.CustomerId = Guard.Against.NullOrEmpty(customerId, nameof(customerId));
 

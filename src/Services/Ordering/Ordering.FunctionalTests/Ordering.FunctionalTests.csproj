@@ -3,7 +3,7 @@
   <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.46" />
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\GuidGenerator\GuidGenerator.csproj" />
     <ProjectReference Include="..\..\HttpClientExtensions\HttpClientExtensions.csproj" />
     <ProjectReference Include="..\Ordering.Api\Ordering.API.csproj" />
     <ProjectReference Include="..\Ordering.Domain.Test\Ordering.Domain.Test.csproj" />

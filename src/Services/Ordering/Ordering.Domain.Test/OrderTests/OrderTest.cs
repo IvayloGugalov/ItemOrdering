@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GuidGenerator;
 using NUnit.Framework;
 
 using Ordering.Domain.OrderAggregate;
@@ -11,11 +12,13 @@ namespace Ordering.Domain.Test.OrderTests
     [TestFixture]
     public class OrderTest
     {
+        private IGuidGeneratorService guidGenerator = new GuidGeneratorService();
+
         [Test]
         [TestCaseSource(nameof(OrderTest.emptyList))]
         public void OrderWithNoProducts_CantBeCreated_WillThrowException(List<OrderedProduct> products)
         {
-            Assert.Throws<ArgumentNullException>(() => new Order(Guid.NewGuid(), products));
+            Assert.Throws<ArgumentNullException>(() => new Order(Guid.NewGuid(), products, this.guidGenerator));
         }
 
         [Test]
@@ -32,7 +35,7 @@ namespace Ordering.Domain.Test.OrderTests
                 new OrderedProduct(Guid.NewGuid(), 25.5, 2),
                 new OrderedProduct(Guid.NewGuid(), 44.3, 10)
             };
-            var order = new Order(Guid.NewGuid(), products);
+            var order = new Order(Guid.NewGuid(), products, this.guidGenerator);
 
             Assert.IsNull(order.ShippingAddress);
 
@@ -49,7 +52,7 @@ namespace Ordering.Domain.Test.OrderTests
                 new OrderedProduct(Guid.NewGuid(), 25.5, 2),
                 new OrderedProduct(Guid.NewGuid(), 44.3, 10)
             };
-            var order = new Order(Guid.NewGuid(), products);
+            var order = new Order(Guid.NewGuid(), products, this.guidGenerator);
 
             var totalPrice = 0.0;
             foreach (var product in products)

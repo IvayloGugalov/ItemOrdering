@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GuidGenerator;
+
 using Ordering.Domain.OrderAggregate;
 
 namespace Ordering.Domain.Test.EntityBuilders
 {
     public static class OrderBuilder
     {
-        public static Order CreateOrder()
+        public static Order CreateOrder(IGuidGeneratorService guidGenerator)
         {
             var products = new List<OrderedProduct>
             {
@@ -17,19 +19,22 @@ namespace Ordering.Domain.Test.EntityBuilders
 
             return new Order(
                 customerId: Guid.NewGuid(),
-                orderedProducts: products);
+                orderedProducts: products,
+                guidGenerator);
         }
 
         public static Order CreateSpecificOrder(
             Guid customerId,
-            List<OrderedProduct> orderedProducts)
+            List<OrderedProduct> orderedProducts,
+            IGuidGeneratorService guidGenerator)
         {
             return new Order(
                 customerId: customerId,
-                orderedProducts: orderedProducts);
+                orderedProducts: orderedProducts,
+                guidGenerator);
         }
 
-        public static IEnumerable<Order> CreateOrders(Guid customerId, int range)
+        public static IEnumerable<Order> CreateOrders(Guid customerId, int range, IGuidGeneratorService guidGenerator)
         {
             for (var i = 1; i <= range; i++)
             {
@@ -39,7 +44,7 @@ namespace Ordering.Domain.Test.EntityBuilders
                     {
                         new OrderedProduct(Guid.NewGuid(), 1.01 * i, 1 * i),
                         new OrderedProduct(Guid.NewGuid(), 2.01 * i, 2 * i)
-                    });
+                    }, guidGenerator);
             }
         }
     }

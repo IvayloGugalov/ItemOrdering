@@ -1,5 +1,6 @@
 ﻿using System;
 
+using GuidGenerator;
 using NUnit.Framework;
 
 using Identity.Integration.Tests.Mocks;
@@ -22,7 +23,7 @@ namespace Identity.Integration.Tests.StorageTests
         [Test]
         public void A()
         {
-            this.mongo.MongoStorage.RefreshTokens.InsertOne(new RefreshToken(Guid.NewGuid().ToString(), Guid.NewGuid()));
+            this.mongo.MongoStorage.RefreshTokens.InsertOne(new RefreshToken(Guid.NewGuid().ToString(), Guid.NewGuid(), new GuidGeneratorService()));
         }
     }
 }

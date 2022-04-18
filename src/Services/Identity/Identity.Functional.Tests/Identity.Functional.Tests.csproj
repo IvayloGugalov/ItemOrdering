@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
@@ -44,8 +44,8 @@
     <ProjectReference Include="..\Identity.API\Identity.API.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+  <!--<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="powershell start-process run_docker_locally.bat" Condition="$([MSBuild]::IsOSPlatform('Windows'))" ContinueOnError="ErrorAndStop" />
-  </Target>
+  </Target>-->
 
 </Project>

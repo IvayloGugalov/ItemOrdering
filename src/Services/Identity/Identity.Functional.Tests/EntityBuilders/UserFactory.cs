@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using GuidGenerator;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
@@ -42,7 +43,7 @@ namespace Identity.Functional.Tests.EntityBuilders
         /// <returns></returns>
         public TestAuthUser GetRandomUser() => this.TestUsers[random.Next(this.TestUsers.Length - 1)];
 
-        public AuthUser CreateAuthUser()
+        public AuthUser CreateAuthUser(IGuidGeneratorService guidGenerator = null)
         {
             var randomUser = this.GetRandomUser();
 
@@ -60,7 +61,8 @@ namespace Identity.Functional.Tests.EntityBuilders
                 randomUser.Email,
                 randomUser.UserName,
                 randomUser.Password,
-                roleToPermissionsList);
+                roleToPermissionsList,
+                guidGenerator ?? new GuidGeneratorService());
         }
 
         public TestAuthUser CreateRandomUser(
@@ -69,7 +71,8 @@ namespace Identity.Functional.Tests.EntityBuilders
             string email = null,
             string userName = null,
             string password = null,
-            Permissions.Permissions[] roles = null)
+            Permissions.Permissions[] roles = null,
+            IGuidGeneratorService guidGenerator = null)
         {
             var randomUser = this.GetRandomUser();
 
@@ -98,7 +101,8 @@ namespace Identity.Functional.Tests.EntityBuilders
                 randomUser.Email,
                 randomUser.UserName,
                 randomUser.Password,
-                roleToPermissionsList);
+                roleToPermissionsList,
+                guidGenerator ?? new GuidGeneratorService());
 
             return randomUser;
         }

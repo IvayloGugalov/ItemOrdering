@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+
+using GuidGenerator;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -14,6 +16,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
     {
         private ItemOrderingDbContext dbContext;
         private OrderRepository orderRepository;
+        private IGuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [SetUp]
         public void SetUp()
@@ -28,7 +31,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task CreateAsync_WillSucceed()
         {
-            var order = OrderBuilder.CreateOrder();
+            var order = OrderBuilder.CreateOrder(this.guidGenerator);
 
             await this.orderRepository.AddAsync(order);
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ordering.API", "src\Services\Ordering\Ordering.Api\Ordering.API.csproj", "{948AC87B-D04A-4AE8-8420-787F56035D8A}"
 EndProject
@@ -52,6 +52,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Integration.Tests", "src\Services\Identity\Identity.Integration.Tests\Identity.Integration.Tests.csproj", "{79B4A9EB-D5D7-4255-A181-88335363119C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Admin.React", "src\Services\Identity\Identity.Admin.React\Identity.Admin.React.csproj", "{86346944-EECC-4312-AF01-07E69D5FCBF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuidGenerator", "src\Services\GuidGenerator\GuidGenerator.csproj", "{083F0510-903A-4DE7-8E96-079B54EF9AB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E3CF835D-472B-408A-80E7-405C1D563303}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +131,10 @@ Global
 		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86346944-EECC-4312-AF01-07E69D5FCBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{083F0510-903A-4DE7-8E96-079B54EF9AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{083F0510-903A-4DE7-8E96-079B54EF9AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{083F0510-903A-4DE7-8E96-079B54EF9AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{083F0510-903A-4DE7-8E96-079B54EF9AB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +159,8 @@ Global
 		{E4AE9635-657F-48A9-9EDF-96FA7CEC5AE2} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{79B4A9EB-D5D7-4255-A181-88335363119C} = {4E70E73E-050B-408A-A581-41AAD7836FC3}
 		{86346944-EECC-4312-AF01-07E69D5FCBF4} = {1F61BBF7-28A8-442C-8E72-CB2B763641BE}
+		{083F0510-903A-4DE7-8E96-079B54EF9AB2} = {E3CF835D-472B-408A-80E7-405C1D563303}
+		{E3CF835D-472B-408A-80E7-405C1D563303} = {711504CA-7B2A-490A-B3FB-DC6D6B3EF2EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F8016928-19C4-463D-AB4C-1A92860FA316}

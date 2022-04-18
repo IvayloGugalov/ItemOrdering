@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GuidGenerator;
 using Microsoft.AspNetCore.Identity;
 
 using Identity.Domain.Entities;
@@ -25,7 +26,8 @@ namespace Identity.Functional.Tests.Proxies
             string email,
             string userName,
             string password,
-            List<RoleToPermissions> roleToPermissions)
+            List<RoleToPermissions> roleToPermissions,
+            IGuidGeneratorService guidGenerator)
         {
             try
             {
@@ -35,7 +37,8 @@ namespace Identity.Functional.Tests.Proxies
                     email: email,
                     userName: userName,
                     password: password,
-                    roles: roleToPermissions);
+                    roles: roleToPermissions,
+                    guidGenerator);
 
                 var result = this.userManager.CreateAsync(registrationUser, password).GetAwaiter().GetResult();
 
@@ -70,7 +73,8 @@ namespace Identity.Functional.Tests.Proxies
             string email,
             string userName,
             string password,
-            List<RoleToPermissions> roleToPermissions);
+            List<RoleToPermissions> roleToPermissions,
+            IGuidGeneratorService guidGenerator);
 
         AuthUser GetUserByEmail(string email);
     }

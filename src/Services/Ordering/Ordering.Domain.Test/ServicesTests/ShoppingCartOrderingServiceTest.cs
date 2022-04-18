@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-
+using GuidGenerator;
 using Moq;
 using NUnit.Framework;
 
@@ -18,12 +18,14 @@ namespace Ordering.Domain.Test.ServicesTests
     {
         private Mock<IShoppingCartRepository> shoppingCartRepositoryMock;
         private Mock<IOrderRepository> orderRepositoryMock;
+        private IGuidGeneratorService guidGenerator;
 
         [SetUp]
         public void SetUp()
         {
             this.shoppingCartRepositoryMock = new Mock<IShoppingCartRepository>();
             this.orderRepositoryMock = new Mock<IOrderRepository>();
+            this.guidGenerator = new GuidGeneratorService();
         }
 
         [TearDown]
@@ -36,16 +38,17 @@ namespace Ordering.Domain.Test.ServicesTests
         [Test]
         public async Task CreateOrderFromShoppingCart_WithValidParams_WillCreateShoppingCart()
         {
-            var shoppingCart = new ShoppingCart(Guid.NewGuid());
-            var shop = new Shop("www.shop.url.com", "my shop");
+            var shoppingCart = new ShoppingCart(Guid.NewGuid(), this.guidGenerator);
+            var shop = new Shop("www.shop.url.com", "my shop", this.guidGenerator);
             var product = new Product(
-                url: @"www.shop.url.com/product_1", title: "product_1", description: "This is the description", price: 49.99, shop);
+                url: @"www.shop.url.com/product_1", title: "product_1", description: "This is the description", price: 49.99, shop, this.guidGenerator);
 
             shoppingCart.AddProduct(product);
 
             var shoppingCartOrderingService = new OrderingService(
                 this.shoppingCartRepositoryMock.Object,
-                this.orderRepositoryMock.Object);
+                this.orderRepositoryMock.Object,
+                this.guidGenerator);
 
             this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerAsync(It.IsAny<ISpecification<ShoppingCart>>()))
                 .ReturnsAsync(shoppingCart);
@@ -64,7 +67,8 @@ namespace Ordering.Domain.Test.ServicesTests
             var customerId = Guid.NewGuid();
             var shoppingCartOrderingService = new OrderingService(
                 this.shoppingCartRepositoryMock.Object,
-                this.orderRepositoryMock.Object);
+                this.orderRepositoryMock.Object,
+                this.guidGenerator);
 
             this.shoppingCartRepositoryMock.Setup(_ => _.FindByCustomerAsync(It.IsAny<ISpecification<ShoppingCart>>()))
                 .ReturnsAsync(It.IsAny<ShoppingCart>());

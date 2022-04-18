@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using GuardClauses;
-
+using GuidGenerator;
 using Ordering.Domain.Shared;
 using Ordering.Domain.ShopAggregate;
 
@@ -18,9 +18,9 @@ namespace Ordering.Domain.ShoppingCartAggregate
 
         private ShoppingCart() { }
 
-        public ShoppingCart(Guid customerId)
+        public ShoppingCart(Guid customerId, IGuidGeneratorService guidGenerator)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = guidGenerator.GenerateGuid();
             this.CustomerId = Guard.Against.NullOrEmpty(customerId, nameof(customerId));
         }
 

@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 
+using GuidGenerator;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+
 using Ordering.Domain.ShoppingCartAggregate;
 using Ordering.Domain.ShoppingCartAggregate.Specifications;
 using Ordering.Domain.Test.EntityBuilders;
@@ -16,6 +18,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
     {
         private ItemOrderingDbContext dbContext;
         private ShoppingCartRepository shoppingCartRepository;
+        private IGuidGeneratorService guidGenerator;
 
         [SetUp]
         public void SetUp()
@@ -25,12 +28,13 @@ namespace Ordering.Infrastructure.Test.UnitTests
                 .Options;
             this.dbContext = new ItemOrderingDbContext(dbOptions);
             this.shoppingCartRepository = new ShoppingCartRepository(this.dbContext);
+            this.guidGenerator = new GuidGeneratorService();
         }
 
         [Test]
         public async Task AddAsync_WillSucceed()
         {
-            var shoppingCart = new ShoppingCart(Guid.NewGuid());
+            var shoppingCart = new ShoppingCart(Guid.NewGuid(), this.guidGenerator);
 
             await this.shoppingCartRepository.AddAsync(shoppingCart);
 
@@ -42,8 +46,8 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task UpdateAsync_WillSucceed()
         {
-            var shoppingCart = new ShoppingCart(Guid.NewGuid());
-            var product = ProductBuilder.CreateProduct();
+            var shoppingCart = new ShoppingCart(Guid.NewGuid(), this.guidGenerator);
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             shoppingCart.AddProduct(product);
             this.dbContext.SeedDataBaseWith(shoppingCart);
@@ -59,8 +63,8 @@ namespace Ordering.Infrastructure.Test.UnitTests
         public async Task FindByCustomerIncludeProducts_WillIncludeProducts()
         {
             var customerId = Guid.NewGuid();
-            var shoppingCart = new ShoppingCart(customerId);
-            var product = ProductBuilder.CreateProduct();
+            var shoppingCart = new ShoppingCart(customerId, this.guidGenerator);
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             shoppingCart.AddProduct(product);
             this.dbContext.SeedDataBaseWith(shoppingCart);
@@ -73,8 +77,8 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task DeleteAsync_WillSucceed()
         {
-            var shoppingCart = new ShoppingCart(Guid.NewGuid());
-            var product = ProductBuilder.CreateProduct();
+            var shoppingCart = new ShoppingCart(Guid.NewGuid(), this.guidGenerator);
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             shoppingCart.AddProduct(product);
             this.dbContext.SeedDataBaseWith(shoppingCart);

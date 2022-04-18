@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 using GuardClauses;
 using MongoDB.Bson.Serialization.Attributes;
+using GuidGenerator;
 
 namespace Identity.Domain.Entities
 {
@@ -25,9 +26,16 @@ namespace Identity.Domain.Entities
         [PersonalData]
         private HashSet<UserToRole> userRoles;
 
-        public AuthUser(string firstName, string lastName, string email, string userName, string password, IEnumerable<RoleToPermissions> roles)
+        public AuthUser(
+            string firstName,
+            string lastName,
+            string email,
+            string userName,
+            string password,
+            IEnumerable<RoleToPermissions> roles,
+            IGuidGeneratorService guidGenerator)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = guidGenerator.GenerateGuid();
             this.FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
             this.LastName = Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
             this.Email = Guard.Against.NullOrWhiteSpace(email, nameof(email));

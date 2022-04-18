@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GuidGenerator;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,6 +30,7 @@ namespace Ordering.Functional.Tests
             {
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ItemOrderingDbContext>();
+                var guidGenerator = scopedServices.GetRequiredService<IGuidGeneratorService>();
 
                 var logger = scopedServices
                     .GetRequiredService<ILogger<TestWebAppFactory<TStartup>>>();
@@ -39,7 +41,7 @@ namespace Ordering.Functional.Tests
                 try
                 {
                     // Seed the database with test data.
-                    Seeder.Initialize(db);
+                    Seeder.Initialize(db, guidGenerator);
                 }
                 catch (Exception ex)
                 {

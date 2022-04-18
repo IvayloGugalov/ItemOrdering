@@ -1,7 +1,7 @@
 ﻿using System;
 
 using GuardClauses;
-
+using GuidGenerator;
 using Ordering.Domain.Shared;
 using Ordering.Domain.ShoppingCartAggregate;
 
@@ -17,9 +17,15 @@ namespace Ordering.Domain.ShopAggregate
 
         private Product() { }
 
-        public Product(string url, string title, string description, double price, Shop shop)
+        public Product(
+            string url,
+            string title,
+            string description,
+            double price,
+            Shop shop,
+            IGuidGeneratorService guidGenerator)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = guidGenerator.GenerateGuid();
             this.Url = Guard.Against.NullOrWhiteSpace(url, nameof(url));
             this.Title = Guard.Against.NullOrWhiteSpace(title, nameof(title));
             this.Description = Guard.Against.NullOrWhiteSpace(description, nameof(description));

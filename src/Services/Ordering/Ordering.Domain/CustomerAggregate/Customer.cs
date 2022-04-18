@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using GuardClauses;
+using GuidGenerator;
 
 using Ordering.Domain.Exceptions;
 using Ordering.Domain.OrderAggregate;
@@ -23,9 +24,14 @@ namespace Ordering.Domain.CustomerAggregate
 
         private Customer() { }
 
-        public Customer(string firstName, string lastName, Address address, Email email)
+        public Customer(
+            string firstName,
+            string lastName,
+            Address address,
+            Email email,
+            IGuidGeneratorService guidGenerator)
         {
-            this.Id = Guid.NewGuid();
+            this.Id = guidGenerator.GenerateGuid();
             this.FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
             this.LastName = Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
             this.Address = Guard.Against.Null(address, nameof(address));
