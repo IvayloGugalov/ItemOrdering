@@ -4,7 +4,7 @@
     "RefreshTokensCollectionName": "RefreshTokens",
     "RolesToPermissionsCollectionName": "RolesToPermissions",
     "UsersToRolesCollectionName": "UsersToRoles",
-    "ConnectionString": "mongodb://localhost:49586/identity",
+    "ConnectionString": "mongodb://localhost:49000/identity",
     "DatabaseName": "identity"
   },
   "Authentication": {

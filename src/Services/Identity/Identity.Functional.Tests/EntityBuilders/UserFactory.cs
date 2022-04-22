@@ -16,6 +16,7 @@ namespace Identity.Functional.Tests.EntityBuilders
     public class UserFactory
     {
         private readonly TestIdentityWebAppFactory<Startup> factory;
+        private readonly List<TestAuthUser> createdUsers;
 
         private static readonly string TEST_DATA_JSON =
             Path.Combine(
@@ -35,13 +36,24 @@ namespace Identity.Functional.Tests.EntityBuilders
         {
             this.factory = factory;
             this.TestUsers = LoadTestUsersFromFile().ToArray();
+
+            this.createdUsers = new List<TestAuthUser>();
         }
 
         /// <summary>
         /// Get a random user from the test data.
         /// </summary>
         /// <returns></returns>
-        public TestAuthUser GetRandomUser() => this.TestUsers[random.Next(this.TestUsers.Length - 1)];
+        public TestAuthUser GetRandomUser()
+        {
+            var randomUser = this.TestUsers
+                .Except(this.createdUsers)
+                .ToArray()[random.Next(this.TestUsers.Length - this.createdUsers.Count - 1)];
+
+            this.createdUsers.Add(randomUser);
+
+            return randomUser;
+        }
 
         public AuthUser CreateAuthUser(IGuidGeneratorService guidGenerator = null)
         {
