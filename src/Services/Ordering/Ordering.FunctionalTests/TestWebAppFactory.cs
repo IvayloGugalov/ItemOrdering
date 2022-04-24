@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+
 using GuidGenerator;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Ordering.API;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.Functional.Tests
+namespace Ordering.FunctionalTests
 {
     public class TestWebAppFactory<TStartup> : WebApplicationFactory<Startup>
     {

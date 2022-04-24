@@ -15,7 +15,7 @@ namespace Ordering.Domain.Test.CustomerTests
     [TestFixture]
     public class CustomerTest
     {
-        private IGuidGeneratorService guidGenerator = new GuidGeneratorService();
+        private readonly IGuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [Test]
         public void CreateShoppingCart_WhileCartExists_WillThrowException()

@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 
+using GuidGenerator;
 using Microsoft.AspNetCore.Identity;
 
 using Identity.Domain.Entities;
 using Identity.Domain.Interfaces;
-using GuidGenerator;
 
 namespace Identity.API.Services
 {
@@ -14,11 +14,14 @@ namespace Identity.API.Services
         private readonly IUserToRoleRepository userToRoleRepository;
         private readonly IGuidGeneratorService guidGenerator;
 
-        public UserService(UserManager<AuthUser> userManager, IUserToRoleRepository userToRoleRepository)
+        public UserService(
+            UserManager<AuthUser> userManager,
+            IUserToRoleRepository userToRoleRepository,
+            IGuidGeneratorService guidGenerator)
         {
             this.userManager = userManager;
             this.userToRoleRepository = userToRoleRepository;
-            this.guidGenerator = new GuidGeneratorService();
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(

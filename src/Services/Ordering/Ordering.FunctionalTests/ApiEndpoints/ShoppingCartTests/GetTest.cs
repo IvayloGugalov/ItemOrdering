@@ -4,15 +4,15 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using HttpClientExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.ShoppingCartEndpoint;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.Functional.Tests.ApiEndpoints.ShoppingCartTests
+namespace Ordering.FunctionalTests.ApiEndpoints.ShoppingCartTests
 {
     [TestFixture]
     public class GetTest

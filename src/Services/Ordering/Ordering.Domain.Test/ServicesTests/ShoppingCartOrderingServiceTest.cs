@@ -16,16 +16,16 @@ namespace Ordering.Domain.Test.ServicesTests
     [TestFixture]
     public class ShoppingCartOrderingServiceTest
     {
+        private readonly IGuidGeneratorService guidGenerator = new GuidGeneratorService();
+
         private Mock<IShoppingCartRepository> shoppingCartRepositoryMock;
         private Mock<IOrderRepository> orderRepositoryMock;
-        private IGuidGeneratorService guidGenerator;
 
         [SetUp]
         public void SetUp()
         {
             this.shoppingCartRepositoryMock = new Mock<IShoppingCartRepository>();
             this.orderRepositoryMock = new Mock<IOrderRepository>();
-            this.guidGenerator = new GuidGeneratorService();
         }
 
         [TearDown]

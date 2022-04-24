@@ -16,7 +16,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
     {
         private ItemOrderingDbContext dbContext;
         private OrderRepository orderRepository;
-        private IGuidGeneratorService guidGenerator = new GuidGeneratorService();
+        private readonly IGuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [SetUp]
         public void SetUp()

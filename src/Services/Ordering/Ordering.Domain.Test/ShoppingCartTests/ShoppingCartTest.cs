@@ -12,13 +12,7 @@ namespace Ordering.Domain.Test.ShoppingCartTests
     [TestFixture]
     public class ShoppingCartTest
     {
-        private IGuidGeneratorService guidGenerator;
-
-        [SetUp]
-        public void SetUp()
-        {
-            this.guidGenerator = new GuidGeneratorService();
-        }
+        private readonly IGuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [Test]
         public void AddProduct_WhenPassingNull_WillThrowException()

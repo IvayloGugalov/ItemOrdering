@@ -12,7 +12,7 @@ namespace Ordering.Domain.Test.OrderTests
     [TestFixture]
     public class OrderTest
     {
-        private IGuidGeneratorService guidGenerator = new GuidGeneratorService();
+        private readonly IGuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [Test]
         [TestCaseSource(nameof(OrderTest.emptyList))]

@@ -3,10 +3,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using GuidGenerator;
+using HttpClientExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
@@ -14,7 +14,7 @@ using Ordering.Domain.OrderAggregate.Specifications;
 using Ordering.Domain.Shared;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
+namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class CreateTest

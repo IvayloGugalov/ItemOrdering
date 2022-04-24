@@ -15,7 +15,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
     {
         private ItemOrderingDbContext dbContext;
         private ProductRepository productRepository;
-        private GuidGeneratorService guidGenerator;
+        private readonly GuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [SetUp]
         public void SetUp()
@@ -25,7 +25,6 @@ namespace Ordering.Infrastructure.Test.UnitTests
                 .Options;
             this.dbContext = new ItemOrderingDbContext(dbOptions);
             this.productRepository = new ProductRepository(this.dbContext);
-            this.guidGenerator = new GuidGeneratorService();
         }
 
         [Test]

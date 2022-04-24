@@ -3,16 +3,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using GuidGenerator;
+using HttpClientExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
 using Ordering.Infrastructure.Data;
-using GuidGenerator;
 
-namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
+namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class GetTest
