@@ -35,7 +35,7 @@ using Identity.Domain.Services;
 using Identity.Infrastructure.MongoDB;
 using Identity.Permissions.Interfaces;
 using Identity.Tokens;
-
+using GuidGenerator;
 
 namespace Identity.API
 {
@@ -53,6 +53,8 @@ namespace Identity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGuidGeneratorServices();
+
             this.ConfigureMongoServices(services);
 
             this.ConfigureUsedServices(services);

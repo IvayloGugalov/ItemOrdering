@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
+using GuidGenerator;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 
@@ -14,6 +15,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
     {
         private ItemOrderingDbContext dbContext;
         private ProductRepository productRepository;
+        private readonly GuidGeneratorService guidGenerator = new GuidGeneratorService();
 
         [SetUp]
         public void SetUp()
@@ -28,7 +30,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task GetByIdAsync_WillSucceed()
         {
-            var product = ProductBuilder.CreateProduct();
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             this.dbContext.SeedDataBaseWith(product);
 
@@ -40,7 +42,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task AddAsync_WillSucceed()
         {
-            var product = ProductBuilder.CreateProduct();
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             await this.productRepository.AddAsync(product);
 
@@ -52,7 +54,7 @@ namespace Ordering.Infrastructure.Test.UnitTests
         [Test]
         public async Task DeleteAsync_WillSucceed()
         {
-            var product = ProductBuilder.CreateProduct();
+            var product = ProductBuilder.CreateProduct(this.guidGenerator);
 
             this.dbContext.Products.Add(product);
 

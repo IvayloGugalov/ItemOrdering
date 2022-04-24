@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 
+using GuidGenerator;
+
 using Ordering.Domain.CustomerAggregate;
 using Ordering.Domain.OrderAggregate;
 using Ordering.Domain.Shared;
@@ -10,7 +12,7 @@ namespace Ordering.Infrastructure.Data
 {
     public static class Seeder
     {
-        public static void Initialize(ItemOrderingDbContext dbContext)
+        public static void Initialize(ItemOrderingDbContext dbContext, IGuidGeneratorService guidGenerator)
         {
             if (!dbContext.Customers.Any())
             {
@@ -24,24 +26,25 @@ namespace Ordering.Infrastructure.Data
                             zipCode: 50100,
                             street: "Tom Soyer Str.",
                             streetNumber: 6),
-                        email: new Email("elon_musk_fake@mail.bg")));
+                        email: new Email("elon_musk_fake@mail.bg"),
+                        guidGenerator));
 
-                dbContext.ShoppingCarts.Add(new ShoppingCart(customer.Entity.Id));
+                dbContext.ShoppingCarts.Add(new ShoppingCart(customer.Entity.Id, guidGenerator));
             }
 
             if (!dbContext.Products.Any())
             {
-                var shop = new Shop(@"https:\\shop_2.com", title: "shop_2");
+                var shop = new Shop(@"https:\\shop_2.com", title: "shop_2", guidGenerator);
                 var products = new[]
                 {
                     new Product(
-                        url: @"https:\\product_12", title: "product_12", description: "This is the description", price: 549.99, shop),
+                        url: @"https:\\product_12", title: "product_12", description: "This is the description", price: 549.99, shop, guidGenerator),
                     new Product(
-                        url: @"https:\\product_22", title: "product_22", description: "This is the description", price: 589.99, shop),
+                        url: @"https:\\product_22", title: "product_22", description: "This is the description", price: 589.99, shop, guidGenerator),
                     new Product(
-                        url: @"https:\\product_32", title: "product_32", description: "This is the description", price: 5100, shop),
+                        url: @"https:\\product_32", title: "product_32", description: "This is the description", price: 5100, shop, guidGenerator),
                     new Product(
-                        url: @"https:\\product_42", title: "product_42", description: "This is the description", price: 50.99, shop),
+                        url: @"https:\\product_42", title: "product_42", description: "This is the description", price: 50.99, shop, guidGenerator),
                 };
 
                 dbContext.Products.AddRange(products);
@@ -50,11 +53,11 @@ namespace Ordering.Infrastructure.Data
             dbContext.SaveChanges();
         }
 
-        public static Customer CustomerWithCartAndProducts(ItemOrderingDbContext dbContext)
+        public static Customer CustomerWithCartAndProducts(ItemOrderingDbContext dbContext, IGuidGeneratorService guidGenerator)
         {
-            var customer = CreateCustomer();
-            var shoppingCart = new ShoppingCart(customer.Id);
-            var products = CreateProducts();
+            var customer = CreateCustomer(guidGenerator);
+            var shoppingCart = new ShoppingCart(customer.Id, guidGenerator);
+            var products = CreateProducts(guidGenerator);
 
             dbContext.Customers.Add(customer);
             dbContext.Products.AddRange(products);
@@ -69,11 +72,11 @@ namespace Ordering.Infrastructure.Data
             return customer;
         }
 
-        public static Customer CustomerWithMultipleOrders(ItemOrderingDbContext dbContext, int orderCount)
+        public static Customer CustomerWithMultipleOrders(ItemOrderingDbContext dbContext, IGuidGeneratorService guidGenerator, int orderCount)
         {
-            var customer = CreateCustomer();
-            var shoppingCart = new ShoppingCart(customer.Id);
-            var products = CreateProducts();
+            var customer = CreateCustomer(guidGenerator);
+            var shoppingCart = new ShoppingCart(customer.Id, guidGenerator);
+            var products = CreateProducts(guidGenerator);
 
             dbContext.Customers.Add(customer);
             dbContext.Products.AddRange(products);
@@ -89,14 +92,14 @@ namespace Ordering.Infrastructure.Data
                 var orderedProducts = shoppingCart.ProductsAndAmount
                     .Select(productAndAmount => new OrderedProduct(productAndAmount.ProductId, productAndAmount.Price, productAndAmount.Amount))
                     .ToList();
-                dbContext.Orders.Add(new Order(shoppingCart.CustomerId, orderedProducts));
+                dbContext.Orders.Add(new Order(shoppingCart.CustomerId, orderedProducts, guidGenerator));
             }
 
             dbContext.SaveChanges();
             return customer;
         }
 
-        private static Customer CreateCustomer() =>
+        private static Customer CreateCustomer(IGuidGeneratorService guidGenerator) =>
             new Customer(
                 firstName: "Ivaylo",
                 lastName: "Gugalov",
@@ -106,21 +109,22 @@ namespace Ordering.Infrastructure.Data
                     zipCode: 1000,
                     street: "4-ti Kilometyr",
                     streetNumber: 1),
-                email: new Email("ivo_mail@mail.bg"));
+                email: new Email("ivo_mail@mail.bg"),
+                guidGenerator);
 
-        private static Product[] CreateProducts()
+        private static Product[] CreateProducts(IGuidGeneratorService guidGenerator)
         {
-            var shop = new Shop(@"https:\\shop_1.com", title: "shop_1");
+            var shop = new Shop(@"https:\\shop_1.com", title: "shop_1", guidGenerator);
             var products = new[]
             {
                 new Product(
-                    url: @"https:\\product_1", title: "product_1", description: "This is the description", price: 49.99, shop),
+                    url: @"https:\\product_1", title: "product_1", description: "This is the description", price: 49.99, shop, guidGenerator),
                 new Product(
-                    url: @"https:\\product_2", title: "product_2", description: "This is the description", price: 89.99, shop),
+                    url: @"https:\\product_2", title: "product_2", description: "This is the description", price: 89.99, shop, guidGenerator),
                 new Product(
-                    url: @"https:\\product_3", title: "product_3", description: "This is the description", price: 100, shop),
+                    url: @"https:\\product_3", title: "product_3", description: "This is the description", price: 100, shop, guidGenerator),
                 new Product(
-                    url: @"https:\\product_4", title: "product_4", description: "This is the description", price: 0.99, shop),
+                    url: @"https:\\product_4", title: "product_4", description: "This is the description", price: 0.99, shop, guidGenerator),
             };
 
             return products;

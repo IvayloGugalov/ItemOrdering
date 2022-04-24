@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 
 using GuardClauses;
+using GuidGenerator;
 
 using Ordering.Domain.Interfaces;
 using Ordering.Domain.ShopAggregate;
@@ -14,11 +15,16 @@ namespace Ordering.Domain.Services
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly IProductRepository productRepository;
+        private readonly IGuidGeneratorService guidGenerator;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository)
+        public ShoppingCartService(
+            IShoppingCartRepository shoppingCartRepository,
+            IProductRepository productRepository,
+            IGuidGeneratorService guidGenerator)
         {
             this.shoppingCartRepository = shoppingCartRepository;
             this.productRepository = productRepository;
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task<ShoppingCart> GetOrCreateShoppingCartAsync(Guid customerId)
@@ -30,7 +36,7 @@ namespace Ordering.Domain.Services
 
             if (shoppingCart != null) return shoppingCart;
 
-            shoppingCart = new ShoppingCart(customerId);
+            shoppingCart = new ShoppingCart(customerId, this.guidGenerator);
 
             await this.shoppingCartRepository.AddAsync(shoppingCart);
 

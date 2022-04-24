@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 
+using GuidGenerator;
 using Microsoft.AspNetCore.Identity;
 
 using Identity.Domain.Entities;
@@ -11,11 +12,16 @@ namespace Identity.API.Services
     {
         private readonly UserManager<AuthUser> userManager;
         private readonly IUserToRoleRepository userToRoleRepository;
+        private readonly IGuidGeneratorService guidGenerator;
 
-        public UserService(UserManager<AuthUser> userManager, IUserToRoleRepository userToRoleRepository)
+        public UserService(
+            UserManager<AuthUser> userManager,
+            IUserToRoleRepository userToRoleRepository,
+            IGuidGeneratorService guidGenerator)
         {
             this.userManager = userManager;
             this.userToRoleRepository = userToRoleRepository;
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(
@@ -32,7 +38,8 @@ namespace Identity.API.Services
                 email: email,
                 userName: userName,
                 password: password,
-                roles: new[] { roleToPermissions });
+                roles: new[] { roleToPermissions },
+                this.guidGenerator);
 
             var result = await this.userManager.CreateAsync(registrationUser, password);
 

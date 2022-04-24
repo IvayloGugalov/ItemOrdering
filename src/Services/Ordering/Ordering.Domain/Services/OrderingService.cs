@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using GuardClauses;
+using GuidGenerator;
 
 using Ordering.Domain.Exceptions;
 using Ordering.Domain.Interfaces;
@@ -18,11 +19,16 @@ namespace Ordering.Domain.Services
     {
         private readonly IShoppingCartRepository shoppingCartRepository;
         private readonly IOrderRepository orderRepository;
+        private readonly IGuidGeneratorService guidGenerator;
 
-        public OrderingService(IShoppingCartRepository shoppingCartRepository, IOrderRepository orderRepository)
+        public OrderingService(
+            IShoppingCartRepository shoppingCartRepository,
+            IOrderRepository orderRepository,
+            IGuidGeneratorService guidGenerator)
         {
             this.shoppingCartRepository = shoppingCartRepository;
             this.orderRepository = orderRepository;
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task<Order> CreateOrderFromShoppingCart(Guid customerId)
@@ -60,7 +66,7 @@ namespace Ordering.Domain.Services
             return await this.orderRepository.GetForCustomerId(specification);
         }
 
-        private static Order CreateOrderFromShoppingCart(ShoppingCart shoppingCart)
+        private Order CreateOrderFromShoppingCart(ShoppingCart shoppingCart)
         {
             var orderedProducts = new List<OrderedProduct>();
             foreach (var productAndAmount in shoppingCart.ProductsAndAmount)
@@ -68,7 +74,7 @@ namespace Ordering.Domain.Services
                 orderedProducts.Add(new OrderedProduct(productAndAmount.ProductId, productAndAmount.Price, productAndAmount.Amount));
                 // TODO: Publish event
             }
-            return new Order(shoppingCart.CustomerId, orderedProducts);
+            return new Order(shoppingCart.CustomerId, orderedProducts, this.guidGenerator);
         }
     }
 }

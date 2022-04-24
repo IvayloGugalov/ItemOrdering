@@ -2,6 +2,8 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using GuidGenerator;
+
 using Identity.Permissions;
 using Identity.Tokens.Interfaces;
 using Identity.Tokens.Tokens;
@@ -17,15 +19,18 @@ namespace Identity.Tokens.TokenGenerators
         private readonly AuthenticationConfiguration authConfiguration;
         private readonly ITokenGenerator tokenGenerator;
         private readonly IRefreshTokenRepository refreshTokenRepository;
+        private readonly IGuidGeneratorService guidGenerator;
 
         public RefreshTokenGenerator(
             AuthenticationConfiguration authConfiguration,
             ITokenGenerator tokenGenerator,
-            IRefreshTokenRepository refreshTokenRepository)
+            IRefreshTokenRepository refreshTokenRepository,
+            IGuidGeneratorService guidGenerator)
         {
             this.authConfiguration = authConfiguration;
             this.tokenGenerator = tokenGenerator;
             this.refreshTokenRepository = refreshTokenRepository;
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task<string> GenerateRefreshToken(Guid userId)
@@ -37,7 +42,7 @@ namespace Identity.Tokens.TokenGenerators
                 tokenExpirationMinutes: this.authConfiguration.RefreshTokenExpirationMinutes,
                 claims: new[] { new Claim(PermissionConstants.UserIdClaimType, userId.ToString()), });
 
-            var refreshToken = new RefreshToken(refreshTokenValue, userId);
+            var refreshToken = new RefreshToken(refreshTokenValue, userId, this.guidGenerator);
 
             await this.refreshTokenRepository.CreateAsync(refreshToken);
 

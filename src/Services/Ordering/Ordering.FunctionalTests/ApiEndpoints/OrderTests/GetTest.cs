@@ -3,27 +3,30 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using GuidGenerator;
+using HttpClientExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using HttpClientExtensions;
 
 using Ordering.API;
 using Ordering.API.Endpoints.OrderEndpoint;
 using Ordering.Infrastructure.Data;
 
-namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
+namespace Ordering.FunctionalTests.ApiEndpoints.OrderTests
 {
     [TestFixture]
     public class GetTest
     {
         private HttpClient httpClient;
         private TestWebAppFactory<Startup> app;
+        private IGuidGeneratorService guidGenerator;
 
         [OneTimeSetUp]
         public void SetUp()
         {
             this.app = new TestWebAppFactory<Startup>();
             this.httpClient = this.app.CreateClient();
+            this.guidGenerator = new GuidGeneratorService();
         }
 
         [OneTimeTearDown]
@@ -40,7 +43,7 @@ namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
             var services = scope.ServiceProvider;
             var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
 
-            var customer = Seeder.CustomerWithMultipleOrders(dbContext, orderCount: 5);
+            var customer = Seeder.CustomerWithMultipleOrders(dbContext, this.guidGenerator, orderCount: 5);
 
             var result = await this.httpClient.GetDeserializedJsonResult<GetOrdersResponse>(GetOrdersRequest.BuildRoute(customer.Id));
 
@@ -58,7 +61,7 @@ namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
             var services = scope.ServiceProvider;
             var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
 
-            var customer = Seeder.CustomerWithCartAndProducts(dbContext);
+            var customer = Seeder.CustomerWithCartAndProducts(dbContext, this.guidGenerator);
 
             var result = await this.httpClient.GetAsync(GetOrdersRequest.BuildRoute(customer.Id));
 
@@ -72,7 +75,7 @@ namespace Ordering.Functional.Tests.ApiEndpoints.OrderTests
             var services = scope.ServiceProvider;
             var dbContext = services.GetRequiredService<ItemOrderingDbContext>();
 
-            var customer = Seeder.CustomerWithMultipleOrders(dbContext, orderCount: 1);
+            var customer = Seeder.CustomerWithMultipleOrders(dbContext, this.guidGenerator, orderCount: 1);
 
             var order = customer.Orders.First();
 

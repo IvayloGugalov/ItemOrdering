@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using GenericStatus;
+using GuidGenerator;
 using Microsoft.AspNetCore.Identity;
 
 using Identity.Admin.Interfaces;
@@ -17,12 +18,18 @@ namespace Identity.Admin.Services
         private readonly IRoleToPermissionRepository rolesToPermissionsRepository;
         private readonly IUserToRoleRepository usersToRolesRepository;
         private readonly UserManager<AuthUser> userManager;
+        private readonly IGuidGeneratorService guidGenerator;
 
-        public AdminUserService(IRoleToPermissionRepository rolesToPermissionsRepository, IUserToRoleRepository usersToRolesRepository, UserManager<AuthUser> userManager)
+        public AdminUserService(
+            IRoleToPermissionRepository rolesToPermissionsRepository,
+            IUserToRoleRepository usersToRolesRepository,
+            UserManager<AuthUser> userManager,
+            IGuidGeneratorService guidGenerator)
         {
             this.rolesToPermissionsRepository = rolesToPermissionsRepository;
             this.usersToRolesRepository = usersToRolesRepository;
             this.userManager = userManager;
+            this.guidGenerator = guidGenerator;
         }
 
         public IQueryable<AuthUser> QueryAuthUsersAsync()
@@ -74,7 +81,8 @@ namespace Identity.Admin.Services
                 email: email,
                 userName: userName,
                 password: password,
-                roles: foundRoles);
+                roles: foundRoles,
+                this.guidGenerator);
 
             var result = await this.userManager.CreateAsync(authUser, password);
             if (!result.Succeeded) return status.AddError(result.Errors.FirstOrDefault()?.ToString());
